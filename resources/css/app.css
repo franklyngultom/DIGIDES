@@ -1,9 +1,55 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    
+    --color-pine-900: #082424;
+    --color-pine-800: #0c3837;
+    --color-pine-700: #114443;
+    --color-pine-600: #1b5e5c;
+    --color-pine-500: #297a77;
+    --color-pine-100: #e2f0ed;
+    --color-pine-50: #f0f7f5;
+
+    --color-emerald-accent: #10b981;
+    --color-emerald-light: #34d399;
+    --color-sage: #4fa394;
+    --color-sage-light: #8bc3b8;
+
+    --color-lime-accent: #d4ed31;
+    --color-lime-light: #e2f48f;
+    --color-lime-soft: #f6fce2;
+
+    --color-bg-workspace: #f7faf9;
+    --color-card-border: #e1ede8;
+}
+
+/* Custom Scrollbar for Smooth DIGIDES Feel */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #f7faf9;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Micro animations */
+@keyframes pulse-subtle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.92; transform: scale(1.02); }
+}
+
+.animate-pulse-subtle {
+    animation: pulse-subtle 3s ease-in-out infinite;
 }

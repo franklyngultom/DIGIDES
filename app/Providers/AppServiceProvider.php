@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\SuratDiterbitkanEvent;
+use App\Listeners\SyncToBukuAgendaListener;
+use App\Listeners\SyncToBukuEkspedisiListener;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +23,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Event::listen(
+            SuratDiterbitkanEvent::class,
+            SyncToBukuEkspedisiListener::class,
+        );
+
+        Event::listen(
+            SuratDiterbitkanEvent::class,
+            SyncToBukuAgendaListener::class,
+        );
     }
 }
