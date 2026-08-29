@@ -45,7 +45,7 @@
 
         <x-card class="p-5 flex items-center gap-3">
             <div class="w-10 h-10 rounded-2xl bg-[#e2f48f] text-[#0c3837] flex items-center justify-center font-bold">
-                💾
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
             </div>
             <div>
                 <span class="text-[11px] text-[#64748b] font-medium block">Total File Cadangan</span>
@@ -55,7 +55,7 @@
 
         <x-card class="p-5 flex items-center gap-3">
             <div class="w-10 h-10 rounded-2xl bg-[#e2f0ed] text-[#114443] flex items-center justify-center font-bold">
-                🔒
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
             </div>
             <div>
                 <span class="text-[11px] text-[#64748b] font-medium block">Format Cadangan</span>

@@ -80,11 +80,11 @@
             <div class="grid grid-cols-2 gap-2 text-xs">
                 <button type="button" onclick="document.getElementById('email').value='admin@desa.id'; document.getElementById('password').value='password';"
                         class="p-2 rounded-2xl bg-[#e2f0ed] hover:bg-[#d0e6e1] text-[#114443] font-semibold transition-colors text-center border border-[#10b981]/20 cursor-pointer">
-                    👑 Admin Desa
+                    Admin Desa
                 </button>
                 <button type="button" onclick="document.getElementById('email').value='staff@desa.id'; document.getElementById('password').value='password';"
                         class="p-2 rounded-2xl bg-[#f6fce2] hover:bg-[#edf9ca] text-[#0c3837] font-semibold transition-colors text-center border border-[#d4ed31]/50 cursor-pointer">
-                    👤 Staff Pelayanan
+                    Staff Pelayanan
                 </button>
             </div>
         </div>

@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             DesaProfileSeeder::class,
             UserSeeder::class,
             PendudukSeeder::class,
+            KeuanganPembangunanSeeder::class,
         ]);
     }
 }

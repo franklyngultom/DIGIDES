@@ -74,7 +74,9 @@
                 <!-- 1. Biodata Kependudukan Card -->
                 <x-card class="space-y-4">
                     <h3 class="text-base font-bold text-[#0c3837] border-b border-[#e1ede8] pb-3 flex items-center gap-2">
-                        <span class="w-7 h-7 rounded-xl bg-[#e2f0ed] text-[#114443] flex items-center justify-center text-sm">📋</span>
+                        <span class="w-7 h-7 rounded-xl bg-[#e2f0ed] text-[#114443] flex items-center justify-center text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        </span>
                         <span>Biodata Lengkap Kependudukan</span>
                     </h3>
 
@@ -122,7 +124,9 @@
                 <x-card class="space-y-4" id="section-berkas">
                     <div class="flex items-center justify-between border-b border-[#e1ede8] pb-3">
                         <h3 class="text-base font-bold text-[#0c3837] flex items-center gap-2">
-                            <span class="w-7 h-7 rounded-xl bg-[#e2f0ed] text-[#114443] flex items-center justify-center text-sm">📁</span>
+                            <span class="w-7 h-7 rounded-xl bg-[#e2f0ed] text-[#114443] flex items-center justify-center text-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+                            </span>
                             <span>Manajemen Berkas Lampiran Warga</span>
                         </h3>
 
@@ -141,7 +145,7 @@
 
                     @if($penduduk->documents->isEmpty())
                         <div class="py-8 text-center text-[#64748b] bg-[#f7faf9] rounded-2xl border border-dashed border-[#e1ede8]">
-                            <span class="text-2xl block mb-1">📄</span>
+                            <svg class="w-8 h-8 text-slate-400 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             <span class="font-semibold block text-xs text-[#0c3837]">Belum ada berkas dokumen tersimpan</span>
                             <span class="text-[11px] text-[#64748b]">Unggah scan KTP, Kartu Keluarga, Akta Kelahiran, atau Surat Nikah warga.</span>
                         </div>
@@ -151,8 +155,12 @@
                             <div class="p-3.5 bg-[#f7faf9] rounded-2xl border border-[#e1ede8] flex flex-col justify-between hover:border-[#10b981] transition-all group">
                                 <div>
                                     <div class="flex items-start justify-between mb-2">
-                                        <div class="w-10 h-10 rounded-xl {{ $doc->is_pdf ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-[#e2f0ed] text-[#114443] border border-[#10b981]/30' }} flex items-center justify-center text-lg">
-                                            {{ $doc->is_pdf ? '📕' : '🖼️' }}
+                                        <div class="w-10 h-10 rounded-xl {{ $doc->is_pdf ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-[#e2f0ed] text-[#114443] border border-[#10b981]/30' }} flex items-center justify-center text-lg font-bold text-xs">
+                                            @if($doc->is_pdf)
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                            @else
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                            @endif
                                         </div>
                                         <x-badge variant="{{ $doc->is_pdf ? 'rose' : 'emerald' }}" class="text-[10px] uppercase font-mono">
                                             {{ $doc->is_pdf ? 'PDF' : 'IMAGE' }}
@@ -204,7 +212,9 @@
                 <x-card class="space-y-4">
                     <div class="flex items-center justify-between border-b border-[#e1ede8] pb-3">
                         <h3 class="text-base font-bold text-[#0c3837] flex items-center gap-2">
-                            <span class="w-7 h-7 rounded-xl bg-[#e2f0ed] text-[#114443] flex items-center justify-center text-sm">🔄</span>
+                            <span class="w-7 h-7 rounded-xl bg-[#e2f0ed] text-[#114443] flex items-center justify-center text-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                            </span>
                             <span>Riwayat Mutasi Warga</span>
                         </h3>
 
@@ -407,7 +417,9 @@
                 <!-- Viewer Header -->
                 <div class="px-6 py-4 bg-[#f7faf9] border-b border-[#e1ede8] flex items-center justify-between shrink-0">
                     <div class="flex items-center gap-2">
-                        <span class="w-8 h-8 rounded-xl bg-[#114443] text-[#d4ed31] flex items-center justify-center text-sm font-bold">📄</span>
+                        <span class="w-8 h-8 rounded-xl bg-[#114443] text-[#d4ed31] flex items-center justify-center text-sm font-bold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        </span>
                         <div>
                             <h4 class="text-sm font-bold text-[#0c3837]" x-text="previewTitle"></h4>
                             <span class="text-[10px] text-[#64748b]">Pratinjau Berkas Lampiran Resmi</span>

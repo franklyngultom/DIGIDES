@@ -88,7 +88,7 @@ Menyediakan tata kelola transparansi keuangan desa sesuai struktur APBDes standa
 
 ## 5. Rencana Pengujian (Verification Plan)
 
-- [ ] Input beberapa transaksi kas masuk dan keluar: Verifikasi perhitungan saldo berjalan (*running balance*) selalu akurat secara matematis.
-- [ ] Buat satu proyek pembangunan di tabel RKP Desa dan ubah status progress hingga 100%.
-- [ ] Upload foto sebelum & sesudah pembangunan serta buka modal lampiran.
-- [ ] Cetak rekapitulasi buku kas umum tahun berjalan ke dalam format PDF berstandar akuntansi desa.
+- [x] Input beberapa transaksi kas masuk dan keluar: Verifikasi perhitungan saldo berjalan (*running balance*) selalu akurat secara matematis.
+- [x] Buat satu proyek pembangunan di tabel RKP Desa dan ubah status progress hingga 100%.
+- [x] Upload foto sebelum & sesudah pembangunan serta buka modal lampiran.
+- [x] Cetak rekapitulasi buku kas umum tahun berjalan ke dalam format PDF berstandar akuntansi desa.

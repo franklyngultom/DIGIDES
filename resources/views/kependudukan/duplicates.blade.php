@@ -30,7 +30,11 @@
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
         <x-card class="p-4 flex items-center gap-3 border-l-4 {{ $total_issues > 0 ? 'border-l-rose-500' : 'border-l-[#10b981]' }}">
             <div class="w-11 h-11 rounded-2xl {{ $total_issues > 0 ? 'bg-rose-50 text-rose-600' : 'bg-[#e2f0ed] text-[#114443]' }} flex items-center justify-center font-bold text-lg">
-                {{ $total_issues > 0 ? '⚠️' : '✅' }}
+                @if($total_issues > 0)
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                @else
+                    <svg class="w-5 h-5 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                @endif
             </div>
             <div>
                 <span class="text-[11px] text-[#64748b] font-medium block">Total Isu Terdeteksi</span>
@@ -40,7 +44,7 @@
 
         <x-card class="p-4 flex items-center gap-3 border-l-4 border-l-amber-500">
             <div class="w-11 h-11 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-lg">
-                🔁
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             </div>
             <div>
                 <span class="text-[11px] text-[#64748b] font-medium block">NIK Terdaftar Ganda</span>
@@ -50,7 +54,7 @@
 
         <x-card class="p-4 flex items-center gap-3 border-l-4 border-l-purple-500">
             <div class="w-11 h-11 rounded-2xl bg-purple-50 text-purple-700 flex items-center justify-center font-bold text-lg">
-                🔍
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             </div>
             <div>
                 <span class="text-[11px] text-[#64748b] font-medium block">Anomali Format NIK</span>
@@ -63,7 +67,7 @@
     @if($total_issues === 0)
         <x-card class="py-12 text-center space-y-3 mt-6">
             <div class="w-16 h-16 rounded-3xl bg-[#e2f0ed] text-[#10b981] flex items-center justify-center text-3xl mx-auto border border-[#10b981]/30">
-                ✨
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
             <h2 class="text-xl font-bold text-[#0c3837]">Seluruh Basis Data Kependudukan Bersih & Terstandarisasi!</h2>
             <p class="text-xs text-[#64748b] max-w-md mx-auto">
@@ -82,7 +86,9 @@
             <x-card class="space-y-4">
                 <div class="flex items-center justify-between border-b border-[#e1ede8] pb-3">
                     <h3 class="text-base font-bold text-[#0c3837] flex items-center gap-2">
-                        <span class="w-7 h-7 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-sm">🔁</span>
+                        <span class="w-7 h-7 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        </span>
                         <span>Daftar NIK Terdaftar Ganda ({{ $duplicates->count() }} Kelompok)</span>
                     </h3>
                     <x-badge variant="amber">{{ $duplicates->count() }} Kelompok Duplikat</x-badge>
@@ -127,7 +133,9 @@
             <x-card class="space-y-4">
                 <div class="flex items-center justify-between border-b border-[#e1ede8] pb-3">
                     <h3 class="text-base font-bold text-[#0c3837] flex items-center gap-2">
-                        <span class="w-7 h-7 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center text-sm">🔍</span>
+                        <span class="w-7 h-7 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        </span>
                         <span>Anomali Format NIK ({{ $anomali->count() }} Data)</span>
                     </h3>
                     <x-badge variant="rose">{{ $anomali->count() }} Format Rusak</x-badge>

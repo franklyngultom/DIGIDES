@@ -54,13 +54,45 @@ class DashboardController extends Controller
             ],
         ];
 
+        $upcomingSchedules = [
+            [
+                'title' => 'Pelayanan Surat Keterangan Usaha (SKU)',
+                'desc' => '3 Berkas pemohon walk-in desk',
+                'tag' => 'Persuratan',
+                'time' => '09:30 WIB',
+                'pic' => 'Staff Pelayanan',
+            ],
+            [
+                'title' => 'Verifikasi Duplikasi NIK Kependudukan',
+                'desc' => 'Sinkronisasi data RT 02 / RW 01',
+                'tag' => 'Kependudukan',
+                'time' => '11:00 WIB',
+                'pic' => 'Admin Desa',
+            ],
+            [
+                'title' => 'Cetak Rekap Buku Ekspedisi & Agenda',
+                'desc' => 'Penutupan buku register bulan berjalan',
+                'tag' => 'Administrasi',
+                'time' => '14:00 WIB',
+                'pic' => 'Sekretariat',
+            ],
+            [
+                'title' => 'Monitoring Proyek Fisik RKP Desa',
+                'desc' => 'Inspeksi pembangunan posyandu Dusun 2',
+                'tag' => 'Pembangunan',
+                'time' => '15:30 WIB',
+                'pic' => 'TPK Desa',
+            ],
+        ];
+
         return view('dashboard.index', compact(
             'user',
             'desa',
             'recentActivities',
             'totalUsers',
             'activeUsers',
-            'productivityStats'
+            'productivityStats',
+            'upcomingSchedules'
         ));
     }
 }
