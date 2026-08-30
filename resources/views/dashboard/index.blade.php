@@ -111,21 +111,7 @@
     </div>
 
     <!-- 3. Quick Actions & Core Module Hub Shortcuts -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        @can('kependudukan.view')
-        <a href="{{ route('kependudukan.index') }}" class="p-4 rounded-3xl bg-white hover:bg-[#edf5f2] border border-[#e1ede8] flex items-center gap-3.5 transition-all shadow-xs group">
-            <div class="w-11 h-11 rounded-2xl bg-[#114443] text-[#d4ed31] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                </svg>
-            </div>
-            <div>
-                <span class="text-xs font-bold text-[#0c3837] block group-hover:text-[#10b981]">Kependudukan</span>
-                <span class="text-[11px] text-slate-500">Buku Induk & Mutasi</span>
-            </div>
-        </a>
-        @endcan
-
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         @can('administrasi.view')
         <a href="{{ route('administrasi.index') }}" class="p-4 rounded-3xl bg-white hover:bg-[#edf5f2] border border-[#e1ede8] flex items-center gap-3.5 transition-all shadow-xs group">
             <div class="w-11 h-11 rounded-2xl bg-[#114443] text-[#d4ed31] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -135,7 +121,33 @@
             </div>
             <div>
                 <span class="text-xs font-bold text-[#0c3837] block group-hover:text-[#10b981]">Administrasi</span>
-                <span class="text-[11px] text-slate-500">8 Buku Register Umum</span>
+                <span class="text-[11px] text-slate-500">9 Buku & Lembaga</span>
+            </div>
+        </a>
+        @endcan
+
+        @can('kependudukan.view')
+        <a href="{{ route('kependudukan.index') }}" class="p-4 rounded-3xl bg-white hover:bg-[#edf5f2] border border-[#e1ede8] flex items-center gap-3.5 transition-all shadow-xs group">
+            <div class="w-11 h-11 rounded-2xl bg-[#114443] text-[#d4ed31] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+            </div>
+            <div>
+                <span class="text-xs font-bold text-[#0c3837] block group-hover:text-[#10b981]">Kependudukan</span>
+                <span class="text-[11px] text-slate-500">Buku Induk & KK</span>
+            </div>
+        </a>
+
+        <a href="{{ route('kependudukan.mutasi.index') }}" class="p-4 rounded-3xl bg-white hover:bg-[#edf5f2] border border-[#e1ede8] flex items-center gap-3.5 transition-all shadow-xs group">
+            <div class="w-11 h-11 rounded-2xl bg-[#114443] text-[#d4ed31] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                </svg>
+            </div>
+            <div>
+                <span class="text-xs font-bold text-[#0c3837] block group-hover:text-[#10b981]">Mutasi Penduduk</span>
+                <span class="text-[11px] text-slate-500">Mutasi & Perubahan</span>
             </div>
         </a>
         @endcan
@@ -149,7 +161,7 @@
             </div>
             <div>
                 <span class="text-xs font-bold text-[#0c3837] block group-hover:text-[#10b981]">Keuangan Desa</span>
-                <span class="text-[11px] text-slate-500">APBDes & Buku Kas</span>
+                <span class="text-[11px] text-slate-500">APBDes & Kas</span>
             </div>
         </a>
         @endcan
@@ -163,7 +175,21 @@
             </div>
             <div>
                 <span class="text-xs font-bold text-[#0c3837] block group-hover:text-[#10b981]">Pembangunan</span>
-                <span class="text-[11px] text-slate-500">RKP Fisik & Kader KPM</span>
+                <span class="text-[11px] text-slate-500">RKP & Kader KPM</span>
+            </div>
+        </a>
+        @endcan
+
+        @can('kependudukan.view')
+        <a href="{{ route('kependudukan.duplicates') }}" class="p-4 rounded-3xl bg-white hover:bg-[#edf5f2] border border-[#e1ede8] flex items-center gap-3.5 transition-all shadow-xs group">
+            <div class="w-11 h-11 rounded-2xl bg-[#114443] text-[#d4ed31] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+            </div>
+            <div>
+                <span class="text-xs font-bold text-[#0c3837] block group-hover:text-[#10b981]">Duplikasi NIK</span>
+                <span class="text-[11px] text-slate-500">Scanner NIK Ganda</span>
             </div>
         </a>
         @endcan

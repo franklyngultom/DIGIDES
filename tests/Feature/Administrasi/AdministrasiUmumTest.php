@@ -42,15 +42,34 @@ class AdministrasiUmumTest extends TestCase
         $response = $this->actingAs($this->admin)->get(route('administrasi.index'));
 
         $response->assertStatus(200);
-        $response->assertSeeText('Buku Register Administrasi Umum');
-        $response->assertSeeText('Peraturan di Desa');
-        $response->assertSeeText('Keputusan Kades');
-        $response->assertSeeText('Inventaris & Aset');
-        $response->assertSeeText('Tanah di Desa');
-        $response->assertSeeText('Anggaran Desa');
-        $response->assertSeeText('Lembaran Desa');
-        $response->assertSeeText('Agenda Surat');
-        $response->assertSeeText('Buku Ekspedisi');
+        $response->assertSeeText('Administrasi Umum');
+        $response->assertSeeText('Peraturan Desa');
+        $response->assertSeeText('Keputusan Kepala Desa');
+        $response->assertSeeText('Inventaris & Kekayaan Desa');
+        $response->assertSeeText('Aparat Pemerintah Desa');
+        $response->assertSeeText('Tanah Kas Desa');
+        $response->assertSeeText('Luas Tanah di Desa');
+        $response->assertSeeText('Buku Agenda Surat');
+        $response->assertSeeText('Surat Ekspedisi');
+        $response->assertSeeText('Lembaran / Berita Desa');
+    }
+
+    public function test_admin_can_access_kelembagaan_workspace(): void
+    {
+        $bpd = \App\Models\Institution::where('slug', 'bpd')->first();
+        if (!$bpd) {
+            $this->seed(\Database\Seeders\InstitutionSeeder::class);
+            $bpd = \App\Models\Institution::where('slug', 'bpd')->first();
+        }
+
+        $response = $this->actingAs($this->admin)->get(route('administrasi.kelembagaan.show', ['institution' => $bpd->slug]));
+        $response->assertStatus(200);
+        $response->assertSeeText('Badan Permusyawaratan Desa');
+        $response->assertSeeText('BPD');
+        $response->assertSeeText('Anggota');
+        $response->assertSeeText('Keputusan');
+        $response->assertSeeText('Kegiatan');
+        $response->assertSeeText('Agenda');
     }
 
     public function test_admin_can_crud_buku_peraturan_desa_and_export_pdf(): void

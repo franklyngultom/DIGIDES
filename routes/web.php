@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DesaProfileController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Administrasi\AbsensiController;
 use App\Http\Controllers\Administrasi\AdministrasiHubController;
+use App\Http\Controllers\Administrasi\AparaturController;
 use App\Http\Controllers\Administrasi\BukuAgendaController;
 use App\Http\Controllers\Administrasi\BukuAnggaranDesaController;
 use App\Http\Controllers\Administrasi\BukuEkspedisiController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Administrasi\BukuKeputusanKadesController;
 use App\Http\Controllers\Administrasi\BukuLembaranDesaController;
 use App\Http\Controllers\Administrasi\BukuPeraturanDesaController;
 use App\Http\Controllers\Administrasi\BukuTanahDesaController;
+use App\Http\Controllers\Administrasi\KelembagaanController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Kependudukan\DocumentController;
@@ -238,6 +240,51 @@ Route::middleware('auth')->group(function () {
             Route::get('/buku-ekspedisi/{bukuEkspedisi}/edit', [BukuEkspedisiController::class, 'edit'])->name('buku-ekspedisi.edit');
             Route::put('/buku-ekspedisi/{bukuEkspedisi}', [BukuEkspedisiController::class, 'update'])->name('buku-ekspedisi.update');
             Route::delete('/buku-ekspedisi/{bukuEkspedisi}', [BukuEkspedisiController::class, 'destroy'])->name('buku-ekspedisi.destroy');
+        });
+
+        // 9. Buku Aparat Desa (Aparatur Pemerintah Desa)
+        Route::get('/aparatur', [AparaturController::class, 'index'])->name('aparatur.index');
+        Route::middleware('permission:administrasi.manage')->group(function () {
+            Route::get('/aparatur/create', [AparaturController::class, 'create'])->name('aparatur.create');
+            Route::post('/aparatur', [AparaturController::class, 'store'])->name('aparatur.store');
+            Route::get('/aparatur/{aparatur}/edit', [AparaturController::class, 'edit'])->name('aparatur.edit');
+            Route::put('/aparatur/{aparatur}', [AparaturController::class, 'update'])->name('aparatur.update');
+            Route::delete('/aparatur/{aparatur}', [AparaturController::class, 'destroy'])->name('aparatur.destroy');
+        });
+
+        // 10. Administrasi Kelembagaan (8 Lembaga: BPD, BUMDes, Kopdes, LPMD, PKK, Posyandu, Karang Taruna, LMP)
+        Route::prefix('kelembagaan/{institution:slug}')->name('kelembagaan.')->group(function () {
+            Route::get('/', [KelembagaanController::class, 'show'])->name('show');
+
+            // Anggota
+            Route::middleware('permission:administrasi.manage')->group(function () {
+                Route::get('/members/create', [KelembagaanController::class, 'createMember'])->name('members.create');
+                Route::post('/members', [KelembagaanController::class, 'storeMember'])->name('members.store');
+                Route::get('/members/{member}/edit', [KelembagaanController::class, 'editMember'])->name('members.edit');
+                Route::put('/members/{member}', [KelembagaanController::class, 'updateMember'])->name('members.update');
+                Route::delete('/members/{member}', [KelembagaanController::class, 'destroyMember'])->name('members.destroy');
+
+                // Keputusan
+                Route::get('/decisions/create', [KelembagaanController::class, 'createDecision'])->name('decisions.create');
+                Route::post('/decisions', [KelembagaanController::class, 'storeDecision'])->name('decisions.store');
+                Route::get('/decisions/{decision}/edit', [KelembagaanController::class, 'editDecision'])->name('decisions.edit');
+                Route::put('/decisions/{decision}', [KelembagaanController::class, 'updateDecision'])->name('decisions.update');
+                Route::delete('/decisions/{decision}', [KelembagaanController::class, 'destroyDecision'])->name('decisions.destroy');
+
+                // Kegiatan
+                Route::get('/activities/create', [KelembagaanController::class, 'createActivity'])->name('activities.create');
+                Route::post('/activities', [KelembagaanController::class, 'storeActivity'])->name('activities.store');
+                Route::get('/activities/{activity}/edit', [KelembagaanController::class, 'editActivity'])->name('activities.edit');
+                Route::put('/activities/{activity}', [KelembagaanController::class, 'updateActivity'])->name('activities.update');
+                Route::delete('/activities/{activity}', [KelembagaanController::class, 'destroyActivity'])->name('activities.destroy');
+
+                // Agenda
+                Route::get('/agendas/create', [KelembagaanController::class, 'createAgenda'])->name('agendas.create');
+                Route::post('/agendas', [KelembagaanController::class, 'storeAgenda'])->name('agendas.store');
+                Route::get('/agendas/{agenda}/edit', [KelembagaanController::class, 'editAgenda'])->name('agendas.edit');
+                Route::put('/agendas/{agenda}', [KelembagaanController::class, 'updateAgenda'])->name('agendas.update');
+                Route::delete('/agendas/{agenda}', [KelembagaanController::class, 'destroyAgenda'])->name('agendas.destroy');
+            });
         });
     });
 

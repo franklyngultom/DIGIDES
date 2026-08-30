@@ -37,8 +37,8 @@
             </a>
 
             <!-- Navigation Links -->
-            <nav class="flex flex-col gap-4 items-center flex-1 w-full px-2 mt-2">
-                <!-- Dashboard -->
+            <nav class="flex flex-col gap-3 items-center flex-1 w-full px-2 mt-2">
+                <!-- 1. Dashboard Produktivitas -->
                 <a href="{{ route('dashboard') }}" 
                    title="Dashboard Produktivitas"
                    class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'dashboard') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
@@ -50,106 +50,10 @@
                     @endif
                 </a>
 
-                @can('user.view')
-                <!-- User Management & RBAC -->
-                <a href="{{ route('admin.users.index') }}" 
-                   title="Manajemen Pengguna & Staf"
-                   class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.users') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                    </svg>
-                    @if(str_starts_with($currentRoute, 'admin.users'))
-                        <span class="absolute -left-2 w-1.5 h-6 bg-[#d4ed31] rounded-r-full"></span>
-                    @endif
-                </a>
-                @endcan
-
-                @can('kependudukan.view')
-                <!-- Buku Induk Kependudukan -->
-                <a href="{{ route('kependudukan.index') }}" 
-                   title="Buku Induk Kependudukan"
-                   id="nav-kependudukan"
-                   class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'kependudukan.') && !str_contains($currentRoute, 'mutasi') && !str_contains($currentRoute, 'duplicates') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                    @if(str_starts_with($currentRoute, 'kependudukan.') && !str_contains($currentRoute, 'mutasi') && !str_contains($currentRoute, 'duplicates'))
-                        <span class="absolute -left-2 w-1.5 h-6 bg-[#d4ed31] rounded-r-full"></span>
-                    @endif
-                </a>
-
-                <!-- Register Mutasi Penduduk -->
-                <a href="{{ route('kependudukan.mutasi.index') }}" 
-                   title="Buku Register Mutasi Penduduk"
-                   id="nav-mutasi"
-                   class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_contains($currentRoute, 'mutasi') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-                    </svg>
-                    @if(str_contains($currentRoute, 'mutasi'))
-                        <span class="absolute -left-2 w-1.5 h-6 bg-[#d4ed31] rounded-r-full"></span>
-                    @endif
-                </a>
-
-                <!-- Pemindai Duplikasi NIK -->
-                <a href="{{ route('kependudukan.duplicates') }}" 
-                   title="Pemindai Duplikasi NIK"
-                   id="nav-duplicates"
-                   class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_contains($currentRoute, 'duplicates') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                    </svg>
-                    @if(str_contains($currentRoute, 'duplicates'))
-                        <span class="absolute -left-2 w-1.5 h-6 bg-[#d4ed31] rounded-r-full"></span>
-                    @endif
-                </a>
-                @endcan
-
-                @can('desa.view')
-                <!-- Profil & Identitas Desa -->
-                <a href="{{ route('admin.desa.index') }}" 
-                   title="Profil & Identitas Desa"
-                   class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.desa') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                    </svg>
-                    @if(str_starts_with($currentRoute, 'admin.desa'))
-                        <span class="absolute -left-2 w-1.5 h-6 bg-[#d4ed31] rounded-r-full"></span>
-                    @endif
-                </a>
-                @endcan
-
-                @can('audit.view')
-                <!-- Audit Trail (Activity Logs) -->
-                <a href="{{ route('admin.audit.index') }}" 
-                   title="Audit Trail & Riwayat Aktivitas"
-                   class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.audit') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                    @if(str_starts_with($currentRoute, 'admin.audit'))
-                        <span class="absolute -left-2 w-1.5 h-6 bg-[#d4ed31] rounded-r-full"></span>
-                    @endif
-                </a>
-                @endcan
-
-                @can('backup.manage')
-                <!-- Database Backup -->
-                <a href="{{ route('admin.backup.index') }}" 
-                   title="Cadangan Database"
-                   class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.backup') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
-                    </svg>
-                    @if(str_starts_with($currentRoute, 'admin.backup'))
-                        <span class="absolute -left-2 w-1.5 h-6 bg-[#d4ed31] rounded-r-full"></span>
-                    @endif
-                </a>
-                @endcan
                 @can('administrasi.view')
-                <!-- Administrasi Umum (8 Buku Register) -->
+                <!-- 2. Administrasi Umum -->
                 <a href="{{ route('administrasi.index') }}" 
-                   title="Buku Register Administrasi Umum"
+                   title="Administrasi Umum"
                    id="nav-administrasi"
                    class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'administrasi.') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -161,8 +65,36 @@
                 </a>
                 @endcan
 
+                @can('kependudukan.view')
+                <!-- 3. Kependudukan (Buku Induk) -->
+                <a href="{{ route('kependudukan.index') }}" 
+                   title="Kependudukan"
+                   id="nav-kependudukan"
+                   class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'kependudukan.') && !str_contains($currentRoute, 'mutasi') && !str_contains($currentRoute, 'duplicates') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    @if(str_starts_with($currentRoute, 'kependudukan.') && !str_contains($currentRoute, 'mutasi') && !str_contains($currentRoute, 'duplicates'))
+                        <span class="absolute -left-2 w-1.5 h-6 bg-[#d4ed31] rounded-r-full"></span>
+                    @endif
+                </a>
+
+                <!-- 4. Mutasi Penduduk -->
+                <a href="{{ route('kependudukan.mutasi.index') }}" 
+                   title="Mutasi Penduduk"
+                   id="nav-mutasi"
+                   class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_contains($currentRoute, 'mutasi') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                    </svg>
+                    @if(str_contains($currentRoute, 'mutasi'))
+                        <span class="absolute -left-2 w-1.5 h-6 bg-[#d4ed31] rounded-r-full"></span>
+                    @endif
+                </a>
+                @endcan
+
                 @can('keuangan.view')
-                <!-- Keuangan Desa (APBDes & Kas) -->
+                <!-- 5. Keuangan -->
                 <a href="{{ route('keuangan.index') }}" 
                    title="Keuangan Desa (APBDes & Kas)"
                    id="nav-keuangan"
@@ -177,7 +109,7 @@
                 @endcan
 
                 @can('pembangunan.view')
-                <!-- Pembangunan Desa (RKP & Proyek Fisik) -->
+                <!-- 6. Pembangunan -->
                 <a href="{{ route('pembangunan.index') }}" 
                    title="Pembangunan & KPM Desa"
                    id="nav-pembangunan"
@@ -186,6 +118,77 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                     </svg>
                     @if(str_starts_with($currentRoute, 'pembangunan.'))
+                        <span class="absolute -left-2 w-1.5 h-6 bg-[#d4ed31] rounded-r-full"></span>
+                    @endif
+                </a>
+                @endcan
+
+                @can('kependudukan.view')
+                <!-- 7. Duplikasi NIK -->
+                <a href="{{ route('kependudukan.duplicates') }}" 
+                   title="Pemindai Duplikasi NIK"
+                   id="nav-duplicates"
+                   class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_contains($currentRoute, 'duplicates') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                    @if(str_contains($currentRoute, 'duplicates'))
+                        <span class="absolute -left-2 w-1.5 h-6 bg-[#d4ed31] rounded-r-full"></span>
+                    @endif
+                </a>
+                @endcan
+
+                @can('desa.view')
+                <!-- 8. Profil dan Identitas Desa -->
+                <a href="{{ route('admin.desa.index') }}" 
+                   title="Profil & Identitas Desa"
+                   class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.desa') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                    @if(str_starts_with($currentRoute, 'admin.desa'))
+                        <span class="absolute -left-2 w-1.5 h-6 bg-[#d4ed31] rounded-r-full"></span>
+                    @endif
+                </a>
+                @endcan
+
+                @can('audit.view')
+                <!-- 9. Riwayat Aktivitas (Audit Trail) -->
+                <a href="{{ route('admin.audit.index') }}" 
+                   title="Riwayat Aktivitas (Audit Trail)"
+                   class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.audit') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    @if(str_starts_with($currentRoute, 'admin.audit'))
+                        <span class="absolute -left-2 w-1.5 h-6 bg-[#d4ed31] rounded-r-full"></span>
+                    @endif
+                </a>
+                @endcan
+
+                @can('user.view')
+                <!-- 10. Management Staff / Pengguna -->
+                <a href="{{ route('admin.users.index') }}" 
+                   title="Management Staff & Pengguna"
+                   class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.users') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    @if(str_starts_with($currentRoute, 'admin.users'))
+                        <span class="absolute -left-2 w-1.5 h-6 bg-[#d4ed31] rounded-r-full"></span>
+                    @endif
+                </a>
+                @endcan
+
+                @can('backup.manage')
+                <!-- 11. Cadangan Database -->
+                <a href="{{ route('admin.backup.index') }}" 
+                   title="Cadangan Database"
+                   class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.backup') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
+                    </svg>
+                    @if(str_starts_with($currentRoute, 'admin.backup'))
                         <span class="absolute -left-2 w-1.5 h-6 bg-[#d4ed31] rounded-r-full"></span>
                     @endif
                 </a>

@@ -9,6 +9,8 @@ class Aparatur extends Model
 {
     use HasFactory;
 
+    protected $table = 'aparatur';
+
     protected $fillable = [
         'penduduk_id',
         'nip',

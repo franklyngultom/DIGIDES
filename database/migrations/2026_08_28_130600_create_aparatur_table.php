@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('aparatur', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('penduduk_id')->unique()->constrained('penduduk')->onDelete('cascade');
+            $table->foreignId('penduduk_id')->unique()->constrained('penduduks')->onDelete('cascade');
             $table->string('nip', 30)->nullable();
             $table->string('jabatan');
             $table->string('qr_token', 64)->unique()->index();
