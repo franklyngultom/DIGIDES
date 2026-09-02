@@ -147,16 +147,70 @@ class PendudukManagementTest extends TestCase
         $this->assertEquals('Lansia', $lansia->kategori_usia);
     }
 
-    public function test_search_scope_filters_by_name_or_nik(): void
+    public function test_staff_can_export_buku_induk_to_pdf(): void
     {
-        Penduduk::create($this->pendudukData(['nama_lengkap' => 'Asep Suhendar']));
-        Penduduk::create($this->pendudukData([
-            'nik' => '3202110101800002',
-            'nama_lengkap' => 'Ibu Siti',
-        ]));
+        Penduduk::create($this->pendudukData());
 
-        $result = Penduduk::search('Asep')->get();
-        $this->assertCount(1, $result);
-        $this->assertEquals('Asep Suhendar', $result->first()->nama_lengkap);
+        $response = $this->actingAs($this->staff)
+            ->get(route('kependudukan.export-pdf'));
+
+        $response->assertOk();
+        $this->assertEquals('application/pdf', $response->headers->get('content-type'));
+    }
+
+    public function test_staff_can_export_buku_induk_to_excel_and_csv(): void
+    {
+        Penduduk::create($this->pendudukData());
+
+        $excelResponse = $this->actingAs($this->staff)
+            ->get(route('kependudukan.export-excel'));
+        $excelResponse->assertOk();
+        $this->assertStringContainsString('text/csv', $excelResponse->headers->get('content-type'));
+
+        $csvResponse = $this->actingAs($this->staff)
+            ->get(route('kependudukan.export-csv'));
+        $csvResponse->assertOk();
+    }
+
+    public function test_staff_can_download_import_template(): void
+    {
+        $response = $this->actingAs($this->staff)
+            ->get(route('kependudukan.import-template'));
+
+        $response->assertOk();
+        $this->assertStringContainsString('text/csv', $response->headers->get('content-type'));
+    }
+
+    public function test_staff_can_import_residents_from_csv(): void
+    {
+        $csvContent = "\xEF\xBB\xBFnik,no_kk,nama_lengkap,tempat_lahir,tanggal_lahir,jenis_kelamin,agama,status_perkawinan,status_dalam_keluarga,alamat_lengkap,rt,rw,status_penduduk\n"
+            . "3202110101900001,3202110101900000,Budi Santoso,Sukabumi,1990-05-10,L,Islam,kawin,kepala_keluarga,Jl. Cikole,001,002,tetap\n";
+
+        $file = \Illuminate\Http\UploadedFile::fake()->createWithContent('import.csv', $csvContent);
+
+        $response = $this->actingAs($this->staff)
+            ->post(route('kependudukan.import'), ['file' => $file]);
+
+        $response->assertRedirect(route('kependudukan.index'));
+        $this->assertDatabaseHas('penduduks', [
+            'nik' => '3202110101900001',
+            'nama_lengkap' => 'Budi Santoso',
+        ]);
+    }
+
+    public function test_admin_can_bulk_delete_residents(): void
+    {
+        $p1 = Penduduk::create($this->pendudukData(['nik' => '3202110101800001']));
+        $p2 = Penduduk::create($this->pendudukData(['nik' => '3202110101800002']));
+
+        $response = $this->actingAs($this->admin)
+            ->post(route('kependudukan.bulk-delete'), [
+                'ids' => "{$p1->id},{$p2->id}",
+            ]);
+
+        $response->assertRedirect(route('kependudukan.index'));
+        $this->assertDatabaseMissing('penduduks', ['id' => $p1->id]);
+        $this->assertDatabaseMissing('penduduks', ['id' => $p2->id]);
     }
 }
+

@@ -16,6 +16,25 @@ class PendudukStoreRequest extends FormRequest
     }
 
     /**
+     * Prepare inputs before validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('nik')) {
+            $this->merge(['nik' => preg_replace('/[^0-9]/', '', (string) $this->nik)]);
+        }
+        if ($this->has('no_kk')) {
+            $this->merge(['no_kk' => preg_replace('/[^0-9]/', '', (string) $this->no_kk)]);
+        }
+        if ($this->has('rt')) {
+            $this->merge(['rt' => str_pad(preg_replace('/[^0-9]/', '', (string) $this->rt), 3, '0', STR_PAD_LEFT)]);
+        }
+        if ($this->has('rw')) {
+            $this->merge(['rw' => str_pad(preg_replace('/[^0-9]/', '', (string) $this->rw), 3, '0', STR_PAD_LEFT)]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
@@ -27,7 +46,7 @@ class PendudukStoreRequest extends FormRequest
             'no_kk' => ['required', 'string', 'digits:16'],
             'nama_lengkap' => ['required', 'string', 'min:3', 'max:255'],
             'tempat_lahir' => ['required', 'string', 'max:100'],
-            'tanggal_lahir' => ['required', 'date', 'before:today'],
+            'tanggal_lahir' => ['required', 'date', 'before_or_equal:today'],
             'jenis_kelamin' => ['required', 'in:L,P'],
             'agama' => ['required', 'string', 'max:50'],
             'pendidikan_terakhir' => ['nullable', 'string', 'max:100'],
@@ -43,6 +62,31 @@ class PendudukStoreRequest extends FormRequest
             'telepon' => ['nullable', 'string', 'max:20'],
             'sumber_data' => ['required', 'in:prodeskel,manual,migrasi_legacy'],
             'status_penduduk' => ['required', 'in:tetap,sementara,pindah,meninggal'],
+        ];
+    }
+
+    /**
+     * Custom validation messages.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'nik.required' => 'NIK wajib diisi.',
+            'nik.digits' => 'NIK harus tepat 16 digit angka numerik.',
+            'nik.unique' => 'NIK ini sudah terdaftar dalam Buku Induk Kependudukan.',
+            'no_kk.required' => 'Nomor KK wajib diisi.',
+            'no_kk.digits' => 'Nomor KK harus tepat 16 digit angka numerik.',
+            'nama_lengkap.required' => 'Nama lengkap wajib diisi.',
+            'tempat_lahir.required' => 'Tempat lahir wajib diisi.',
+            'tanggal_lahir.required' => 'Tanggal lahir wajib diisi.',
+            'tanggal_lahir.before_or_equal' => 'Tanggal lahir tidak boleh melebihi hari ini.',
+            'jenis_kelamin.required' => 'Jenis kelamin wajib dipilih.',
+            'agama.required' => 'Agama wajib dipilih.',
+            'alamat_lengkap.required' => 'Alamat lengkap wajib diisi.',
+            'rt.required' => 'Nomor RT wajib diisi.',
+            'rw.required' => 'Nomor RW wajib diisi.',
         ];
     }
 
@@ -77,3 +121,4 @@ class PendudukStoreRequest extends FormRequest
         ];
     }
 }
+

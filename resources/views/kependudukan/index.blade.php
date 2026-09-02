@@ -1,327 +1,558 @@
 <x-layouts.app>
     <x-slot:title>Buku Induk Penduduk</x-slot:title>
 
-    <!-- Top Workspace Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <div class="flex items-center gap-2 mb-1">
-                <a href="{{ route('dashboard') }}" class="text-xs text-[#64748b] hover:text-[#10b981]">Dashboard</a>
-                <span class="text-xs text-[#64748b]">/</span>
-                <span class="text-xs font-bold text-[#0c3837]">Kependudukan</span>
-                <span class="text-xs text-[#64748b]">/</span>
-                <span class="text-xs font-bold text-[#0c3837]">Buku Induk</span>
-            </div>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-[#0c3837] tracking-tight">Buku Induk Kependudukan Desa</h1>
-            <p class="text-xs sm:text-sm text-[#64748b] mt-0.5">Master data warga terpadu dengan perlindungan privasi data sensitif meja pelayanan</p>
-        </div>
-
-        <div class="flex items-center gap-3">
-            @can('kependudukan.view')
-            <a href="{{ route('kependudukan.duplicates') }}" 
-               id="btn-nik-scanner"
-               class="px-4 py-2.5 bg-white hover:bg-[#e2f0ed] text-[#0c3837] border border-[#e1ede8] text-xs font-bold rounded-full shadow-xs flex items-center gap-2 transition-all cursor-pointer">
-                <svg class="w-4 h-4 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                </svg>
-                <span>Cek NIK Ganda</span>
-            </a>
-            @endcan
-
-            @can('kependudukan.create')
-            <a href="{{ route('kependudukan.create') }}" 
-               class="px-5 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-full shadow-xs flex items-center gap-2 transition-all cursor-pointer">
-                <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
-                </svg>
-                <span>Daftarkan Warga Baru</span>
-            </a>
-            @endcan
-        </div>
-    </div>
-
-    <!-- 1. Statistics Cards -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <x-card class="p-4 flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-[#e2f0ed] text-[#114443] flex items-center justify-center font-bold text-lg shadow-inner">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-            </div>
+    <div x-data="{
+        selected: [],
+        selectAll: false,
+        importModal: false,
+        deleteModal: false,
+        allIds: {{ json_encode($penduduks->pluck('id')->toArray()) }},
+        toggleAll() {
+            if (this.selectAll) {
+                this.selected = [...this.allIds];
+            } else {
+                this.selected = [];
+            }
+        },
+        updateSelectAll() {
+            this.selectAll = this.allIds.length > 0 && this.allIds.every(id => this.selected.includes(id));
+        },
+        exportUrl(type) {
+            let url = '{{ url('/kependudukan') }}/export-' + type;
+            let params = new URLSearchParams(window.location.search);
+            if (this.selected.length > 0) {
+                params.set('ids', this.selected.join(','));
+            }
+            let queryString = params.toString();
+            return queryString ? url + '?' + queryString : url;
+        },
+        triggerPrint() {
+            window.print();
+        }
+    }">
+        <!-- Top Workspace Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-                <span class="text-[11px] text-[#64748b] font-medium block">Total Jiwa</span>
-                <span class="text-xl font-extrabold text-[#0c3837]">{{ number_format($stats['total']) }}</span>
-            </div>
-        </x-card>
-
-        <x-card class="p-4 flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-[#e2f48f] text-[#0c3837] flex items-center justify-center font-bold text-lg shadow-inner">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-            </div>
-            <div>
-                <span class="text-[11px] text-[#64748b] font-medium block">Laki-Laki / Perempuan</span>
-                <span class="text-xl font-extrabold text-[#0c3837]">{{ number_format($stats['laki_laki']) }} <span class="text-xs font-normal text-slate-400">/</span> {{ number_format($stats['perempuan']) }}</span>
-            </div>
-        </x-card>
-
-        <x-card class="p-4 flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-[#0c3837] text-[#d4ed31] flex items-center justify-center font-bold text-lg shadow-inner">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-            </div>
-            <div>
-                <span class="text-[11px] text-[#64748b] font-medium block">Kepala Keluarga</span>
-                <span class="text-xl font-extrabold text-[#0c3837]">{{ number_format($stats['kk']) }}</span>
-            </div>
-        </x-card>
-
-        <x-card class="p-4 flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-[#edf5f2] text-[#4fa394] flex items-center justify-center font-bold text-lg shadow-inner">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-            </div>
-            <div>
-                <span class="text-[11px] text-[#64748b] font-medium block">Pindah / Meninggal</span>
-                <span class="text-xl font-extrabold text-[#0c3837]">{{ number_format($stats['pindah']) }} <span class="text-xs font-normal text-slate-400">/</span> {{ number_format($stats['meninggal']) }}</span>
-            </div>
-        </x-card>
-    </div>
-
-    <!-- 2. Main Data Section -->
-    <x-card class="space-y-4">
-        <!-- Header Controls: Privacy Mode Toggle + Search & Filters -->
-        <div class="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between pb-4 border-b border-[#e1ede8]" 
-             x-data="{ 
-                 privacy: sessionStorage.getItem('digides_privacy_mode') === 'true',
-                 togglePrivacy() {
-                     this.privacy = !this.privacy;
-                     sessionStorage.setItem('digides_privacy_mode', this.privacy);
-                     document.querySelectorAll('.nik-field').forEach(el => {
-                         el.textContent = this.privacy ? el.dataset.masked : el.dataset.plain;
-                     });
-                 },
-                 init() {
-                     if (this.privacy) {
-                         document.querySelectorAll('.nik-field').forEach(el => {
-                             el.textContent = el.dataset.masked;
-                         });
-                     }
-                 }
-             }">
-            
-            <!-- Privacy Toggle Switch -->
-            <div class="flex items-center gap-3 bg-[#f7faf9] px-4 py-2 rounded-2xl border border-[#e1ede8]">
-                <button type="button"
-                        id="privacy-toggle"
-                        @click="togglePrivacy()" 
-                        :class="privacy ? 'bg-[#10b981]' : 'bg-slate-300'"
-                        class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
-                        role="switch"
-                        :aria-checked="privacy"
-                        title="Klik untuk aktifkan/nonaktifkan Privacy Mode meja pelayanan">
-                    <span :class="privacy ? 'translate-x-5' : 'translate-x-0'" 
-                          class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
-                </button>
-                <div class="flex flex-col">
-                    <span class="text-xs font-bold text-[#0c3837]" x-text="privacy ? 'Privacy Mode Aktif' : 'Mode Terbuka'"></span>
-                    <span class="text-[10px] text-[#64748b]" x-text="privacy ? 'NIK disamarkan saat menghadap warga' : 'NIK terlihat lengkap'"></span>
+                <div class="flex items-center gap-2 mb-1">
+                    <a href="{{ route('dashboard') }}" class="text-xs text-[#64748b] hover:text-[#10b981]">Dashboard</a>
+                    <span class="text-xs text-[#64748b]">/</span>
+                    <span class="text-xs font-bold text-[#0c3837]">Kependudukan</span>
+                    <span class="text-xs text-[#64748b]">/</span>
+                    <span class="text-xs font-bold text-[#0c3837]">Buku Induk</span>
                 </div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-[#0c3837] tracking-tight">Buku Induk Kependudukan Desa</h1>
+                <p class="text-xs sm:text-sm text-[#64748b] mt-0.5">Master data warga terpadu dengan perlindungan privasi data sensitif meja pelayanan</p>
             </div>
 
-            <!-- Search & Filters -->
-            <form method="GET" action="{{ route('kependudukan.index') }}" class="flex flex-wrap gap-2.5 items-center w-full lg:w-auto" id="filter-form">
-                <div class="relative w-full sm:w-56">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, NIK, KK..." 
-                            id="search-penduduk"
-                            class="w-full pl-9 pr-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs focus:bg-white focus:outline-none focus:border-[#10b981] transition-all">
-                    <svg class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            <div class="flex items-center gap-3">
+                @can('kependudukan.view')
+                <a href="{{ route('kependudukan.duplicates') }}" 
+                   id="btn-nik-scanner"
+                   class="px-4 py-2.5 bg-white hover:bg-[#e2f0ed] text-[#0c3837] border border-[#e1ede8] text-xs font-bold rounded-full shadow-xs flex items-center gap-2 transition-all cursor-pointer">
+                    <svg class="w-4 h-4 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                     </svg>
+                    <span>Cek NIK Ganda</span>
+                </a>
+                @endcan
+
+                @can('kependudukan.create')
+                <a href="{{ route('kependudukan.create') }}" 
+                   class="px-5 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-full shadow-xs flex items-center gap-2 transition-all cursor-pointer">
+                    <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    <span>Daftarkan Warga Baru</span>
+                </a>
+                @endcan
+            </div>
+        </div>
+
+        <!-- 1. Statistics Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+            <x-card class="p-4 flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-[#e2f0ed] text-[#114443] flex items-center justify-center font-bold text-lg shadow-inner">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                </div>
+                <div>
+                    <span class="text-[11px] text-[#64748b] font-medium block">Total Jiwa</span>
+                    <span class="text-xl font-extrabold text-[#0c3837]">{{ number_format($stats['total']) }}</span>
+                </div>
+            </x-card>
+
+            <x-card class="p-4 flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-[#e2f48f] text-[#0c3837] flex items-center justify-center font-bold text-lg shadow-inner">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                </div>
+                <div>
+                    <span class="text-[11px] text-[#64748b] font-medium block">Laki-Laki / Perempuan</span>
+                    <span class="text-xl font-extrabold text-[#0c3837]">{{ number_format($stats['laki_laki']) }} <span class="text-xs font-normal text-slate-400">/</span> {{ number_format($stats['perempuan']) }}</span>
+                </div>
+            </x-card>
+
+            <x-card class="p-4 flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-[#0c3837] text-[#d4ed31] flex items-center justify-center font-bold text-lg shadow-inner">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                </div>
+                <div>
+                    <span class="text-[11px] text-[#64748b] font-medium block">Kepala Keluarga</span>
+                    <span class="text-xl font-extrabold text-[#0c3837]">{{ number_format($stats['kk']) }}</span>
+                </div>
+            </x-card>
+
+            <x-card class="p-4 flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-[#edf5f2] text-[#4fa394] flex items-center justify-center font-bold text-lg shadow-inner">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                </div>
+                <div>
+                    <span class="text-[11px] text-[#64748b] font-medium block">Pindah / Meninggal</span>
+                    <span class="text-xl font-extrabold text-[#0c3837]">{{ number_format($stats['pindah']) }} <span class="text-xs font-normal text-slate-400">/</span> {{ number_format($stats['meninggal']) }}</span>
+                </div>
+            </x-card>
+        </div>
+
+        <!-- 2. Main Data Section -->
+        <x-card class="space-y-4 mt-6">
+            <!-- Header Controls: Privacy Mode Toggle + Search & Filters -->
+            <div class="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between pb-4 border-b border-[#e1ede8]" 
+                 x-data="{ 
+                     privacy: sessionStorage.getItem('digides_privacy_mode') === 'true',
+                     togglePrivacy() {
+                         this.privacy = !this.privacy;
+                         sessionStorage.setItem('digides_privacy_mode', this.privacy);
+                         document.querySelectorAll('.nik-field').forEach(el => {
+                             el.textContent = this.privacy ? el.dataset.masked : el.dataset.plain;
+                         });
+                     },
+                     init() {
+                         if (this.privacy) {
+                             document.querySelectorAll('.nik-field').forEach(el => {
+                                 el.textContent = el.dataset.masked;
+                             });
+                         }
+                     }
+                 }">
+                
+                <!-- Privacy Toggle Switch -->
+                <div class="flex items-center gap-3 bg-[#f7faf9] px-4 py-2 rounded-2xl border border-[#e1ede8]">
+                    <button type="button"
+                            id="privacy-toggle"
+                            @click="togglePrivacy()" 
+                            :class="privacy ? 'bg-[#10b981]' : 'bg-slate-300'"
+                            class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
+                            role="switch"
+                            :aria-checked="privacy"
+                            title="Klik untuk aktifkan/nonaktifkan Privacy Mode meja pelayanan">
+                        <span :class="privacy ? 'translate-x-5' : 'translate-x-0'" 
+                              class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+                    </button>
+                    <div class="flex flex-col">
+                        <span class="text-xs font-bold text-[#0c3837]" x-text="privacy ? 'Privacy Mode Aktif' : 'Mode Terbuka'"></span>
+                        <span class="text-[10px] text-[#64748b]" x-text="privacy ? 'NIK disamarkan saat menghadap warga' : 'NIK terlihat lengkap'"></span>
+                    </div>
                 </div>
 
-                <select name="dusun" class="px-3 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:outline-none focus:border-[#10b981]" id="filter-dusun" onchange="this.form.submit()">
-                    <option value="">Semua Dusun</option>
-                    @foreach($dusunList as $dusun)
-                        <option value="{{ $dusun }}" @selected(request('dusun') === $dusun)>{{ $dusun }}</option>
-                    @endforeach
-                </select>
+                <!-- Search & Filters -->
+                <form method="GET" action="{{ route('kependudukan.index') }}" class="flex flex-wrap gap-2.5 items-center w-full lg:w-auto" id="filter-form">
+                    <div class="relative w-full sm:w-56">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, NIK, KK..." 
+                                id="search-penduduk"
+                                class="w-full pl-9 pr-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs focus:bg-white focus:outline-none focus:border-[#10b981] transition-all">
+                        <svg class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
 
-                <select name="jenis_kelamin" class="px-3 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:outline-none focus:border-[#10b981]" id="filter-jk" onchange="this.form.submit()">
-                    <option value="">Semua Gender</option>
-                    <option value="L" @selected(request('jenis_kelamin') === 'L')>Laki-Laki</option>
-                    <option value="P" @selected(request('jenis_kelamin') === 'P')>Perempuan</option>
-                </select>
+                    <select name="dusun" class="px-3 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:outline-none focus:border-[#10b981]" id="filter-dusun" onchange="this.form.submit()">
+                        <option value="">Semua Dusun</option>
+                        @foreach($dusunList as $dusun)
+                            <option value="{{ $dusun }}" @selected(request('dusun') === $dusun)>{{ $dusun }}</option>
+                        @endforeach
+                    </select>
 
-                <select name="kategori_usia" class="px-3 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:outline-none focus:border-[#10b981]" id="filter-usia" onchange="this.form.submit()">
-                    <option value="">Semua Usia</option>
-                    <option value="balita" @selected(request('kategori_usia') === 'balita')>Balita (≤5 th)</option>
-                    <option value="sekolah" @selected(request('kategori_usia') === 'sekolah')>Usia Sekolah (6-18 th)</option>
-                    <option value="produktif" @selected(request('kategori_usia') === 'produktif')>Produktif (19-59 th)</option>
-                    <option value="lansia" @selected(request('kategori_usia') === 'lansia')>Lansia (≥60 th)</option>
-                </select>
+                    <select name="jenis_kelamin" class="px-3 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:outline-none focus:border-[#10b981]" id="filter-jk" onchange="this.form.submit()">
+                        <option value="">Semua Gender</option>
+                        <option value="L" @selected(request('jenis_kelamin') === 'L')>Laki-Laki</option>
+                        <option value="P" @selected(request('jenis_kelamin') === 'P')>Perempuan</option>
+                    </select>
 
-                <select name="status_penduduk" class="px-3 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:outline-none focus:border-[#10b981]" id="filter-status" onchange="this.form.submit()">
-                    <option value="">Semua Status</option>
-                    <option value="tetap" @selected(request('status_penduduk') === 'tetap')>Tetap</option>
-                    <option value="sementara" @selected(request('status_penduduk') === 'sementara')>Sementara</option>
-                    <option value="pindah" @selected(request('status_penduduk') === 'pindah')>Pindah</option>
-                    <option value="meninggal" @selected(request('status_penduduk') === 'meninggal')>Meninggal</option>
-                </select>
+                    <select name="kategori_usia" class="px-3 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:outline-none focus:border-[#10b981]" id="filter-usia" onchange="this.form.submit()">
+                        <option value="">Semua Usia</option>
+                        <option value="balita" @selected(request('kategori_usia') === 'balita')>Balita (≤5 th)</option>
+                        <option value="sekolah" @selected(request('kategori_usia') === 'sekolah')>Usia Sekolah (6-18 th)</option>
+                        <option value="produktif" @selected(request('kategori_usia') === 'produktif')>Produktif (19-59 th)</option>
+                        <option value="lansia" @selected(request('kategori_usia') === 'lansia')>Lansia (≥60 th)</option>
+                    </select>
 
-                <button type="submit" class="px-4 py-2 bg-[#114443] hover:bg-[#0c3837] text-white rounded-full text-xs font-bold transition-all cursor-pointer" id="btn-filter-apply">
-                    Terapkan
+                    <select name="status_penduduk" class="px-3 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:outline-none focus:border-[#10b981]" id="filter-status" onchange="this.form.submit()">
+                        <option value="">Semua Status</option>
+                        <option value="tetap" @selected(request('status_penduduk') === 'tetap')>Tetap</option>
+                        <option value="sementara" @selected(request('status_penduduk') === 'sementara')>Sementara</option>
+                        <option value="pindah" @selected(request('status_penduduk') === 'pindah')>Pindah</option>
+                        <option value="meninggal" @selected(request('status_penduduk') === 'meninggal')>Meninggal</option>
+                    </select>
+
+                    <button type="submit" class="px-4 py-2 bg-[#114443] hover:bg-[#0c3837] text-white rounded-full text-xs font-bold transition-all cursor-pointer" id="btn-filter-apply">
+                        Terapkan
+                    </button>
+
+                    @if(request()->anyFilled(['search','dusun','jenis_kelamin','kategori_usia','status_penduduk']))
+                        <a href="{{ route('kependudukan.index') }}" class="px-2.5 py-2 text-xs text-rose-600 hover:underline font-semibold" id="btn-filter-reset">
+                            Reset
+                        </a>
+                    @endif
+                </form>
+            </div>
+
+            <!-- ============================================================= -->
+            <!-- EXPORT / IMPORT / BULK ACTIONS TOOLBAR (Reference Layout)     -->
+            <!-- ============================================================= -->
+            <!-- ============================================================= -->
+            <!-- EXPORT / IMPORT / BULK ACTIONS TOOLBAR (Reference Layout)     -->
+            <!-- ============================================================= -->
+            <div class="flex flex-wrap items-center gap-2 py-2 px-1">
+                <!-- Selected Counter -->
+                <span class="text-xs font-semibold text-[#64748b] mr-1" x-text="selected.length + ' dipilih'"></span>
+
+                <!-- 1. Excel Export -->
+                <a :href="exportUrl('excel')" 
+                   id="btn-export-excel"
+                   title="Ekspor data ke Microsoft Excel"
+                   class="px-3 py-1.5 bg-white hover:bg-[#f0f7f5] text-[#0c3837] border border-[#e1ede8] rounded-xl text-xs font-bold shadow-2xs flex items-center gap-1.5 transition-all hover:border-[#10b981]">
+                    <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm10.5-8.5l-2 3.5 2 3.5h-1.6l-1.2-2.3-1.2 2.3H8.9l2-3.5-2-3.5h1.6l1.2 2.3 1.2-2.3h1.6z"/>
+                    </svg>
+                    <span>Excel</span>
+                </a>
+
+                <!-- 2. PDF Export -->
+                <a :href="exportUrl('pdf')" 
+                   target="_blank"
+                   id="btn-export-pdf"
+                   title="Cetak & Unduh Buku Induk ke PDF"
+                   class="px-3 py-1.5 bg-white hover:bg-[#f0f7f5] text-[#0c3837] border border-[#e1ede8] rounded-xl text-xs font-bold shadow-2xs flex items-center gap-1.5 transition-all hover:border-[#10b981]">
+                    <svg class="w-3.5 h-3.5 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                    <span>PDF</span>
+                </a>
+
+                <!-- 3. CSV Export -->
+                <a :href="exportUrl('csv')" 
+                   id="btn-export-csv"
+                   title="Ekspor data format CSV"
+                   class="px-3 py-1.5 bg-white hover:bg-[#f0f7f5] text-[#0c3837] border border-[#e1ede8] rounded-xl text-xs font-bold shadow-2xs flex items-center gap-1.5 transition-all hover:border-[#10b981]">
+                    <span>CSV</span>
+                </a>
+
+                <!-- 4. Cetak Langsung -->
+                <button type="button" 
+                        @click="triggerPrint()"
+                        id="btn-print"
+                        title="Cetak tampilan dokumen langsung"
+                        class="px-3 py-1.5 bg-white hover:bg-[#f0f7f5] text-[#0c3837] border border-[#e1ede8] rounded-xl text-xs font-bold shadow-2xs flex items-center gap-1.5 transition-all hover:border-[#10b981] cursor-pointer">
+                    <svg class="w-3.5 h-3.5 text-slate-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                    </svg>
+                    <span>Cetak</span>
                 </button>
 
-                @if(request()->anyFilled(['search','dusun','jenis_kelamin','kategori_usia','status_penduduk']))
-                    <a href="{{ route('kependudukan.index') }}" class="px-2.5 py-2 text-xs text-rose-600 hover:underline font-semibold" id="btn-filter-reset">
-                        Reset
-                    </a>
-                @endif
-            </form>
-        </div>
+                <!-- 5. Hapus Terpilih -->
+                @can('kependudukan.delete')
+                <button type="button" 
+                        @click="if (selected.length > 0) deleteModal = true"
+                        :disabled="selected.length === 0"
+                        :class="selected.length > 0 ? 'text-rose-600 border-rose-200 hover:bg-rose-50 cursor-pointer shadow-2xs' : 'text-slate-300 border-slate-200 cursor-not-allowed opacity-60'"
+                        id="btn-bulk-delete"
+                        title="Hapus seluruh warga yang dicentang"
+                        class="px-3 py-1.5 bg-white border rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all">
+                    <span>Hapus Terpilih</span>
+                </button>
+                @endcan
 
-        <!-- Residents Table -->
-        <div class="overflow-x-auto rounded-2xl border border-[#e1ede8]">
-            <table class="w-full text-left text-xs" id="table-penduduk">
-                <thead class="bg-[#f7faf9] text-[#64748b] font-bold uppercase border-b border-[#e1ede8]">
-                    <tr>
-                        <th class="py-3.5 px-4 w-12 text-center">No</th>
-                        <th class="py-3.5 px-4">NIK (Nomor Induk)</th>
-                        <th class="py-3.5 px-4">Nama Lengkap & Profil</th>
-                        <th class="py-3.5 px-4">Tempat / Tgl Lahir</th>
-                        <th class="py-3.5 px-4">Dusun / RT-RW</th>
-                        <th class="py-3.5 px-4">Status</th>
-                        <th class="py-3.5 px-4">Sumber Data</th>
-                        <th class="py-3.5 px-4 text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-[#e1ede8]">
-                    @forelse($penduduks as $index => $penduduk)
-                    <tr class="hover:bg-[#f7faf9] transition-colors">
-                        <td class="py-3.5 px-4 text-center text-[#64748b] font-medium">
-                            {{ $penduduks->firstItem() + $index }}
-                        </td>
+                <!-- 6. Impor Data -->
+                @can('kependudukan.create')
+                <button type="button" 
+                        @click="importModal = true"
+                        id="btn-import-modal"
+                        title="Impor data warga dari berkas Excel atau CSV"
+                        class="px-3 py-1.5 bg-white hover:bg-[#e2f0ed] text-[#0c3837] border border-[#e1ede8] rounded-xl text-xs font-bold shadow-2xs flex items-center gap-1.5 transition-all hover:border-[#10b981] cursor-pointer">
+                    <svg class="w-3.5 h-3.5 text-[#114443] shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+                    </svg>
+                    <span>Impor</span>
+                </button>
+                @endcan
+            </div>
 
-                        <!-- NIK Field (with masking attributes) -->
-                        <td class="py-3.5 px-4 whitespace-nowrap">
-                            <span class="nik-field font-mono font-bold text-[#0c3837] tracking-wider text-xs bg-[#f0f7f5] px-2.5 py-1 rounded-lg border border-[#e1ede8]"
-                                  data-plain="{{ $penduduk->nik }}"
-                                  data-masked="{{ $penduduk->masked_nik }}">
-                                {{ $penduduk->nik }}
-                            </span>
-                            <span class="text-[10px] text-[#64748b] block mt-0.5">KK: {{ $penduduk->no_kk }}</span>
-                        </td>
+            <!-- Residents Table with Checkbox Selection -->
+            <div class="overflow-x-auto rounded-2xl border border-[#e1ede8]">
+                <table class="w-full text-left text-xs" id="table-penduduk">
+                    <thead class="bg-[#f7faf9] text-[#64748b] font-bold uppercase border-b border-[#e1ede8]">
+                        <tr>
+                            <th class="py-3.5 px-3 w-10 text-center">
+                                <input type="checkbox" 
+                                       x-model="selectAll" 
+                                       @change="toggleAll()" 
+                                       id="checkbox-select-all"
+                                       class="rounded border-[#cbd5e1] text-[#114443] focus:ring-[#10b981] w-4 h-4 cursor-pointer">
+                            </th>
+                            <th class="py-3.5 px-3 w-12 text-center">No</th>
+                            <th class="py-3.5 px-4">NIK (Nomor Induk)</th>
+                            <th class="py-3.5 px-4">Nama Lengkap & Profil</th>
+                            <th class="py-3.5 px-4">Tempat / Tgl Lahir</th>
+                            <th class="py-3.5 px-4">Dusun / RT-RW</th>
+                            <th class="py-3.5 px-4">Status</th>
+                            <th class="py-3.5 px-4">Sumber Data</th>
+                            <th class="py-3.5 px-4 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#e1ede8]">
+                        @forelse($penduduks as $index => $penduduk)
+                        <tr :class="selected.includes({{ $penduduk->id }}) ? 'bg-[#edf5f2]' : 'hover:bg-[#f7faf9]'" class="transition-colors">
+                            <!-- Checkbox per Row -->
+                            <td class="py-3.5 px-3 text-center">
+                                <input type="checkbox" 
+                                       :value="{{ $penduduk->id }}" 
+                                       x-model="selected" 
+                                       @change="updateSelectAll()"
+                                       id="check-penduduk-{{ $penduduk->id }}"
+                                       class="rounded border-[#cbd5e1] text-[#114443] focus:ring-[#10b981] w-4 h-4 cursor-pointer">
+                            </td>
 
-                        <!-- Name & Basic Info -->
-                        <td class="py-3.5 px-4 whitespace-nowrap">
-                            <a href="{{ route('kependudukan.show', $penduduk) }}" class="font-bold text-[#0c3837] hover:text-[#10b981] block text-sm transition-colors">
-                                {{ $penduduk->nama_lengkap }}
-                            </a>
-                            <div class="text-[11px] text-[#64748b] flex items-center gap-1.5 mt-0.5">
-                                <span>{{ $penduduk->jenis_kelamin_label }}</span>
-                                <span>•</span>
-                                <span>{{ $penduduk->umur }} th ({{ $penduduk->kategori_usia }})</span>
-                                <span>•</span>
-                                <span>{{ $penduduk->agama }}</span>
-                            </div>
-                        </td>
+                            <td class="py-3.5 px-3 text-center text-[#64748b] font-medium">
+                                {{ $penduduks->firstItem() + $index }}
+                            </td>
 
-                        <!-- Birth Info -->
-                        <td class="py-3.5 px-4 whitespace-nowrap">
-                            <span class="font-medium text-[#0f172a] block">{{ $penduduk->tempat_lahir }}</span>
-                            <span class="text-[11px] text-[#64748b]">{{ $penduduk->tanggal_lahir->format('d M Y') }}</span>
-                        </td>
+                            <!-- NIK Field (with masking attributes) -->
+                            <td class="py-3.5 px-4 whitespace-nowrap">
+                                <span class="nik-field font-mono font-bold text-[#0c3837] tracking-wider text-xs bg-[#f0f7f5] px-2.5 py-1 rounded-lg border border-[#e1ede8]"
+                                      data-plain="{{ $penduduk->nik }}"
+                                      data-masked="{{ $penduduk->masked_nik }}">
+                                    {{ $penduduk->nik }}
+                                </span>
+                                <span class="text-[10px] text-[#64748b] block mt-0.5">KK: {{ $penduduk->no_kk }}</span>
+                            </td>
 
-                        <!-- Address Info -->
-                        <td class="py-3.5 px-4 whitespace-nowrap">
-                            <span class="font-medium text-[#0f172a] block">{{ $penduduk->dusun ?? 'Pusat Desa' }}</span>
-                            <span class="text-[11px] text-[#64748b]">RT {{ $penduduk->rt }} / RW {{ $penduduk->rw }}</span>
-                        </td>
-
-                        <!-- Status Badge -->
-                        <td class="py-3.5 px-4 whitespace-nowrap">
-                            @php
-                                $statusVariant = match($penduduk->status_penduduk) {
-                                    'tetap' => 'emerald',
-                                    'sementara' => 'amber',
-                                    'pindah' => 'slate',
-                                    'meninggal' => 'rose',
-                                    default => 'slate'
-                                };
-                            @endphp
-                            <x-badge :variant="$statusVariant">
-                                {{ ucfirst($penduduk->status_penduduk) }}
-                            </x-badge>
-                        </td>
-
-                        <!-- Data Source -->
-                        <td class="py-3.5 px-4 whitespace-nowrap">
-                            <span class="text-[11px] font-medium text-[#64748b] inline-flex items-center gap-1 bg-[#f7faf9] px-2 py-0.5 rounded-md border border-[#e1ede8]">
-                                {{ match($penduduk->sumber_data) {
-                                    'prodeskel' => 'Prodeskel',
-                                    'manual' => 'Input Staff',
-                                    'migrasi_legacy' => 'Migrasi DB',
-                                    default => $penduduk->sumber_data
-                                } }}
-                            </span>
-                        </td>
-
-                        <!-- Actions -->
-                        <td class="py-3.5 px-4 text-center whitespace-nowrap">
-                            <div class="flex items-center justify-center gap-1.5">
-                                <a href="{{ route('kependudukan.show', $penduduk) }}" 
-                                   id="btn-show-{{ $penduduk->id }}"
-                                   class="p-2 text-[#114443] hover:bg-[#e2f0ed] rounded-xl transition-colors" 
-                                   title="Lihat Detail & Berkas">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
+                            <!-- Name & Basic Info -->
+                            <td class="py-3.5 px-4 whitespace-nowrap">
+                                <a href="{{ route('kependudukan.show', $penduduk) }}" class="font-bold text-[#0c3837] hover:text-[#10b981] block text-sm transition-colors">
+                                    {{ $penduduk->nama_lengkap }}
                                 </a>
+                                <div class="text-[11px] text-[#64748b] flex items-center gap-1.5 mt-0.5">
+                                    <span>{{ $penduduk->jenis_kelamin_label }}</span>
+                                    <span>•</span>
+                                    <span>{{ $penduduk->umur }} th ({{ $penduduk->kategori_usia }})</span>
+                                    <span>•</span>
+                                    <span>{{ $penduduk->agama }}</span>
+                                </div>
+                            </td>
 
-                                @can('kependudukan.edit')
-                                <a href="{{ route('kependudukan.edit', $penduduk) }}" 
-                                   id="btn-edit-{{ $penduduk->id }}"
-                                   class="p-2 text-[#114443] hover:bg-[#e2f0ed] rounded-xl transition-colors" 
-                                   title="Edit Data Warga">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                    </svg>
-                                </a>
-                                @endcan
+                            <!-- Birth Info -->
+                            <td class="py-3.5 px-4 whitespace-nowrap">
+                                <span class="font-medium text-[#0f172a] block">{{ $penduduk->tempat_lahir }}</span>
+                                <span class="text-[11px] text-[#64748b]">{{ $penduduk->tanggal_lahir?->format('d M Y') }}</span>
+                            </td>
 
-                                @can('kependudukan.delete')
-                                <form method="POST" action="{{ route('kependudukan.destroy', $penduduk) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data warga {{ $penduduk->nama_lengkap }}?')" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            id="btn-delete-{{ $penduduk->id }}"
-                                            class="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer" 
-                                            title="Hapus Data">
+                            <!-- Address Info -->
+                            <td class="py-3.5 px-4 whitespace-nowrap">
+                                <span class="font-medium text-[#0f172a] block">{{ $penduduk->dusun ?? 'Pusat Desa' }}</span>
+                                <span class="text-[11px] text-[#64748b]">RT {{ $penduduk->rt }} / RW {{ $penduduk->rw }}</span>
+                            </td>
+
+                            <!-- Status Badge -->
+                            <td class="py-3.5 px-4 whitespace-nowrap">
+                                @php
+                                    $statusVariant = match($penduduk->status_penduduk) {
+                                        'tetap' => 'emerald',
+                                        'sementara' => 'amber',
+                                        'pindah' => 'slate',
+                                        'meninggal' => 'rose',
+                                        default => 'slate'
+                                    };
+                                @endphp
+                                <x-badge :variant="$statusVariant">
+                                    {{ ucfirst($penduduk->status_penduduk) }}
+                                </x-badge>
+                            </td>
+
+                            <!-- Data Source -->
+                            <td class="py-3.5 px-4 whitespace-nowrap">
+                                <span class="text-[11px] font-medium text-[#64748b] inline-flex items-center gap-1 bg-[#f7faf9] px-2 py-0.5 rounded-md border border-[#e1ede8]">
+                                    {{ match($penduduk->sumber_data) {
+                                        'prodeskel' => 'Prodeskel',
+                                        'manual' => 'Input Staff',
+                                        'migrasi_legacy' => 'Migrasi DB',
+                                        default => $penduduk->sumber_data
+                                    } }}
+                                </span>
+                            </td>
+
+                            <!-- Actions -->
+                            <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                                <div class="flex items-center justify-center gap-1.5">
+                                    <a href="{{ route('kependudukan.show', $penduduk) }}" 
+                                       id="btn-show-{{ $penduduk->id }}"
+                                       class="p-2 text-[#114443] hover:bg-[#e2f0ed] rounded-xl transition-colors" 
+                                       title="Lihat Detail & Berkas">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                         </svg>
-                                    </button>
-                                </form>
-                                @endcan
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="8" class="py-12 text-center text-[#64748b]">
-                            <svg class="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                            </svg>
-                            <span class="font-semibold block text-sm">Tidak ada data warga yang sesuai.</span>
-                            <span class="text-xs text-slate-400 mt-1">Coba sesuaikan kata kunci pencarian atau filter yang digunakan.</span>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                                    </a>
+
+                                    @can('kependudukan.edit')
+                                    <a href="{{ route('kependudukan.edit', $penduduk) }}" 
+                                       id="btn-edit-{{ $penduduk->id }}"
+                                       class="p-2 text-[#114443] hover:bg-[#e2f0ed] rounded-xl transition-colors" 
+                                       title="Edit Data Warga">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                    </a>
+                                    @endcan
+
+                                    @can('kependudukan.delete')
+                                    <form method="POST" action="{{ route('kependudukan.destroy', $penduduk) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data warga {{ $penduduk->nama_lengkap }}?')" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" 
+                                                id="btn-delete-{{ $penduduk->id }}"
+                                                class="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer" 
+                                                title="Hapus Data">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                    @endcan
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="9" class="py-12 text-center text-[#64748b]">
+                                <svg class="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                                <span class="font-semibold block text-sm">Tidak ada data warga yang sesuai.</span>
+                                <span class="text-xs text-slate-400 mt-1">Coba sesuaikan kata kunci pencarian atau filter yang digunakan.</span>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            @if($penduduks->hasPages())
+            <div class="pt-2">
+                {{ $penduduks->links() }}
+            </div>
+            @endif
+        </x-card>
+
+        <!-- ============================================================= -->
+        <!-- MODAL IMPOR DATA EXCEL / CSV                                  -->
+        <!-- ============================================================= -->
+        <div x-show="importModal" 
+             class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#082424]/60 backdrop-blur-xs" 
+             style="display: none;"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+            <div @click.away="importModal = false" class="bg-white rounded-3xl border border-[#e1ede8] p-6 shadow-2xl max-w-lg w-full space-y-4">
+                <div class="flex items-center justify-between border-b border-[#e1ede8] pb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-xl bg-[#e2f0ed] text-[#114443] flex items-center justify-center font-bold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                        </span>
+                        <div>
+                            <h3 class="text-base font-bold text-[#0c3837]">Impor Data Kependudukan</h3>
+                            <span class="text-[10px] text-[#64748b]">Unggah berkas Excel / CSV untuk input massal</span>
+                        </div>
+                    </div>
+                    <button type="button" @click="importModal = false" class="text-slate-400 hover:text-slate-600 font-bold text-lg cursor-pointer">✕</button>
+                </div>
+
+                <!-- Template Download Card -->
+                <div class="p-3.5 bg-[#f0f7f5] rounded-2xl border border-[#10b981]/30 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-[#0c3837] block">Gunakan Format Standar</span>
+                        <span class="text-[10px] text-[#64748b]">Unduh template agar kolom data sesuai otomatis</span>
+                    </div>
+                    <a href="{{ route('kependudukan.import-template') }}" 
+                       id="btn-download-template"
+                       class="px-3.5 py-1.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-xl shadow-2xs flex items-center gap-1.5 transition-all">
+                        <svg class="w-3.5 h-3.5 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        <span>Unduh Template</span>
+                    </a>
+                </div>
+
+                <!-- Upload Form -->
+                <form method="POST" action="{{ route('kependudukan.import') }}" enctype="multipart/form-data" id="form-import-penduduk" class="space-y-4">
+                    @csrf
+                    <div>
+                        <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5" for="import-file">
+                            Pilih Berkas (.csv, .xlsx, .xls) <span class="text-rose-500">*</span>
+                        </label>
+                        <input type="file" name="file" id="import-file" required accept=".csv,.xlsx,.xls,.txt"
+                               class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#e2f0ed] file:text-[#114443] hover:file:bg-[#d0e6e1] cursor-pointer">
+                        <span class="text-[10px] text-[#64748b] mt-1 block">Maksimal ukuran berkas: 10 MB. NIK 16 digit yang sudah ada akan diperbarui.</span>
+                    </div>
+
+                    <div class="flex justify-end gap-2 pt-2 border-t border-[#e1ede8]">
+                        <button type="button" @click="importModal = false" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-[#0f172a] text-xs font-bold rounded-full transition-all">
+                            Batal
+                        </button>
+                        <button type="submit" id="btn-submit-import" class="px-5 py-2 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-full shadow-xs transition-all cursor-pointer flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                            <span>Mulai Impor Data</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <!-- Pagination -->
-        @if($penduduks->hasPages())
-        <div class="pt-2">
-            {{ $penduduks->links() }}
+        <!-- ============================================================= -->
+        <!-- MODAL KONFIRMASI HAPUS TERPILIH                               -->
+        <!-- ============================================================= -->
+        <div x-show="deleteModal" 
+             class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#082424]/60 backdrop-blur-xs" 
+             style="display: none;"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+            <div @click.away="deleteModal = false" class="bg-white rounded-3xl border border-[#e1ede8] p-6 shadow-2xl max-w-sm w-full space-y-4 text-center">
+                <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto text-xl font-bold">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-[#0c3837]">Hapus Data Terpilih?</h3>
+                    <p class="text-xs text-[#64748b] mt-1">
+                        Anda akan menghapus <span class="font-bold text-rose-600" x-text="selected.length"></span> data warga dari Buku Induk Kependudukan. Tindakan ini tidak dapat dibatalkan.
+                    </p>
+                </div>
+
+                <form method="POST" action="{{ route('kependudukan.bulk-delete') }}" id="form-bulk-delete">
+                    @csrf
+                    <input type="hidden" name="ids" :value="selected.join(',')">
+                    <div class="flex justify-center gap-2 pt-2">
+                        <button type="button" @click="deleteModal = false" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-[#0f172a] text-xs font-bold rounded-full transition-all">
+                            Batal
+                        </button>
+                        <button type="submit" id="btn-confirm-bulk-delete" class="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-full shadow-xs transition-all cursor-pointer">
+                            Ya, Hapus Sekarang
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-        @endif
-    </x-card>
+    </div>
 </x-layouts.app>

@@ -17,6 +17,25 @@ class PendudukUpdateRequest extends FormRequest
     }
 
     /**
+     * Prepare inputs before validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('nik')) {
+            $this->merge(['nik' => preg_replace('/[^0-9]/', '', (string) $this->nik)]);
+        }
+        if ($this->has('no_kk')) {
+            $this->merge(['no_kk' => preg_replace('/[^0-9]/', '', (string) $this->no_kk)]);
+        }
+        if ($this->has('rt')) {
+            $this->merge(['rt' => str_pad(preg_replace('/[^0-9]/', '', (string) $this->rt), 3, '0', STR_PAD_LEFT)]);
+        }
+        if ($this->has('rw')) {
+            $this->merge(['rw' => str_pad(preg_replace('/[^0-9]/', '', (string) $this->rw), 3, '0', STR_PAD_LEFT)]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
@@ -30,7 +49,7 @@ class PendudukUpdateRequest extends FormRequest
             'no_kk' => ['required', 'string', 'digits:16'],
             'nama_lengkap' => ['required', 'string', 'min:3', 'max:255'],
             'tempat_lahir' => ['required', 'string', 'max:100'],
-            'tanggal_lahir' => ['required', 'date', 'before:today'],
+            'tanggal_lahir' => ['required', 'date', 'before_or_equal:today'],
             'jenis_kelamin' => ['required', 'in:L,P'],
             'agama' => ['required', 'string', 'max:50'],
             'pendidikan_terakhir' => ['nullable', 'string', 'max:100'],
@@ -80,3 +99,4 @@ class PendudukUpdateRequest extends FormRequest
         ];
     }
 }
+

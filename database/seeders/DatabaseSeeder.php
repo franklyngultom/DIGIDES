@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             PendudukSeeder::class,
             KeuanganPembangunanSeeder::class,
             InstitutionSeeder::class,
+            ScheduleSeeder::class,
         ]);
     }
 }

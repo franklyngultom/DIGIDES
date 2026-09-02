@@ -30,6 +30,22 @@
     <form method="POST" action="{{ route('kependudukan.store') }}" id="form-penduduk-create" class="space-y-6">
         @csrf
 
+        @if ($errors->any())
+        <div class="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-rose-800 text-xs shadow-xs space-y-1">
+            <div class="flex items-center gap-2 font-bold text-rose-700">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span>Mohon periksa kembali formulir pendaftaran warga:</span>
+            </div>
+            <ul class="list-disc list-inside space-y-0.5 text-[11px] text-rose-600 pl-1">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Left Column: Identitas Utama Kependudukan -->
             <x-card class="space-y-4">
@@ -46,7 +62,7 @@
                             <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5" for="nik">
                                 NIK (16 Digit) <span class="text-rose-500">*</span>
                             </label>
-                            <input type="text" name="nik" id="nik" value="{{ old('nik') }}" maxlength="16" pattern="[0-9]{16}" placeholder="3202110000000001" required
+                            <input type="text" name="nik" id="nik" value="{{ old('nik') }}" maxlength="16" placeholder="3202110000000001" required
                                    class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs font-mono focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('nik') border-rose-500 @enderror">
                             @error('nik') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                         </div>
@@ -55,7 +71,7 @@
                             <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5" for="no_kk">
                                 Nomor Kartu Keluarga (16 Digit) <span class="text-rose-500">*</span>
                             </label>
-                            <input type="text" name="no_kk" id="no_kk" value="{{ old('no_kk') }}" maxlength="16" pattern="[0-9]{16}" placeholder="3202110000000000" required
+                            <input type="text" name="no_kk" id="no_kk" value="{{ old('no_kk') }}" maxlength="16" placeholder="3202110000000000" required
                                    class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs font-mono focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('no_kk') border-rose-500 @enderror">
                             @error('no_kk') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                         </div>
@@ -84,7 +100,7 @@
                             <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5" for="tanggal_lahir">
                                 Tanggal Lahir <span class="text-rose-500">*</span>
                             </label>
-                            <input type="date" name="tanggal_lahir" id="tanggal_lahir" value="{{ old('tanggal_lahir') }}" required
+                            <input type="date" name="tanggal_lahir" id="tanggal_lahir" value="{{ old('tanggal_lahir') }}" max="{{ date('Y-m-d') }}" required
                                    class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('tanggal_lahir') border-rose-500 @enderror">
                             @error('tanggal_lahir') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                         </div>
@@ -109,12 +125,13 @@
                                 Golongan Darah
                             </label>
                             <select name="golongan_darah" id="golongan_darah"
-                                    class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981] transition-all">
+                                    class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('golongan_darah') border-rose-500 @enderror">
                                 <option value="">Tidak Diketahui</option>
                                 @foreach(['A','B','AB','O','A+','A-','B+','B-','AB+','AB-','O+','O-'] as $gd)
                                     <option value="{{ $gd }}" @selected(old('golongan_darah') === $gd)>{{ $gd }}</option>
                                 @endforeach
                             </select>
+                            @error('golongan_darah') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
 
@@ -127,7 +144,7 @@
                                     class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('agama') border-rose-500 @enderror">
                                 <option value="">Pilih Agama...</option>
                                 @foreach(['Islam','Kristen Protestan','Kristen Katolik','Hindu','Budha','Konghucu'] as $ag)
-                                    <option value="{{ $ag }}" @selected(old('agama') === $ag)>{{ $ag }}</option>
+                                    <option value="{{ $ag }}" @selected(old('agama', 'Islam') === $ag)>{{ $ag }}</option>
                                 @endforeach
                             </select>
                             @error('agama') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
@@ -138,7 +155,8 @@
                                 Kewarganegaraan <span class="text-rose-500">*</span>
                             </label>
                             <input type="text" name="kewarganegaraan" id="kewarganegaraan" value="{{ old('kewarganegaraan', 'WNI') }}" required
-                                   class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs focus:bg-white focus:outline-none focus:border-[#10b981] transition-all">
+                                   class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('kewarganegaraan') border-rose-500 @enderror">
+                            @error('kewarganegaraan') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
 
@@ -148,12 +166,13 @@
                                 Status Perkawinan <span class="text-rose-500">*</span>
                             </label>
                             <select name="status_perkawinan" id="status_perkawinan" required
-                                    class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981] transition-all">
+                                    class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('status_perkawinan') border-rose-500 @enderror">
                                 <option value="belum_kawin" @selected(old('status_perkawinan') === 'belum_kawin')>Belum Kawin</option>
                                 <option value="kawin" @selected(old('status_perkawinan') === 'kawin')>Kawin</option>
                                 <option value="cerai_hidup" @selected(old('status_perkawinan') === 'cerai_hidup')>Cerai Hidup</option>
                                 <option value="cerai_mati" @selected(old('status_perkawinan') === 'cerai_mati')>Cerai Mati</option>
                             </select>
+                            @error('status_perkawinan') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                         </div>
 
                         <div>
@@ -161,13 +180,14 @@
                                 Status dalam Keluarga <span class="text-rose-500">*</span>
                             </label>
                             <select name="status_dalam_keluarga" id="status_dalam_keluarga" required
-                                    class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981] transition-all">
+                                    class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('status_dalam_keluarga') border-rose-500 @enderror">
                                 <option value="kepala_keluarga" @selected(old('status_dalam_keluarga') === 'kepala_keluarga')>Kepala Keluarga</option>
                                 <option value="istri" @selected(old('status_dalam_keluarga') === 'istri')>Istri</option>
                                 <option value="anak" @selected(old('status_dalam_keluarga') === 'anak')>Anak</option>
                                 <option value="famili_lain" @selected(old('status_dalam_keluarga') === 'famili_lain')>Famili Lain</option>
                                 <option value="lainnya" @selected(old('status_dalam_keluarga') === 'lainnya')>Lainnya</option>
                             </select>
+                            @error('status_dalam_keluarga') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
                 </div>
@@ -200,21 +220,24 @@
                                     RT <span class="text-rose-500">*</span>
                                 </label>
                                 <input type="text" name="rt" id="rt" value="{{ old('rt') }}" maxlength="3" placeholder="001" required
-                                       class="w-full px-3 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-center font-mono focus:bg-white focus:outline-none focus:border-[#10b981] transition-all">
+                                       class="w-full px-3 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-center font-mono focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('rt') border-rose-500 @enderror">
+                                @error('rt') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5" for="rw">
                                     RW <span class="text-rose-500">*</span>
                                 </label>
                                 <input type="text" name="rw" id="rw" value="{{ old('rw') }}" maxlength="3" placeholder="002" required
-                                       class="w-full px-3 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-center font-mono focus:bg-white focus:outline-none focus:border-[#10b981] transition-all">
+                                       class="w-full px-3 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-center font-mono focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('rw') border-rose-500 @enderror">
+                                @error('rw') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5" for="dusun">
                                     Dusun / Blok
                                 </label>
                                 <input type="text" name="dusun" id="dusun" value="{{ old('dusun') }}" placeholder="Cikole"
-                                       class="w-full px-3 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs focus:bg-white focus:outline-none focus:border-[#10b981] transition-all">
+                                       class="w-full px-3 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('dusun') border-rose-500 @enderror">
+                                @error('dusun') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                             </div>
                         </div>
 
@@ -223,7 +246,8 @@
                                 Nomor Kontak / WhatsApp
                             </label>
                             <input type="text" name="telepon" id="telepon" value="{{ old('telepon') }}" placeholder="0812XXXXXXXX"
-                                   class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs font-mono focus:bg-white focus:outline-none focus:border-[#10b981] transition-all">
+                                   class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs font-mono focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('telepon') border-rose-500 @enderror">
+                            @error('telepon') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
                 </x-card>
@@ -244,12 +268,13 @@
                                     Pendidikan Terakhir
                                 </label>
                                 <select name="pendidikan_terakhir" id="pendidikan_terakhir"
-                                        class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981] transition-all">
+                                        class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('pendidikan_terakhir') border-rose-500 @enderror">
                                     <option value="">Pilih Jenjang...</option>
                                     @foreach(['Tidak/Belum Sekolah','Belum Tamat SD','Tamat SD','SLTP/Sederajat','SLTA/Sederajat','Diploma I/II','Diploma III','Diploma IV/S1','S2','S3'] as $p)
                                         <option value="{{ $p }}" @selected(old('pendidikan_terakhir') === $p)>{{ $p }}</option>
                                     @endforeach
                                 </select>
+                                @error('pendidikan_terakhir') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
@@ -257,7 +282,8 @@
                                     Pekerjaan
                                 </label>
                                 <input type="text" name="pekerjaan" id="pekerjaan" value="{{ old('pekerjaan') }}" placeholder="Petani, Wiraswasta, PNS, dll."
-                                       class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs focus:bg-white focus:outline-none focus:border-[#10b981] transition-all">
+                                       class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('pekerjaan') border-rose-500 @enderror">
+                                @error('pekerjaan') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                             </div>
                         </div>
 
@@ -267,11 +293,12 @@
                                     Sumber Asal Data <span class="text-rose-500">*</span>
                                 </label>
                                 <select name="sumber_data" id="sumber_data" required
-                                        class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981] transition-all">
+                                        class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('sumber_data') border-rose-500 @enderror">
                                     <option value="manual" @selected(old('sumber_data','manual') === 'manual')>Input Manual Staff</option>
                                     <option value="prodeskel" @selected(old('sumber_data') === 'prodeskel')>Prodeskel Kemendagri</option>
                                     <option value="migrasi_legacy" @selected(old('sumber_data') === 'migrasi_legacy')>Migrasi DB Legacy</option>
                                 </select>
+                                @error('sumber_data') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
@@ -279,12 +306,13 @@
                                     Status Kependudukan <span class="text-rose-500">*</span>
                                 </label>
                                 <select name="status_penduduk" id="status_penduduk" required
-                                        class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981] transition-all">
+                                        class="w-full px-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981] transition-all @error('status_penduduk') border-rose-500 @enderror">
                                     <option value="tetap" @selected(old('status_penduduk','tetap') === 'tetap')>Penduduk Tetap</option>
                                     <option value="sementara" @selected(old('status_penduduk') === 'sementara')>Penduduk Sementara</option>
                                     <option value="pindah" @selected(old('status_penduduk') === 'pindah')>Pindah</option>
                                     <option value="meninggal" @selected(old('status_penduduk') === 'meninggal')>Meninggal</option>
                                 </select>
+                                @error('status_penduduk') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                             </div>
                         </div>
                     </div>

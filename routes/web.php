@@ -18,6 +18,7 @@ use App\Http\Controllers\Administrasi\BukuTanahDesaController;
 use App\Http\Controllers\Administrasi\KelembagaanController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\Kependudukan\DocumentController;
 use App\Http\Controllers\Kependudukan\DuplicateScannerController;
 use App\Http\Controllers\Kependudukan\MutasiController;
@@ -56,6 +57,11 @@ Route::middleware('auth')->group(function () {
 
     // Main 3-Column Working Productivity Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Upcoming Schedule Management
+    Route::post('/schedules', [ScheduleController::class, 'store'])->name('schedules.store');
+    Route::put('/schedules/{schedule}', [ScheduleController::class, 'update'])->name('schedules.update');
+    Route::delete('/schedules/{schedule}', [ScheduleController::class, 'destroy'])->name('schedules.destroy');
 
     // Admin & Core Infrastructure Routes
     Route::prefix('admin')->name('admin.')->group(function () {
@@ -104,15 +110,27 @@ Route::middleware('auth')->group(function () {
     // =============================================================
     Route::prefix('kependudukan')->name('kependudukan.')->group(function () {
 
-        // Buku Induk Penduduk
+        // Buku Induk Penduduk - Export & Import Operations
         Route::middleware('permission:kependudukan.view')->group(function () {
-            Route::get('/', [PendudukController::class, 'index'])->name('index');
-            Route::get('/{penduduk}', [PendudukController::class, 'show'])->name('show');
+            Route::get('/export-pdf', [PendudukController::class, 'exportPdf'])->name('export-pdf');
+            Route::get('/export-excel', [PendudukController::class, 'exportExcel'])->name('export-excel');
+            Route::get('/export-csv', [PendudukController::class, 'exportCsv'])->name('export-csv');
+            Route::get('/import-template', [PendudukController::class, 'downloadTemplate'])->name('import-template');
         });
 
         Route::middleware('permission:kependudukan.create')->group(function () {
+            Route::post('/import', [PendudukController::class, 'import'])->name('import');
             Route::get('/create', [PendudukController::class, 'create'])->name('create');
             Route::post('/', [PendudukController::class, 'store'])->name('store');
+        });
+
+        Route::middleware('permission:kependudukan.delete')->group(function () {
+            Route::post('/bulk-delete', [PendudukController::class, 'bulkDestroy'])->name('bulk-delete');
+        });
+
+        Route::middleware('permission:kependudukan.view')->group(function () {
+            Route::get('/', [PendudukController::class, 'index'])->name('index');
+            Route::get('/{penduduk}', [PendudukController::class, 'show'])->name('show');
         });
 
         Route::middleware('permission:kependudukan.edit')->group(function () {
