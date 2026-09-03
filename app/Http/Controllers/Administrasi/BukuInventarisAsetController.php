@@ -124,4 +124,122 @@ class BukuInventarisAsetController extends Controller
 
         return $pdf->stream('Buku_Inventaris_Aset_' . ($tahun ?: 'Semua_Tahun') . '.pdf');
     }
+
+    public function exportExcel(Request $request)
+    {
+        $tahun = $request->query('tahun');
+        $data = BukuInventarisAset::when($tahun, fn($q) => $q->where('tahun_pengadaan', $tahun))
+            ->orderBy('tahun_pengadaan', 'asc')
+            ->get();
+
+        $headers = [
+            'No',
+            'Tahun Pengadaan',
+            'Jenis Barang',
+            'Kode Barang',
+            'Identitas / Spesifikasi',
+            'Asal Usul',
+            'Harga Perolehan (Rp)',
+            'Kondisi',
+            'Lokasi Penempatan',
+        ];
+
+        $rows = [];
+        foreach ($data as $i => $item) {
+            $rows[] = [
+                $i + 1,
+                $item->tahun_pengadaan,
+                $item->jenis_barang,
+                $item->kode_barang ?? '',
+                $item->identitas_barang,
+                $item->asal_usul,
+                $item->harga_perolehan,
+                $item->kondisi,
+                $item->lokasi_penempatan,
+            ];
+        }
+
+        return \App\Services\AdministrasiImportExportService::exportCsv(
+            'Buku_Inventaris_Aset_Desa_' . ($tahun ?: 'Semua_Tahun') . '_' . date('Ymd_His') . '.csv',
+            $headers,
+            $rows
+        );
+    }
+
+    public function downloadTemplate()
+    {
+        $headers = [
+            'tahun_pengadaan',
+            'jenis_barang',
+            'kode_barang',
+            'identitas_barang',
+            'asal_usul',
+            'harga_perolehan',
+            'kondisi',
+            'lokasi_penempatan',
+        ];
+
+        $rows = [
+            [
+                date('Y'),
+                'Laptop Kantor Asus Vivobook',
+                'AST-01/' . date('Y'),
+                'Intel Core i5, RAM 16GB, SSD 512GB',
+                'apbdes',
+                '12500000',
+                'baik',
+                'Ruang Sekretariat Desa',
+            ]
+        ];
+
+        return \App\Services\AdministrasiImportExportService::exportCsv(
+            'Template_Import_Inventaris_Aset.csv',
+            $headers,
+            $rows
+        );
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|max:10240',
+        ]);
+
+        $rows = \App\Services\AdministrasiImportExportService::parseCsv($request->file('file')->getRealPath());
+
+        if (count($rows) <= 1) {
+            return redirect()->back()->with('error', 'Berkas kosong atau format tidak sesuai.');
+        }
+
+        $headers = array_map('strtolower', $rows[0]);
+        $importedCount = 0;
+
+        for ($i = 1; $i < count($rows); $i++) {
+            $row = $rows[$i];
+            if (empty(array_filter($row))) continue;
+
+            $data = array_combine($headers, array_pad($row, count($headers), null));
+
+            if (empty($data['jenis_barang']) || empty($data['identitas_barang'])) {
+                continue;
+            }
+
+            BukuInventarisAset::create([
+                'tahun_pengadaan'   => !empty($data['tahun_pengadaan']) ? (int)$data['tahun_pengadaan'] : (int)date('Y'),
+                'jenis_barang'      => $data['jenis_barang'],
+                'kode_barang'       => $data['kode_barang'] ?? null,
+                'identitas_barang'  => $data['identitas_barang'],
+                'asal_usul'         => in_array($data['asal_usul'] ?? '', ['apbdes', 'bantuan_pemerintah', 'bantuan_provinsi', 'bantuan_kabupaten', 'hibah', 'lainnya']) ? $data['asal_usul'] : 'apbdes',
+                'harga_perolehan'   => !empty($data['harga_perolehan']) ? (float)str_replace(['Rp', '.', ','], '', $data['harga_perolehan']) : 0,
+                'kondisi'           => in_array($data['kondisi'] ?? '', ['baik', 'rusak_ringan', 'rusak_berat']) ? $data['kondisi'] : 'baik',
+                'lokasi_penempatan' => $data['lokasi_penempatan'] ?? 'Kantor Desa',
+                'created_by'        => auth()->id(),
+            ]);
+
+            $importedCount++;
+        }
+
+        return redirect()->route('administrasi.inventaris-aset.index')
+            ->with('success', "Berhasil mengimpor {$importedCount} data inventaris aset desa.");
+    }
 }

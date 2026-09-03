@@ -199,6 +199,59 @@ class UserController extends Controller
     }
 
     /**
+     * Get user-friendly display title for permissions.
+     */
+    public static function formatPermissionLabel(string $permissionName): string
+    {
+        $labels = [
+            // Profil Desa
+            'desa.view' => 'Lihat Profil Desa',
+            'desa.update' => 'Ubah Profil Desa',
+
+            // Manajemen Pengguna
+            'user.view' => 'Lihat Daftar Pengguna',
+            'user.create' => 'Tambah Pengguna Baru',
+            'user.edit' => 'Edit Data Pengguna',
+            'user.delete' => 'Hapus Pengguna',
+
+            // Kependudukan
+            'kependudukan.view' => 'Lihat Data Kependudukan',
+            'kependudukan.create' => 'Tambah Penduduk Baru',
+            'kependudukan.edit' => 'Edit Data Penduduk',
+            'kependudukan.delete' => 'Hapus Data Penduduk',
+            'kependudukan.verify' => 'Verifikasi & Scan NIK Ganda',
+
+            // Persuratan Walk-In
+            'persuratan.view' => 'Lihat Arsip Persuratan',
+            'persuratan.create' => 'Buat Surat Permohonan',
+            'persuratan.print' => 'Cetak & Download Dokumen Surat',
+
+            // Kelembagaan Dinamis
+            'kelembagaan.view' => 'Lihat Data Lembaga Desa',
+            'kelembagaan.manage_master' => 'Kelola Master Lembaga',
+            'kelembagaan.edit_content' => 'Kelola Anggota & Agenda Lembaga',
+
+            // Administrasi Umum
+            'administrasi.view' => 'Lihat 9 Buku Register Administrasi',
+            'administrasi.manage' => 'Kelola & Entri Buku Administrasi',
+
+            // Keuangan Desa
+            'keuangan.view' => 'Lihat APBDes & Kas Keuangan',
+            'keuangan.manage' => 'Kelola Anggaran & Realisasi APBDes',
+
+            // Pembangunan Desa
+            'pembangunan.view' => 'Lihat Dokumen & RKP Pembangunan',
+            'pembangunan.manage' => 'Kelola Realisasi Proyek Pembangunan',
+
+            // Sistem & Audit
+            'audit.view' => 'Lihat Log Audit Aktivitas Sistem',
+            'backup.manage' => 'Kelola Cadangan Database (Backup & Restore)',
+        ];
+
+        return $labels[$permissionName] ?? ucwords(str_replace(['.', '_'], ' ', $permissionName));
+    }
+
+    /**
      * Group permissions logically for UI selection.
      */
     protected function getGroupedPermissions(): array
@@ -211,7 +264,6 @@ class UserController extends Controller
             'Kependudukan' => [],
             'Persuratan Walk-In' => [],
             'Kelembagaan Dinamis' => [],
-            'Absensi Aparatur' => [],
             'Administrasi Umum' => [],
             'Keuangan Desa' => [],
             'Pembangunan Desa' => [],
@@ -219,6 +271,8 @@ class UserController extends Controller
         ];
 
         foreach ($permissions as $perm) {
+            $perm->display_name = static::formatPermissionLabel($perm->name);
+
             $prefix = explode('.', $perm->name)[0];
             $group = match ($prefix) {
                 'desa' => 'Profil Desa',
@@ -226,7 +280,6 @@ class UserController extends Controller
                 'kependudukan' => 'Kependudukan',
                 'persuratan' => 'Persuratan Walk-In',
                 'kelembagaan' => 'Kelembagaan Dinamis',
-                'absensi' => 'Absensi Aparatur',
                 'administrasi' => 'Administrasi Umum',
                 'keuangan' => 'Keuangan Desa',
                 'pembangunan' => 'Pembangunan Desa',

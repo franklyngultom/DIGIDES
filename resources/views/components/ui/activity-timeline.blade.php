@@ -78,7 +78,7 @@
             @foreach($items as $item)
                 <div class="relative flex items-start gap-4 group">
                     <!-- Milestone Dot -->
-                    <div class="w-7 h-7 rounded-full bg-[#114443] text-[#d4ed31] flex items-center justify-center shrink-0 z-10 shadow-xs border-2 border-white">
+                    <div class="w-7 h-7 rounded-full bg-[#114443] text-[#d4ed31] flex items-center justify-center shrink-0 shadow-xs border-2 border-white relative">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
@@ -153,215 +153,221 @@
     <!-- ============================================================= -->
     <!-- MODAL CREATE SCHEDULE                                         -->
     <!-- ============================================================= -->
-    <div x-show="createModal" 
-         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#082424]/60 backdrop-blur-xs" 
-         style="display: none;"
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-150"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0">
-        <div @click.away="createModal = false" class="bg-white rounded-3xl border border-[#e1ede8] p-6 shadow-2xl max-w-md w-full space-y-4">
-            <div class="flex items-center justify-between border-b border-[#e1ede8] pb-3">
-                <div class="flex items-center gap-2">
-                    <span class="w-8 h-8 rounded-xl bg-[#e2f0ed] text-[#114443] flex items-center justify-center font-bold">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    </span>
-                    <div>
-                        <h3 class="text-base font-bold text-[#0c3837]">Tambah Jadwal Baru</h3>
-                        <span class="text-[10px] text-[#64748b]">Agenda layanan dan koordinasi desa</span>
+    <template x-teleport="body">
+        <div x-show="createModal" 
+             class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[#082424]/60 backdrop-blur-xs" 
+             style="display: none;"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+            <div @click.away="createModal = false" class="bg-white rounded-3xl border border-[#e1ede8] p-6 shadow-2xl max-w-md w-full space-y-4 relative z-10">
+                <div class="flex items-center justify-between border-b border-[#e1ede8] pb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-xl bg-[#e2f0ed] text-[#114443] flex items-center justify-center font-bold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        </span>
+                        <div>
+                            <h3 class="text-base font-bold text-[#0c3837]">Tambah Jadwal Baru</h3>
+                            <span class="text-[10px] text-[#64748b]">Agenda layanan dan koordinasi desa</span>
+                        </div>
                     </div>
-                </div>
-                <button type="button" @click="createModal = false" class="text-slate-400 hover:text-slate-600 font-bold text-lg cursor-pointer">✕</button>
-            </div>
-
-            <form method="POST" action="{{ route('schedules.store') }}" id="form-create-schedule" class="space-y-3">
-                @csrf
-                <div>
-                    <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="create-title">
-                        Nama Kegiatan / Agenda <span class="text-rose-500">*</span>
-                    </label>
-                    <input type="text" name="title" id="create-title" required placeholder="Contoh: Pelayanan Surat Keterangan Usaha (SKU)"
-                           class="w-full px-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]">
+                    <button type="button" @click="createModal = false" class="text-slate-400 hover:text-slate-600 font-bold text-lg cursor-pointer">✕</button>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <form method="POST" action="{{ route('schedules.store') }}" id="form-create-schedule" class="space-y-3">
+                    @csrf
                     <div>
-                        <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="create-tag">
-                            Kategori Modul <span class="text-rose-500">*</span>
+                        <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="create-title">
+                            Nama Kegiatan / Agenda <span class="text-rose-500">*</span>
                         </label>
-                        <select name="tag" id="create-tag" required class="w-full px-3 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]">
-                            <option value="Persuratan">Persuratan</option>
-                            <option value="Kependudukan">Kependudukan</option>
-                            <option value="Administrasi">Administrasi</option>
-                            <option value="Keuangan">Keuangan</option>
-                            <option value="Pembangunan">Pembangunan</option>
-                            <option value="Umum">Umum</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="create-time">
-                            Waktu / Jam <span class="text-rose-500">*</span>
-                        </label>
-                        <input type="text" name="time" id="create-time" required placeholder="09:30 WIB"
+                        <input type="text" name="title" id="create-title" required placeholder="Contoh: Pelayanan Surat Keterangan Usaha (SKU)"
                                class="w-full px-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]">
                     </div>
-                </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="create-pic">
-                        Petugas / Penanggung Jawab (PIC)
-                    </label>
-                    <input type="text" name="pic" id="create-pic" placeholder="Contoh: Staff Pelayanan / Sekretariat"
-                           class="w-full px-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]">
-                </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="create-tag">
+                                Kategori Modul <span class="text-rose-500">*</span>
+                            </label>
+                            <select name="tag" id="create-tag" required class="w-full px-3 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]">
+                                <option value="Persuratan">Persuratan</option>
+                                <option value="Kependudukan">Kependudukan</option>
+                                <option value="Administrasi">Administrasi</option>
+                                <option value="Keuangan">Keuangan</option>
+                                <option value="Pembangunan">Pembangunan</option>
+                                <option value="Umum">Umum</option>
+                            </select>
+                        </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="create-desc">
-                        Keterangan Singkat / Catatan
-                    </label>
-                    <textarea name="description" id="create-desc" rows="2" placeholder="Contoh: 3 Berkas pemohon walk-in desk"
-                              class="w-full px-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]"></textarea>
-                </div>
+                        <div>
+                            <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="create-time">
+                                Waktu / Jam <span class="text-rose-500">*</span>
+                            </label>
+                            <input type="text" name="time" id="create-time" required placeholder="Contoh: 09:00 - 11:30"
+                                   class="w-full px-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]">
+                        </div>
+                    </div>
 
-                <div class="flex justify-end gap-2 pt-2 border-t border-[#e1ede8]">
-                    <button type="button" @click="createModal = false" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-[#0f172a] text-xs font-bold rounded-full transition-all">
-                        Batal
-                    </button>
-                    <button type="submit" id="btn-submit-create-schedule" class="px-5 py-2 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-full shadow-xs transition-all cursor-pointer">
-                        Simpan Jadwal
-                    </button>
-                </div>
-            </form>
+                    <div>
+                        <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="create-pic">
+                            Petugas / Penanggung Jawab (PIC)
+                        </label>
+                        <input type="text" name="pic" id="create-pic" placeholder="Contoh: Kaur Pelayanan / Jack Grealish"
+                               class="w-full px-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="create-desc">
+                            Keterangan Singkat / Catatan
+                        </label>
+                        <textarea name="description" id="create-desc" rows="2" placeholder="Catatan opsional mengenai persiapan atau berkas..."
+                                  class="w-full px-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]"></textarea>
+                    </div>
+
+                    <div class="flex justify-end gap-2 pt-2 border-t border-[#e1ede8]">
+                        <button type="button" @click="createModal = false" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-[#0f172a] text-xs font-bold rounded-full transition-all cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="submit" id="btn-submit-create-schedule" class="px-5 py-2 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-full shadow-xs transition-all cursor-pointer">
+                            Simpan Jadwal
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
+    </template>
 
     <!-- ============================================================= -->
     <!-- MODAL EDIT SCHEDULE                                           -->
     <!-- ============================================================= -->
-    <div x-show="editModal" 
-         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#082424]/60 backdrop-blur-xs" 
-         style="display: none;"
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-150"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0">
-        <div @click.away="editModal = false" class="bg-white rounded-3xl border border-[#e1ede8] p-6 shadow-2xl max-w-md w-full space-y-4">
-            <div class="flex items-center justify-between border-b border-[#e1ede8] pb-3">
-                <div class="flex items-center gap-2">
-                    <span class="w-8 h-8 rounded-xl bg-[#e2f0ed] text-[#114443] flex items-center justify-center font-bold">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                    </span>
-                    <div>
-                        <h3 class="text-base font-bold text-[#0c3837]">Edit Jadwal Kegiatan</h3>
-                        <span class="text-[10px] text-[#64748b]">Perbarui rincian agenda layanan</span>
+    <template x-teleport="body">
+        <div x-show="editModal" 
+             class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[#082424]/60 backdrop-blur-xs" 
+             style="display: none;"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+            <div @click.away="editModal = false" class="bg-white rounded-3xl border border-[#e1ede8] p-6 shadow-2xl max-w-md w-full space-y-4 relative z-10">
+                <div class="flex items-center justify-between border-b border-[#e1ede8] pb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-xl bg-[#e2f0ed] text-[#114443] flex items-center justify-center font-bold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        </span>
+                        <div>
+                            <h3 class="text-base font-bold text-[#0c3837]">Edit Jadwal Kegiatan</h3>
+                            <span class="text-[10px] text-[#64748b]">Perbarui rincian agenda layanan</span>
+                        </div>
                     </div>
-                </div>
-                <button type="button" @click="editModal = false" class="text-slate-400 hover:text-slate-600 font-bold text-lg cursor-pointer">✕</button>
-            </div>
-
-            <form method="POST" :action="editItem.updateUrl" id="form-edit-schedule" class="space-y-3">
-                @csrf
-                @method('PUT')
-                <div>
-                    <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="edit-title">
-                        Nama Kegiatan / Agenda <span class="text-rose-500">*</span>
-                    </label>
-                    <input type="text" name="title" id="edit-title" required x-model="editItem.title"
-                           class="w-full px-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]">
+                    <button type="button" @click="editModal = false" class="text-slate-400 hover:text-slate-600 font-bold text-lg cursor-pointer">✕</button>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <form method="POST" :action="editItem.updateUrl" id="form-edit-schedule" class="space-y-3">
+                    @csrf
+                    @method('PUT')
                     <div>
-                        <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="edit-tag">
-                            Kategori Modul <span class="text-rose-500">*</span>
+                        <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="edit-title">
+                            Nama Kegiatan / Agenda <span class="text-rose-500">*</span>
                         </label>
-                        <select name="tag" id="edit-tag" required x-model="editItem.tag" class="w-full px-3 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]">
-                            <option value="Persuratan">Persuratan</option>
-                            <option value="Kependudukan">Kependudukan</option>
-                            <option value="Administrasi">Administrasi</option>
-                            <option value="Keuangan">Keuangan</option>
-                            <option value="Pembangunan">Pembangunan</option>
-                            <option value="Umum">Umum</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="edit-time">
-                            Waktu / Jam <span class="text-rose-500">*</span>
-                        </label>
-                        <input type="text" name="time" id="edit-time" required x-model="editItem.time"
+                        <input type="text" name="title" id="edit-title" required x-model="editItem.title"
                                class="w-full px-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]">
                     </div>
-                </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="edit-pic">
-                        Petugas / Penanggung Jawab (PIC)
-                    </label>
-                    <input type="text" name="pic" id="edit-pic" x-model="editItem.pic"
-                           class="w-full px-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]">
-                </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="edit-tag">
+                                Kategori Modul <span class="text-rose-500">*</span>
+                            </label>
+                            <select name="tag" id="edit-tag" required x-model="editItem.tag" class="w-full px-3 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]">
+                                <option value="Persuratan">Persuratan</option>
+                                <option value="Kependudukan">Kependudukan</option>
+                                <option value="Administrasi">Administrasi</option>
+                                <option value="Keuangan">Keuangan</option>
+                                <option value="Pembangunan">Pembangunan</option>
+                                <option value="Umum">Umum</option>
+                            </select>
+                        </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="edit-desc">
-                        Keterangan Singkat / Catatan
-                    </label>
-                    <textarea name="description" id="edit-desc" rows="2" x-model="editItem.description"
-                              class="w-full px-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]"></textarea>
-                </div>
+                        <div>
+                            <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="edit-time">
+                                Waktu / Jam <span class="text-rose-500">*</span>
+                            </label>
+                            <input type="text" name="time" id="edit-time" required x-model="editItem.time"
+                                   class="w-full px-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]">
+                        </div>
+                    </div>
 
-                <div class="flex justify-end gap-2 pt-2 border-t border-[#e1ede8]">
-                    <button type="button" @click="editModal = false" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-[#0f172a] text-xs font-bold rounded-full transition-all">
-                        Batal
-                    </button>
-                    <button type="submit" id="btn-submit-edit-schedule" class="px-5 py-2 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-full shadow-xs transition-all cursor-pointer">
-                        Perbarui Jadwal
-                    </button>
-                </div>
-            </form>
+                    <div>
+                        <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="edit-pic">
+                            Petugas / Penanggung Jawab (PIC)
+                        </label>
+                        <input type="text" name="pic" id="edit-pic" x-model="editItem.pic"
+                               class="w-full px-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1" for="edit-desc">
+                            Keterangan Singkat / Catatan
+                        </label>
+                        <textarea name="description" id="edit-desc" rows="2" x-model="editItem.description"
+                                  class="w-full px-3.5 py-2 bg-[#f7faf9] border border-[#e1ede8] rounded-xl text-xs text-[#0c3837] focus:bg-white focus:outline-none focus:border-[#10b981]"></textarea>
+                    </div>
+
+                    <div class="flex justify-end gap-2 pt-2 border-t border-[#e1ede8]">
+                        <button type="button" @click="editModal = false" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-[#0f172a] text-xs font-bold rounded-full transition-all cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="submit" id="btn-submit-edit-schedule" class="px-5 py-2 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-full shadow-xs transition-all cursor-pointer">
+                            Perbarui Jadwal
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
+    </template>
 
     <!-- ============================================================= -->
     <!-- MODAL KONFIRMASI DELETE SCHEDULE                              -->
     <!-- ============================================================= -->
-    <div x-show="deleteModal" 
-         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#082424]/60 backdrop-blur-xs" 
-         style="display: none;"
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-150"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0">
-        <div @click.away="deleteModal = false" class="bg-white rounded-3xl border border-[#e1ede8] p-6 shadow-2xl max-w-sm w-full space-y-4 text-center">
-            <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto text-xl font-bold">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-            </div>
-            <div>
-                <h3 class="text-base font-bold text-[#0c3837]">Hapus Jadwal Kegiatan?</h3>
-                <p class="text-xs text-[#64748b] mt-1">
-                    Agenda "<strong class="text-rose-600" x-text="deleteItem.title"></strong>" akan dihapus secara permanen dari daftar jadwal.
-                </p>
-            </div>
-
-            <form method="POST" :action="deleteItem.deleteUrl" id="form-delete-schedule">
-                @csrf
-                @method('DELETE')
-                <div class="flex justify-center gap-2 pt-2">
-                    <button type="button" @click="deleteModal = false" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-[#0f172a] text-xs font-bold rounded-full transition-all">
-                        Batal
-                    </button>
-                    <button type="submit" id="btn-confirm-delete-schedule" class="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-full shadow-xs transition-all cursor-pointer">
-                        Ya, Hapus Jadwal
-                    </button>
+    <template x-teleport="body">
+        <div x-show="deleteModal" 
+             class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[#082424]/60 backdrop-blur-xs" 
+             style="display: none;"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+            <div @click.away="deleteModal = false" class="bg-white rounded-3xl border border-[#e1ede8] p-6 shadow-2xl max-w-sm w-full space-y-4 text-center relative z-10">
+                <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto text-xl font-bold">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                 </div>
-            </form>
+                <div>
+                    <h3 class="text-base font-bold text-[#0c3837]">Hapus Jadwal Kegiatan?</h3>
+                    <p class="text-xs text-[#64748b] mt-1">
+                        Agenda "<strong class="text-rose-600" x-text="deleteItem.title"></strong>" akan dihapus secara permanen dari daftar jadwal.
+                    </p>
+                </div>
+
+                <form method="POST" :action="deleteItem.deleteUrl" id="form-delete-schedule">
+                    @csrf
+                    @method('DELETE')
+                    <div class="flex justify-center gap-2 pt-2">
+                        <button type="button" @click="deleteModal = false" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-[#0f172a] text-xs font-bold rounded-full transition-all cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="submit" id="btn-confirm-delete-schedule" class="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-full shadow-xs transition-all cursor-pointer">
+                            Ya, Hapus Jadwal
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
+    </template>
 </div>

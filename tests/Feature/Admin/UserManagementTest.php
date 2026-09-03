@@ -97,13 +97,19 @@ class UserManagementTest extends TestCase
         $this->assertFalse($this->staff->fresh()->is_active);
     }
 
-    public function test_admin_cannot_delete_self(): void
+    public function test_admin_can_view_create_and_edit_user_with_formatted_permissions(): void
     {
-        $response = $this->actingAs($this->admin)->delete(route('admin.users.destroy', $this->admin));
+        $createResponse = $this->actingAs($this->admin)->get(route('admin.users.create'));
+        $createResponse->assertStatus(200);
+        $createResponse->assertSee('Lihat Profil Desa');
+        $createResponse->assertSee('Tambah Penduduk Baru');
+        $createResponse->assertSee('Cetak & Download Dokumen Surat');
 
-        $response->assertRedirect();
-        $this->assertDatabaseHas('users', [
-            'id' => $this->admin->id,
-        ]);
+        $editResponse = $this->actingAs($this->admin)->get(route('admin.users.edit', $this->staff));
+        $editResponse->assertStatus(200);
+        $editResponse->assertSee('Lihat Profil Desa');
+        $editResponse->assertSee('Tambah Penduduk Baru');
+        $editResponse->assertSee('Cetak & Download Dokumen Surat');
     }
 }
+

@@ -310,4 +310,163 @@ class KelembagaanController extends Controller
         return redirect()->route('administrasi.kelembagaan.show', ['institution' => $institution->slug, 'tab' => 'agenda'])
             ->with('success', "Agenda {$institution->singkatan} berhasil dihapus.");
     }
+
+    // ==========================================
+    // 5. EXPORT & IMPORT KELEMBAGAAN
+    // ==========================================
+    public function exportPdf(Request $request, Institution $institution)
+    {
+        $tahun = $request->query('tahun');
+        $desa = \App\Models\DesaProfile::current();
+
+        $members = $institution->members()
+            ->with('penduduk')
+            ->orderBy('status_aktif', 'desc')
+            ->get();
+
+        $activities = $institution->activities()
+            ->when($tahun, fn($q, $y) => $q->where('tahun', $y))
+            ->orderBy('tanggal_kegiatan', 'desc')
+            ->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.administrasi.rekap_kelembagaan', compact('institution', 'desa', 'tahun', 'members', 'activities'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream('Rekap_Lembaga_' . $institution->slug . '_' . ($tahun ?: 'Semua_Tahun') . '.pdf');
+    }
+
+    public function exportExcel(Request $request, Institution $institution)
+    {
+        $members = $institution->members()->with('penduduk')->get();
+
+        $headers = [
+            'No',
+            'Lembaga',
+            'NIK',
+            'Nama Lengkap',
+            'Jabatan',
+            'No SK Pengangkatan',
+            'Tanggal SK',
+            'Periode Mulai',
+            'Periode Selesai',
+            'Kontak / Telepon',
+            'Status Aktif',
+            'Keterangan',
+        ];
+
+        $rows = [];
+        foreach ($members as $i => $item) {
+            $rows[] = [
+                $i + 1,
+                $institution->nama_lembaga,
+                "'" . ($item->nik ?? $item->penduduk->nik ?? ''),
+                $item->nama_lengkap ?? $item->penduduk->nama_lengkap ?? '-',
+                $item->jabatan,
+                $item->nomor_sk_pengangkatan ?? '',
+                $item->tanggal_sk ? date('Y-m-d', strtotime($item->tanggal_sk)) : '',
+                $item->periode_mulai ?? '',
+                $item->periode_selesai ?? '',
+                "'" . ($item->kontak ?? $item->penduduk->telepon ?? ''),
+                $item->status_aktif ? 'Aktif' : 'Non-Aktif',
+                $item->keterangan ?? '',
+            ];
+        }
+
+        return \App\Services\AdministrasiImportExportService::exportCsv(
+            'Anggota_Lembaga_' . $institution->slug . '_' . date('Ymd_His') . '.csv',
+            $headers,
+            $rows
+        );
+    }
+
+    public function downloadTemplate(Institution $institution)
+    {
+        $headers = [
+            'nik',
+            'nama_lengkap',
+            'jabatan',
+            'nomor_sk_pengangkatan',
+            'tanggal_sk',
+            'periode_mulai',
+            'periode_selesai',
+            'kontak',
+            'status_aktif',
+            'keterangan',
+        ];
+
+        $rows = [
+            [
+                '3202111504700010',
+                'Drs. H. Mulyadi',
+                'Ketua',
+                '141/05/SK-LPM/' . date('Y'),
+                date('Y') . '-01-05',
+                date('Y'),
+                date('Y') + 5,
+                '081234567890',
+                '1',
+                'Pengurus Inti Lembaga Desa',
+            ]
+        ];
+
+        return \App\Services\AdministrasiImportExportService::exportCsv(
+            'Template_Import_Anggota_' . $institution->slug . '.csv',
+            $headers,
+            $rows
+        );
+    }
+
+    public function import(Request $request, Institution $institution)
+    {
+        $request->validate([
+            'file' => 'required|file|max:10240',
+        ]);
+
+        $rows = \App\Services\AdministrasiImportExportService::parseCsv($request->file('file')->getRealPath());
+
+        if (count($rows) <= 1) {
+            return redirect()->back()->with('error', 'Berkas kosong atau format tidak sesuai.');
+        }
+
+        $headers = array_map('strtolower', $rows[0]);
+        $importedCount = 0;
+
+        for ($i = 1; $i < count($rows); $i++) {
+            $row = $rows[$i];
+            if (empty(array_filter($row))) continue;
+
+            $data = array_combine($headers, array_pad($row, count($headers), null));
+
+            if (empty($data['nama_lengkap']) || empty($data['jabatan'])) {
+                continue;
+            }
+
+            $nik = !empty($data['nik']) ? preg_replace('/[^0-9]/', '', $data['nik']) : null;
+            $pendudukId = null;
+            if ($nik) {
+                $p = Penduduk::where('nik', $nik)->first();
+                if ($p) $pendudukId = $p->id;
+            }
+
+            InstitutionMember::create([
+                'institution_id'        => $institution->id,
+                'penduduk_id'           => $pendudukId,
+                'nama_lengkap'          => $data['nama_lengkap'],
+                'nik'                   => $nik,
+                'jabatan'               => $data['jabatan'],
+                'nomor_sk_pengangkatan' => $data['nomor_sk_pengangkatan'] ?? null,
+                'tanggal_sk'            => !empty($data['tanggal_sk']) ? date('Y-m-d', strtotime($data['tanggal_sk'])) : null,
+                'periode_mulai'         => !empty($data['periode_mulai']) ? (int)$data['periode_mulai'] : null,
+                'periode_selesai'       => !empty($data['periode_selesai']) ? (int)$data['periode_selesai'] : null,
+                'kontak'                => $data['kontak'] ?? null,
+                'keterangan'            => $data['keterangan'] ?? null,
+                'status_aktif'          => isset($data['status_aktif']) ? (bool)$data['status_aktif'] : true,
+            ]);
+
+            $importedCount++;
+        }
+
+        return redirect()->route('administrasi.kelembagaan.show', ['institution' => $institution->slug, 'tab' => 'anggota'])
+            ->with('success', "Berhasil mengimpor {$importedCount} data anggota {$institution->singkatan}.");
+    }
 }

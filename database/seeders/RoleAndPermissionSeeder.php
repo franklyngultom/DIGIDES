@@ -46,11 +46,6 @@ class RoleAndPermissionSeeder extends Seeder
             'kelembagaan.manage_master',
             'kelembagaan.edit_content',
 
-            // Absensi Aparatur
-            'absensi.scan',
-            'absensi.override',
-            'absensi.rekap',
-
             // Administrasi Umum (8 Buku Register)
             'administrasi.view',
             'administrasi.manage',
@@ -88,7 +83,6 @@ class RoleAndPermissionSeeder extends Seeder
             'persuratan.print',
             'kelembagaan.view',
             'kelembagaan.edit_content',
-            'absensi.scan',
             'administrasi.view',
         ]);
     }

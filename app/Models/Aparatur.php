@@ -27,9 +27,4 @@ class Aparatur extends Model
     {
         return $this->belongsTo(Penduduk::class);
     }
-
-    public function absensis()
-    {
-        return $this->hasMany(Absensi::class);
-    }
 }

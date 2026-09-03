@@ -83,6 +83,10 @@ class User extends Authenticatable
                     return asset($this->avatar_path);
                 }
 
+                if (!$this->avatar_path && $this->email === 'staff@desa.id' && file_exists(public_path('images/avatar-jack.jpg'))) {
+                    return asset('images/avatar-jack.jpg');
+                }
+
                 $encodedName = urlencode($this->name);
 
                 return "https://ui-avatars.com/api/?name={$encodedName}&background=114443&color=d4ed31&bold=true";

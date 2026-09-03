@@ -148,6 +148,73 @@
                     </div>
                 </x-card>
 
+                <!-- Scenic Village Landscape Photo Card -->
+                <x-card class="space-y-4" x-data="{ 
+                    photoPreview: null,
+                    removePhoto: false,
+                    previewImage(e) {
+                        const file = e.target.files[0];
+                        if (file) {
+                            this.photoPreview = URL.createObjectURL(file);
+                            this.removePhoto = false;
+                        }
+                    }
+                }">
+                    <div class="flex items-center justify-between border-b border-[#e1ede8] pb-3">
+                        <h3 class="text-base font-bold text-[#0c3837]">Foto Lanskap Desa (Sidebar)</h3>
+                        @if ($desa->has_custom_foto_desa)
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#10b981]/15 text-[#0c3837] border border-[#10b981]/30">Foto Kustom</span>
+                        @else
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">Foto Bawaan</span>
+                        @endif
+                    </div>
+
+                    <!-- Photo Preview Box -->
+                    <div class="relative rounded-2xl overflow-hidden h-36 border border-[#e1ede8] bg-[#0c3837] shadow-inner group">
+                        <template x-if="photoPreview">
+                            <img :src="photoPreview" class="w-full h-full object-cover" alt="Preview Foto Baru">
+                        </template>
+                        <template x-if="!photoPreview">
+                            <img src="{{ $desa->foto_desa_url }}" 
+                                 :class="removePhoto ? 'opacity-30 grayscale' : 'opacity-100'"
+                                 class="w-full h-full object-cover transition-all duration-300" 
+                                 alt="Foto {{ $desa->nama_desa }}">
+                        </template>
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0c3837]/90 via-transparent to-transparent flex flex-col justify-end p-3 pointer-events-none">
+                            <h4 class="text-xs font-bold text-white tracking-wide">{{ $desa->nama_desa }}</h4>
+                            <p class="text-[10px] text-[#8bc3b8]">{{ $desa->kabupaten }}, Indonesia • GMT+7</p>
+                        </div>
+
+                        <template x-if="removePhoto">
+                            <div class="absolute inset-0 bg-rose-950/70 flex items-center justify-center p-3 text-center">
+                                <span class="text-xs font-bold text-rose-200">Foto kustom akan dihapus & kembali ke bawaan saat disimpan</span>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- File Input & Upload Control -->
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5">Unggah Foto Lanskap Baru</label>
+                            <input type="file" name="foto_desa" accept="image/png,image/jpeg,image/webp" @change="previewImage($event)"
+                                   class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#e2f0ed] file:text-[#114443] hover:file:bg-[#d0e6e1] cursor-pointer">
+                            <span class="text-[10px] text-[#64748b] mt-1 block">Format: JPG, PNG, WEBP (Rasio lanskap disarankan, Maks. 5 MB)</span>
+                            @error('foto_desa') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
+                        </div>
+
+                        @if ($desa->has_custom_foto_desa)
+                            <div class="pt-2 border-t border-[#e1ede8]">
+                                <label class="flex items-center gap-2 cursor-pointer select-none">
+                                    <input type="checkbox" name="hapus_foto_desa" value="1" x-model="removePhoto"
+                                           class="rounded border-[#e1ede8] text-rose-600 focus:ring-rose-500 w-4 h-4">
+                                    <span class="text-xs font-semibold text-rose-600">Hapus foto kustom (Kembalikan ke foto bawaan)</span>
+                                </label>
+                            </div>
+                        @endif
+                    </div>
+                </x-card>
+
                 <!-- Contact & Digital Presence -->
                 <x-card class="space-y-4">
                     <h3 class="text-base font-bold text-[#0c3837] border-b border-[#e1ede8] pb-3">Kontak & Portal</h3>

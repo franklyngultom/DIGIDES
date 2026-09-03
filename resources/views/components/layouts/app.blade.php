@@ -232,7 +232,7 @@
                 @endcan
 
                 @can('audit.view')
-                <!-- 9. Riwayat Aktivitas (Audit Trail) -->
+                <!-- 10. Riwayat Aktivitas (Audit Trail) -->
                 <a href="{{ route('admin.audit.index') }}" 
                    title="Riwayat Aktivitas (Audit Trail)"
                    :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.audit') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.audit') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
@@ -250,7 +250,7 @@
                 @endcan
 
                 @can('user.view')
-                <!-- 10. Management Staff / Pengguna -->
+                <!-- 11. Management Staff / Pengguna -->
                 <a href="{{ route('admin.users.index') }}" 
                    title="Management Staff & Pengguna"
                    :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.users') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.users') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
@@ -268,7 +268,7 @@
                 @endcan
 
                 @can('backup.manage')
-                <!-- 11. Cadangan Database -->
+                <!-- 12. Cadangan Database -->
                 <a href="{{ route('admin.backup.index') }}" 
                    title="Cadangan Database"
                    :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.backup') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.backup') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
@@ -281,25 +281,6 @@
                           x-transition:enter-end="opacity-100 translate-x-0"
                           class="text-xs truncate">
                         Backup Data
-                    </span>
-                </a>
-                @endcan
-
-                @can('absensi.access')
-                <!-- 12. Absensi Aparatur -->
-                <a href="{{ route('absensi.scanner') }}"
-                   title="Absensi Aparatur (QR Scanner)"
-                   id="nav-absensi"
-                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'absensi.') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'absensi.') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <span x-show="sidebarExpanded" 
-                          x-transition:enter="transition ease-out duration-150" 
-                          x-transition:enter-start="opacity-0 -translate-x-2" 
-                          x-transition:enter-end="opacity-100 translate-x-0"
-                          class="text-xs truncate">
-                        Absensi QR
                     </span>
                 </a>
                 @endcan
@@ -329,7 +310,7 @@
 
         <!-- 2. CENTER MAIN WORKSPACE (FEED & PAGES) -->
         <main class="flex-1 p-6 md:p-8 overflow-y-auto space-y-6 max-w-full">
-            {{ $slot }}
+            {!! $slot ?? $__env->yieldContent('content') !!}
         </main>
 
         <!-- 3. RIGHT INTELLIGENCE & PROFILE PANEL -->
@@ -406,7 +387,12 @@
         </aside>
     </div>
 
+    <!-- Staff Avatar Modal -->
+    <x-staff-avatar-modal />
+
     <!-- Toast Notifications -->
     <x-toast />
+
+    @stack('scripts')
 </body>
 </html>

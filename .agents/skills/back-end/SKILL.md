@@ -1,6 +1,6 @@
 ---
 name: back-end
-description: Panduan arsitektur backend Laravel 11/13 DIGIDES v2, mencakup Spatie RBAC, Dynamic Institution Engine, NIK Duplicate Scanner, PDF Generator & Ekspedisi Sync, QR Attendance, dan Activity Logging.
+description: Panduan arsitektur backend Laravel 11/13 DIGIDES v2, mencakup Spatie RBAC, Dynamic Institution Engine, NIK Duplicate Scanner, PDF Generator & Ekspedisi Sync, dan Activity Logging.
 ---
 
 # Back-End Development Skill (DIGIDES Laravel Architecture)
@@ -16,11 +16,9 @@ app/
 ├── Actions/
 │   ├── Kependudukan/
 │   │   └── ScanDuplicateNikAction.php
-│   ├── Persuratan/
-│   │   ├── GenerateNomorSuratAction.php
-│   │   └── RenderSuratPdfAction.php
-│   └── Absensi/
-│       └── ProcessQrAttendanceAction.php
+│   └── Persuratan/
+│       ├── GenerateNomorSuratAction.php
+│       └── RenderSuratPdfAction.php
 ├── Events/
 │   └── SuratDiterbitkanEvent.php
 ├── Listeners/
@@ -32,7 +30,6 @@ app/
 │   │   ├── Kependudukan/ (PendudukController, MutasiController, BerkasController)
 │   │   ├── Persuratan/ (PelayananSuratController, ArsipSuratController)
 │   │   ├── Kelembagaan/ (InstitutionMasterController, InstitutionWorkspaceController)
-│   │   ├── Absensi/ (AparaturController, QrScannerController, RekapAbsensiController)
 │   │   ├── Administrasi/ (BukuPeraturanController, BukuInventarisController, BukuTanahController)
 │   │   └── Keuangan/ (ApbdesController, BukuKasController, BankDesaController)
 │   └── Requests/ (Form Requests terisolasi per operasi)
@@ -50,8 +47,7 @@ app/
 │   ├── InstitutionDecision.php
 │   ├── InstitutionActivity.php
 │   ├── InstitutionAgenda.php
-│   ├── Aparatur.php
-│   └── Absensi.php
+│   └── Aparatur.php
 └── Services/
 ```
 
@@ -174,83 +170,6 @@ class SyncToBukuEkspedisiListener
             'surat_arsip_id' => $surat->id,
             'catatan' => 'Diterbitkan otomatis melalui Pelayanan Walk-In Desk'
         ]);
-    }
-}
-```
-
----
-
-## 5. QR Attendance Engine & Token Verification
-
-```php
-namespace App\Actions\Absensi;
-
-use App\Models\Aparatur;
-use App\Models\Absensi;
-use Carbon\Carbon;
-use Exception;
-
-class ProcessQrAttendanceAction
-{
-    public function execute(string $qrToken): array
-    {
-        $aparatur = Aparatur::with('penduduk')
-            ->where('qr_token', $qrToken)
-            ->where('status_aktif', true)
-            ->first();
-
-        if (!$aparatur) {
-            throw new Exception("Kartu QR Aparatur tidak valid atau tidak aktif.");
-        }
-
-        $today = Carbon::today();
-        $now = Carbon::now();
-
-        $absensi = Absensi::firstOrNew([
-            'aparatur_id' => $aparatur->id,
-            'tanggal' => $today->toDateString()
-        ]);
-
-        if (!$absensi->jam_masuk) {
-            // Catat Jam Masuk
-            $absensi->jam_masuk = $now->toTimeString();
-            $batasJam = Carbon::parse($today->toDateString() . ' ' . $aparatur->jam_masuk_standar)
-                ->addMinutes($aparatur->toleransi_terlambat_menit);
-
-            $absensi->status_kehadiran = $now->gt($batasJam) ? 'terlambat' : 'hadir';
-            $absensi->metode_absen = 'qr_scanner';
-            $absensi->save();
-
-            return [
-                'type' => 'masuk',
-                'status' => $absensi->status_kehadiran,
-                'nama' => $aparatur->penduduk->nama_lengkap,
-                'jabatan' => $aparatur->jabatan,
-                'waktu' => $now->format('H:i:s')
-            ];
-        }
-
-        if (!$absensi->jam_pulang) {
-            // Catat Jam Pulang
-            $absensi->jam_pulang = $now->toTimeString();
-            $absensi->save();
-
-            return [
-                'type' => 'pulang',
-                'status' => 'hadir',
-                'nama' => $aparatur->penduduk->nama_lengkap,
-                'jabatan' => $aparatur->jabatan,
-                'waktu' => $now->format('H:i:s')
-            ];
-        }
-
-        return [
-            'type' => 'already_recorded',
-            'status' => 'info',
-            'nama' => $aparatur->penduduk->nama_lengkap,
-            'jabatan' => $aparatur->jabatan,
-            'waktu' => $absensi->jam_pulang
-        ];
     }
 }
 ```

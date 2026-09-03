@@ -4,7 +4,6 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\BackupController;
 use App\Http\Controllers\Admin\DesaProfileController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Administrasi\AbsensiController;
 use App\Http\Controllers\Administrasi\AdministrasiHubController;
 use App\Http\Controllers\Administrasi\AparaturController;
 use App\Http\Controllers\Administrasi\BukuAgendaController;
@@ -17,8 +16,10 @@ use App\Http\Controllers\Administrasi\BukuPeraturanDesaController;
 use App\Http\Controllers\Administrasi\BukuTanahDesaController;
 use App\Http\Controllers\Administrasi\KelembagaanController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\StaffProfileController;
 use App\Http\Controllers\Kependudukan\DocumentController;
 use App\Http\Controllers\Kependudukan\DuplicateScannerController;
 use App\Http\Controllers\Kependudukan\MutasiController;
@@ -49,6 +50,9 @@ Route::get('/', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
+
+    Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+    Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
 });
 
 // Authenticated Routes
@@ -57,6 +61,10 @@ Route::middleware('auth')->group(function () {
 
     // Main 3-Column Working Productivity Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Staff Profile Avatar Management (Only for Staff)
+    Route::post('/staff/avatar', [StaffProfileController::class, 'updateAvatar'])->name('staff.avatar.update');
+    Route::delete('/staff/avatar', [StaffProfileController::class, 'deleteAvatar'])->name('staff.avatar.delete');
 
     // Upcoming Schedule Management
     Route::post('/schedules', [ScheduleController::class, 'store'])->name('schedules.store');
@@ -72,6 +80,8 @@ Route::middleware('auth')->group(function () {
         });
         Route::middleware('permission:desa.update')->group(function () {
             Route::put('/desa', [DesaProfileController::class, 'update'])->name('desa.update');
+            Route::post('/desa/foto', [DesaProfileController::class, 'updateFoto'])->name('desa.foto.update');
+            Route::delete('/desa/foto', [DesaProfileController::class, 'deleteFoto'])->name('desa.foto.delete');
         });
 
         // 2. Manajemen Pengguna & RBAC
@@ -175,7 +185,10 @@ Route::middleware('auth')->group(function () {
         // 1. Buku Peraturan Desa
         Route::get('/peraturan-desa', [BukuPeraturanDesaController::class, 'index'])->name('peraturan-desa.index');
         Route::get('/peraturan-desa/export-pdf', [BukuPeraturanDesaController::class, 'exportPdf'])->name('peraturan-desa.export-pdf');
+        Route::get('/peraturan-desa/export-excel', [BukuPeraturanDesaController::class, 'exportExcel'])->name('peraturan-desa.export-excel');
+        Route::get('/peraturan-desa/import-template', [BukuPeraturanDesaController::class, 'downloadTemplate'])->name('peraturan-desa.import-template');
         Route::middleware('permission:administrasi.manage')->group(function () {
+            Route::post('/peraturan-desa/import', [BukuPeraturanDesaController::class, 'import'])->name('peraturan-desa.import');
             Route::get('/peraturan-desa/create', [BukuPeraturanDesaController::class, 'create'])->name('peraturan-desa.create');
             Route::post('/peraturan-desa', [BukuPeraturanDesaController::class, 'store'])->name('peraturan-desa.store');
             Route::get('/peraturan-desa/{peraturanDesa}/edit', [BukuPeraturanDesaController::class, 'edit'])->name('peraturan-desa.edit');
@@ -186,7 +199,10 @@ Route::middleware('auth')->group(function () {
         // 2. Buku Keputusan Kepala Desa
         Route::get('/keputusan-kades', [BukuKeputusanKadesController::class, 'index'])->name('keputusan-kades.index');
         Route::get('/keputusan-kades/export-pdf', [BukuKeputusanKadesController::class, 'exportPdf'])->name('keputusan-kades.export-pdf');
+        Route::get('/keputusan-kades/export-excel', [BukuKeputusanKadesController::class, 'exportExcel'])->name('keputusan-kades.export-excel');
+        Route::get('/keputusan-kades/import-template', [BukuKeputusanKadesController::class, 'downloadTemplate'])->name('keputusan-kades.import-template');
         Route::middleware('permission:administrasi.manage')->group(function () {
+            Route::post('/keputusan-kades/import', [BukuKeputusanKadesController::class, 'import'])->name('keputusan-kades.import');
             Route::get('/keputusan-kades/create', [BukuKeputusanKadesController::class, 'create'])->name('keputusan-kades.create');
             Route::post('/keputusan-kades', [BukuKeputusanKadesController::class, 'store'])->name('keputusan-kades.store');
             Route::get('/keputusan-kades/{keputusanKades}/edit', [BukuKeputusanKadesController::class, 'edit'])->name('keputusan-kades.edit');
@@ -197,7 +213,10 @@ Route::middleware('auth')->group(function () {
         // 3. Buku Inventaris dan Kekayaan Desa
         Route::get('/inventaris-aset', [BukuInventarisAsetController::class, 'index'])->name('inventaris-aset.index');
         Route::get('/inventaris-aset/export-pdf', [BukuInventarisAsetController::class, 'exportPdf'])->name('inventaris-aset.export-pdf');
+        Route::get('/inventaris-aset/export-excel', [BukuInventarisAsetController::class, 'exportExcel'])->name('inventaris-aset.export-excel');
+        Route::get('/inventaris-aset/import-template', [BukuInventarisAsetController::class, 'downloadTemplate'])->name('inventaris-aset.import-template');
         Route::middleware('permission:administrasi.manage')->group(function () {
+            Route::post('/inventaris-aset/import', [BukuInventarisAsetController::class, 'import'])->name('inventaris-aset.import');
             Route::get('/inventaris-aset/create', [BukuInventarisAsetController::class, 'create'])->name('inventaris-aset.create');
             Route::post('/inventaris-aset', [BukuInventarisAsetController::class, 'store'])->name('inventaris-aset.store');
             Route::get('/inventaris-aset/{inventarisAset}/edit', [BukuInventarisAsetController::class, 'edit'])->name('inventaris-aset.edit');
@@ -208,7 +227,10 @@ Route::middleware('auth')->group(function () {
         // 4. Buku Tanah Kas & Tanah di Desa
         Route::get('/tanah-desa', [BukuTanahDesaController::class, 'index'])->name('tanah-desa.index');
         Route::get('/tanah-desa/export-pdf', [BukuTanahDesaController::class, 'exportPdf'])->name('tanah-desa.export-pdf');
+        Route::get('/tanah-desa/export-excel', [BukuTanahDesaController::class, 'exportExcel'])->name('tanah-desa.export-excel');
+        Route::get('/tanah-desa/import-template', [BukuTanahDesaController::class, 'downloadTemplate'])->name('tanah-desa.import-template');
         Route::middleware('permission:administrasi.manage')->group(function () {
+            Route::post('/tanah-desa/import', [BukuTanahDesaController::class, 'import'])->name('tanah-desa.import');
             Route::get('/tanah-desa/create', [BukuTanahDesaController::class, 'create'])->name('tanah-desa.create');
             Route::post('/tanah-desa', [BukuTanahDesaController::class, 'store'])->name('tanah-desa.store');
             Route::get('/tanah-desa/{tanahDesa}/edit', [BukuTanahDesaController::class, 'edit'])->name('tanah-desa.edit');
@@ -219,7 +241,10 @@ Route::middleware('auth')->group(function () {
         // 5. Buku Anggaran Pemerintah Desa (APBDes)
         Route::get('/anggaran-desa', [BukuAnggaranDesaController::class, 'index'])->name('anggaran-desa.index');
         Route::get('/anggaran-desa/export-pdf', [BukuAnggaranDesaController::class, 'exportPdf'])->name('anggaran-desa.export-pdf');
+        Route::get('/anggaran-desa/export-excel', [BukuAnggaranDesaController::class, 'exportExcel'])->name('anggaran-desa.export-excel');
+        Route::get('/anggaran-desa/import-template', [BukuAnggaranDesaController::class, 'downloadTemplate'])->name('anggaran-desa.import-template');
         Route::middleware('permission:administrasi.manage')->group(function () {
+            Route::post('/anggaran-desa/import', [BukuAnggaranDesaController::class, 'import'])->name('anggaran-desa.import');
             Route::get('/anggaran-desa/create', [BukuAnggaranDesaController::class, 'create'])->name('anggaran-desa.create');
             Route::post('/anggaran-desa', [BukuAnggaranDesaController::class, 'store'])->name('anggaran-desa.store');
             Route::get('/anggaran-desa/{anggaranDesa}/edit', [BukuAnggaranDesaController::class, 'edit'])->name('anggaran-desa.edit');
@@ -230,7 +255,10 @@ Route::middleware('auth')->group(function () {
         // 6. Buku Lembaran Desa & Berita Desa
         Route::get('/lembaran-desa', [BukuLembaranDesaController::class, 'index'])->name('lembaran-desa.index');
         Route::get('/lembaran-desa/export-pdf', [BukuLembaranDesaController::class, 'exportPdf'])->name('lembaran-desa.export-pdf');
+        Route::get('/lembaran-desa/export-excel', [BukuLembaranDesaController::class, 'exportExcel'])->name('lembaran-desa.export-excel');
+        Route::get('/lembaran-desa/import-template', [BukuLembaranDesaController::class, 'downloadTemplate'])->name('lembaran-desa.import-template');
         Route::middleware('permission:administrasi.manage')->group(function () {
+            Route::post('/lembaran-desa/import', [BukuLembaranDesaController::class, 'import'])->name('lembaran-desa.import');
             Route::get('/lembaran-desa/create', [BukuLembaranDesaController::class, 'create'])->name('lembaran-desa.create');
             Route::post('/lembaran-desa', [BukuLembaranDesaController::class, 'store'])->name('lembaran-desa.store');
             Route::get('/lembaran-desa/{lembaranDesa}/edit', [BukuLembaranDesaController::class, 'edit'])->name('lembaran-desa.edit');
@@ -241,7 +269,10 @@ Route::middleware('auth')->group(function () {
         // 7. Buku Agenda Surat Masuk & Keluar
         Route::get('/buku-agenda', [BukuAgendaController::class, 'index'])->name('buku-agenda.index');
         Route::get('/buku-agenda/export-pdf', [BukuAgendaController::class, 'exportPdf'])->name('buku-agenda.export-pdf');
+        Route::get('/buku-agenda/export-excel', [BukuAgendaController::class, 'exportExcel'])->name('buku-agenda.export-excel');
+        Route::get('/buku-agenda/import-template', [BukuAgendaController::class, 'downloadTemplate'])->name('buku-agenda.import-template');
         Route::middleware('permission:administrasi.manage')->group(function () {
+            Route::post('/buku-agenda/import', [BukuAgendaController::class, 'import'])->name('buku-agenda.import');
             Route::get('/buku-agenda/create', [BukuAgendaController::class, 'create'])->name('buku-agenda.create');
             Route::post('/buku-agenda', [BukuAgendaController::class, 'store'])->name('buku-agenda.store');
             Route::get('/buku-agenda/{bukuAgenda}/edit', [BukuAgendaController::class, 'edit'])->name('buku-agenda.edit');
@@ -252,7 +283,10 @@ Route::middleware('auth')->group(function () {
         // 8. Buku Ekspedisi
         Route::get('/buku-ekspedisi', [BukuEkspedisiController::class, 'index'])->name('buku-ekspedisi.index');
         Route::get('/buku-ekspedisi/export-pdf', [BukuEkspedisiController::class, 'exportPdf'])->name('buku-ekspedisi.export-pdf');
+        Route::get('/buku-ekspedisi/export-excel', [BukuEkspedisiController::class, 'exportExcel'])->name('buku-ekspedisi.export-excel');
+        Route::get('/buku-ekspedisi/import-template', [BukuEkspedisiController::class, 'downloadTemplate'])->name('buku-ekspedisi.import-template');
         Route::middleware('permission:administrasi.manage')->group(function () {
+            Route::post('/buku-ekspedisi/import', [BukuEkspedisiController::class, 'import'])->name('buku-ekspedisi.import');
             Route::get('/buku-ekspedisi/create', [BukuEkspedisiController::class, 'create'])->name('buku-ekspedisi.create');
             Route::post('/buku-ekspedisi', [BukuEkspedisiController::class, 'store'])->name('buku-ekspedisi.store');
             Route::get('/buku-ekspedisi/{bukuEkspedisi}/edit', [BukuEkspedisiController::class, 'edit'])->name('buku-ekspedisi.edit');
@@ -262,7 +296,11 @@ Route::middleware('auth')->group(function () {
 
         // 9. Buku Aparat Desa (Aparatur Pemerintah Desa)
         Route::get('/aparatur', [AparaturController::class, 'index'])->name('aparatur.index');
+        Route::get('/aparatur/export-pdf', [AparaturController::class, 'exportPdf'])->name('aparatur.export-pdf');
+        Route::get('/aparatur/export-excel', [AparaturController::class, 'exportExcel'])->name('aparatur.export-excel');
+        Route::get('/aparatur/import-template', [AparaturController::class, 'downloadTemplate'])->name('aparatur.import-template');
         Route::middleware('permission:administrasi.manage')->group(function () {
+            Route::post('/aparatur/import', [AparaturController::class, 'import'])->name('aparatur.import');
             Route::get('/aparatur/create', [AparaturController::class, 'create'])->name('aparatur.create');
             Route::post('/aparatur', [AparaturController::class, 'store'])->name('aparatur.store');
             Route::get('/aparatur/{aparatur}/edit', [AparaturController::class, 'edit'])->name('aparatur.edit');
@@ -273,6 +311,10 @@ Route::middleware('auth')->group(function () {
         // 10. Administrasi Kelembagaan (8 Lembaga: BPD, BUMDes, Kopdes, LPMD, PKK, Posyandu, Karang Taruna, LMP)
         Route::prefix('kelembagaan/{institution:slug}')->name('kelembagaan.')->group(function () {
             Route::get('/', [KelembagaanController::class, 'show'])->name('show');
+            Route::get('/export-pdf', [KelembagaanController::class, 'exportPdf'])->name('export-pdf');
+            Route::get('/export-excel', [KelembagaanController::class, 'exportExcel'])->name('export-excel');
+            Route::get('/import-template', [KelembagaanController::class, 'downloadTemplate'])->name('import-template');
+            Route::post('/import', [KelembagaanController::class, 'import'])->name('import');
 
             // Anggota
             Route::middleware('permission:administrasi.manage')->group(function () {
@@ -390,16 +432,5 @@ Route::middleware('auth')->group(function () {
             Route::put('/inventaris-hasil/{inventarisHasil}', [InventarisHasilController::class, 'update'])->name('inventaris-hasil.update');
             Route::delete('/inventaris-hasil/{inventarisHasil}', [InventarisHasilController::class, 'destroy'])->name('inventaris-hasil.destroy');
         });
-    });
-
-    // =============================================================
-    // Modul Absensi Aparatur
-    // =============================================================
-    Route::prefix('absensi')->name('absensi.')->middleware('permission:absensi.access')->group(function () {
-        Route::get('/scanner', [AbsensiController::class, 'scanner'])->name('scanner');
-        Route::post('/scan', [AbsensiController::class, 'scan'])->name('scan');
-        Route::get('/manual', [AbsensiController::class, 'manualForm'])->name('manual.form');
-        Route::post('/manual', [AbsensiController::class, 'manualStore'])->name('manual.store');
-        Route::get('/export', [AbsensiController::class, 'exportPdf'])->name('export.pdf');
     });
 });

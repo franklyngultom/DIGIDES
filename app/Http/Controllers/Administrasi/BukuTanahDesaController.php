@@ -122,4 +122,132 @@ class BukuTanahDesaController extends Controller
 
         return $pdf->stream('Buku_Tanah_Desa_' . ($jenis ?: 'Semua_Jenis') . '.pdf');
     }
+
+    public function exportExcel(Request $request)
+    {
+        $jenis = $request->query('jenis');
+        $data = BukuTanahDesa::when($jenis, fn($q) => $q->where('jenis_tanah', $jenis))
+            ->orderBy('id', 'asc')
+            ->get();
+
+        $headers = [
+            'No',
+            'Jenis Tanah',
+            'Nomor Sertifikat / Letter C',
+            'Nama Pemilik Asal',
+            'Luas (M2)',
+            'Kelas Tanah',
+            'Lokasi / Blok',
+            'Peruntukan Saat Ini',
+            'Patok Tanda Batas',
+        ];
+
+        $rows = [];
+        foreach ($data as $i => $item) {
+            $rows[] = [
+                $i + 1,
+                $item->jenis_tanah,
+                "'" . $item->nomor_sertifikat_letter_c,
+                $item->nama_pemilik_asal,
+                $item->luas_m2,
+                $item->kelas_tanah ?? '',
+                $item->lokasi_blok,
+                $item->peruntukan_saat_ini,
+                $item->patok_tanda_batas ?? '',
+            ];
+        }
+
+        return \App\Services\AdministrasiImportExportService::exportCsv(
+            'Buku_Tanah_Desa_' . ($jenis ?: 'Semua_Jenis') . '_' . date('Ymd_His') . '.csv',
+            $headers,
+            $rows
+        );
+    }
+
+    public function downloadTemplate()
+    {
+        $headers = [
+            'jenis_tanah',
+            'nomor_sertifikat_letter_c',
+            'nama_pemilik_asal',
+            'luas_m2',
+            'kelas_tanah',
+            'lokasi_blok',
+            'peruntukan_saat_ini',
+            'patok_tanda_batas',
+        ];
+
+        $rows = [
+            [
+                'tanah_kas_desa',
+                'C-104/SKM',
+                'Tanah Kas Desa (Pemerintah Desa Sukamaju)',
+                '15000',
+                'S.I',
+                'Blok Lapangan Utama RT 02/01',
+                'Lapangan Olahraga & Gedung Serbaguna',
+                'Patok Beton BPN No. 01 - 04',
+            ],
+            [
+                'tanah_warga',
+                'SHM No. 4452',
+                'Budi Santoso',
+                '450',
+                'D.II',
+                'Blok Cikole RT 01/01',
+                'Pemukiman Rumah Tinggal',
+                'Pagar Tembok & Patok Kayu',
+            ]
+        ];
+
+        return \App\Services\AdministrasiImportExportService::exportCsv(
+            'Template_Import_Tanah_Desa.csv',
+            $headers,
+            $rows
+        );
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|max:10240',
+        ]);
+
+        $rows = \App\Services\AdministrasiImportExportService::parseCsv($request->file('file')->getRealPath());
+
+        if (count($rows) <= 1) {
+            return redirect()->back()->with('error', 'Berkas kosong atau format tidak sesuai.');
+        }
+
+        $headers = array_map('strtolower', $rows[0]);
+        $importedCount = 0;
+
+        for ($i = 1; $i < count($rows); $i++) {
+            $row = $rows[$i];
+            if (empty(array_filter($row))) continue;
+
+            $data = array_combine($headers, array_pad($row, count($headers), null));
+
+            if (empty($data['nomor_sertifikat_letter_c']) || empty($data['nama_pemilik_asal'])) {
+                continue;
+            }
+
+            BukuTanahDesa::create([
+                'jenis_tanah'               => in_array($data['jenis_tanah'] ?? '', ['tanah_kas_desa', 'tanah_bengkok', 'tanah_warga']) ? $data['jenis_tanah'] : 'tanah_kas_desa',
+                'nomor_sertifikat_letter_c' => $data['nomor_sertifikat_letter_c'],
+                'nama_pemilik_asal'         => $data['nama_pemilik_asal'],
+                'luas_m2'                   => !empty($data['luas_m2']) ? (float)$data['luas_m2'] : 0,
+                'kelas_tanah'               => $data['kelas_tanah'] ?? null,
+                'lokasi_blok'               => $data['lokasi_blok'] ?? 'Blok Desa',
+                'peruntukan_saat_ini'       => $data['peruntukan_saat_ini'] ?? 'Fasilitas Desa',
+                'patok_tanda_batas'         => $data['patok_tanda_batas'] ?? null,
+                'created_by'                => auth()->id(),
+            ]);
+
+            $importedCount++;
+        }
+
+        return redirect()->route('administrasi.tanah-desa.index')
+            ->with('success', "Berhasil mengimpor {$importedCount} data register tanah desa.");
+    }
 }

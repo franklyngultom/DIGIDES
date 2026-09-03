@@ -88,11 +88,11 @@
                             <h4 class="text-xs font-extrabold text-[#0c3837] uppercase tracking-wider mb-3">{{ $groupName }}</h4>
                             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
                                 @foreach ($perms as $perm)
-                                <label class="inline-flex items-center gap-2 p-2 rounded-xl bg-white border border-[#e1ede8] hover:border-[#10b981] cursor-pointer transition-colors text-xs">
+                                <label class="inline-flex items-center gap-2.5 p-2.5 rounded-xl bg-white border border-[#e1ede8] hover:border-[#10b981] hover:bg-[#edf5f2] cursor-pointer transition-all text-xs shadow-2xs">
                                     <input type="checkbox" name="permissions[]" value="{{ $perm->name }}" 
                                            {{ in_array($perm->name, old('permissions', [])) ? 'checked' : '' }}
-                                           class="w-3.5 h-3.5 rounded text-[#114443] border-[#e1ede8] focus:ring-[#10b981]">
-                                    <span class="text-slate-700 font-mono text-[11px]">{{ $perm->name }}</span>
+                                           class="w-4 h-4 rounded text-[#114443] border-[#e1ede8] focus:ring-[#10b981] shrink-0">
+                                    <span class="text-xs font-semibold text-[#0c3837] leading-tight">{{ $perm->display_name ?? \App\Http\Controllers\Admin\UserController::formatPermissionLabel($perm->name) }}</span>
                                 </label>
                                 @endforeach
                             </div>

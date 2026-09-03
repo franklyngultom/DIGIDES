@@ -15,7 +15,7 @@
         </div>
 
         <!-- Login Form -->
-        <form method="POST" action="{{ route('login.store') }}" class="space-y-5">
+        <form method="POST" action="{{ route('login.store') }}" class="space-y-5" x-data="{ showPass: false }">
             @csrf
 
             <!-- Email Address -->
@@ -36,7 +36,7 @@
                 @enderror
             </div>
 
-            <!-- Password -->
+            <!-- Password with Toggle -->
             <div>
                 <label for="password" class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-2">Kata Sandi</label>
                 <div class="relative">
@@ -45,9 +45,22 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                         </svg>
                     </div>
-                    <input id="password" type="password" name="password" required autocomplete="current-password"
+                    <input id="password" :type="showPass ? 'text' : 'password'" name="password" required autocomplete="current-password"
                            placeholder="••••••••"
-                           class="w-full pl-10 pr-4 py-3 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-sm text-[#0f172a] focus:bg-white focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-[#10b981]/20 transition-all">
+                           class="w-full pl-10 pr-11 py-3 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-sm text-[#0f172a] focus:bg-white focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-[#10b981]/20 transition-all">
+                    
+                    <!-- Toggle Visibility Button -->
+                    <button type="button" @click="showPass = !showPass" tabindex="-1"
+                            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-[#114443] transition-colors cursor-pointer"
+                            :title="showPass ? 'Sembunyikan Kata Sandi' : 'Tampilkan Kata Sandi'">
+                        <svg x-show="!showPass" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        <svg x-show="showPass" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/>
+                        </svg>
+                    </button>
                 </div>
                 @error('password')
                     <p class="text-xs text-rose-600 mt-1 font-medium">{{ $message }}</p>
@@ -74,19 +87,14 @@
             </div>
         </form>
 
-        <!-- Development Quick Logins -->
+        <!-- Register Link -->
         <div class="mt-8 pt-6 border-t border-[#e1ede8] text-center">
-            <span class="text-[11px] font-semibold text-slate-400 block mb-3 uppercase tracking-wider">Akses Uji Coba Cepat</span>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-                <button type="button" onclick="document.getElementById('email').value='admin@desa.id'; document.getElementById('password').value='password';"
-                        class="p-2 rounded-2xl bg-[#e2f0ed] hover:bg-[#d0e6e1] text-[#114443] font-semibold transition-colors text-center border border-[#10b981]/20 cursor-pointer">
-                    Admin Desa
-                </button>
-                <button type="button" onclick="document.getElementById('email').value='staff@desa.id'; document.getElementById('password').value='password';"
-                        class="p-2 rounded-2xl bg-[#f6fce2] hover:bg-[#edf9ca] text-[#0c3837] font-semibold transition-colors text-center border border-[#d4ed31]/50 cursor-pointer">
-                    Staff Pelayanan
-                </button>
-            </div>
+            <p class="text-xs text-slate-500">
+                Belum memiliki akun terdaftar?
+                <a href="{{ route('register') }}" class="font-bold text-[#114443] hover:text-[#10b981] hover:underline transition-colors ml-1">
+                    Daftar Akun Baru
+                </a>
+            </p>
         </div>
     </div>
 </x-layouts.auth>

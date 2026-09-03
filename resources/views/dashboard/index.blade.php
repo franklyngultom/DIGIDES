@@ -27,6 +27,62 @@
         </div>
     </div>
 
+    @if(auth()->check() && auth()->user()->hasRole('Staff Desa'))
+    <!-- Staff Profile & Quick Actions Banner -->
+    <div class="bg-gradient-to-r from-[#114443] via-[#0c3837] to-[#082424] rounded-3xl p-5 md:p-6 text-white border border-[#1b5e5c] shadow-lg relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-5">
+        <!-- Background Ambient Glow -->
+        <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-[#10b981]/20 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute left-1/3 -top-10 w-36 h-36 bg-[#d4ed31]/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="flex items-center gap-4 relative z-10 w-full md:w-auto">
+            <!-- Staff Avatar with hover edit overlay -->
+            <div class="relative group shrink-0">
+                <div class="w-16 h-16 sm:w-18 sm:h-18 rounded-full border-2 border-[#d4ed31] p-1 shadow-md bg-[#114443]">
+                    <img src="{{ auth()->user()->avatar_url }}" alt="{{ auth()->user()->name }}" class="w-full h-full rounded-full object-cover shadow-inner">
+                </div>
+                <button type="button" 
+                        @click="$dispatch('open-avatar-modal')"
+                        class="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-all duration-200 cursor-pointer text-white"
+                        title="Ganti Foto Profil Staff">
+                    <svg class="w-5 h-5 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span class="text-[8px] font-bold text-[#d4ed31] uppercase">Edit</span>
+                </button>
+                <span class="absolute bottom-1 right-1 w-3.5 h-3.5 bg-[#10b981] border-2 border-[#0c3837] rounded-full" title="Staff Aktif"></span>
+            </div>
+
+            <!-- Staff Info -->
+            <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <h2 class="text-base sm:text-lg font-extrabold text-white tracking-tight truncate">{{ auth()->user()->name }}</h2>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#d4ed31] text-[#0c3837]">
+                        Staff Pelayanan Desa
+                    </span>
+                </div>
+                <p class="text-xs text-[#8bc3b8] mt-0.5">{{ auth()->user()->email }} &bull; {{ auth()->user()->phone ?? 'Belum ada nomor telepon' }}</p>
+                <p class="text-[11px] text-slate-300 mt-1 flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>Status Akun Aktif &bull; Sesi Masuk: {{ auth()->user()->last_login_at ? auth()->user()->last_login_at->format('d M Y, H:i') : 'Hari ini' }} WIB</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Action Button to Edit Avatar -->
+        <div class="relative z-10 flex items-center gap-3 w-full md:w-auto justify-end">
+            <button type="button" 
+                    @click="$dispatch('open-avatar-modal')"
+                    class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-[#d4ed31] hover:bg-[#c2db26] text-[#0c3837] font-bold text-xs flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <span>Ubah Foto Profil Staff</span>
+            </button>
+        </div>
+    </div>
+    @endif
+
     <!-- 1. Metric Cards with Sparklines (Exact Visual Reference Layout) -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         @foreach($productivityStats as $stat)

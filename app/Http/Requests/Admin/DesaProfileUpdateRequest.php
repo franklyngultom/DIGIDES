@@ -37,6 +37,8 @@ class DesaProfileUpdateRequest extends FormRequest
             'nip_kades' => ['nullable', 'string', 'max:50'],
             'nik_kades' => ['nullable', 'string', 'size:16'],
             'logo' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp,svg', 'max:2048'],
+            'foto_desa' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
+            'hapus_foto_desa' => ['nullable', 'boolean'],
         ];
     }
 }

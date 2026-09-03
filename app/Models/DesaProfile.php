@@ -26,6 +26,7 @@ class DesaProfile extends Model
         'telepon_desa',
         'website',
         'logo_path',
+        'foto_desa_path',
         'nama_kades',
         'nip_kades',
         'nik_kades',
@@ -90,6 +91,38 @@ class DesaProfile extends Model
     }
 
     /**
+     * Accessor for village scenic / landscape photo URL.
+     */
+    protected function fotoDesaUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if ($this->foto_desa_path && file_exists(public_path('storage/'.$this->foto_desa_path))) {
+                    return asset('storage/'.$this->foto_desa_path);
+                }
+
+                if ($this->foto_desa_path && file_exists(public_path($this->foto_desa_path))) {
+                    return asset($this->foto_desa_path);
+                }
+
+                if (file_exists(public_path('images/sukabumi-scenic.jpg'))) {
+                    return asset('images/sukabumi-scenic.jpg');
+                }
+
+                return 'https://images.unsplash.com/photo-1506744038136-46273834b3fb';
+            }
+        );
+    }
+
+    /**
+     * Check if a custom village photo has been uploaded.
+     */
+    public function getHasCustomFotoDesaAttribute(): bool
+    {
+        return !empty($this->foto_desa_path);
+    }
+
+    /**
      * Accessor for full structured address.
      */
     protected function fullAddress(): Attribute
@@ -99,3 +132,4 @@ class DesaProfile extends Model
         );
     }
 }
+
