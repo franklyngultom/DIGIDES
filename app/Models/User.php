@@ -127,4 +127,20 @@ class User extends Authenticatable
                 ->orWhere('phone', 'like', "%{$search}%");
         });
     }
+
+    /**
+     * Relationship to CitizenProfile.
+     */
+    public function citizenProfile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(CitizenProfile::class);
+    }
+
+    /**
+     * Helper to check if user is registered as citizen (Masyarakat).
+     */
+    public function isMasyarakat(): bool
+    {
+        return $this->hasRole('Masyarakat');
+    }
 }

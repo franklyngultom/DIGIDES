@@ -24,10 +24,11 @@ class RegistrationTest extends TestCase
         $response = $this->get('/register');
 
         $response->assertStatus(200);
-        $response->assertSee('Daftar Akun Baru');
+        $response->assertSee('Daftar Akun Masyarakat');
+        $response->assertSee('Nomor Induk Kependudukan (NIK)');
         $response->assertSee('Nama Lengkap');
         $response->assertSee('Alamat Email');
-        $response->assertSee('Nomor Telepon / WhatsApp');
+        $response->assertSee('Nomor WhatsApp / HP Aktif');
         $response->assertSee('showPass');
         $response->assertSee('showPassConfirm');
     }
@@ -35,31 +36,38 @@ class RegistrationTest extends TestCase
     public function test_new_users_can_register(): void
     {
         $response = $this->post('/register', [
-            'name' => 'Budi Staf Baru',
-            'email' => 'budistaf@desa.id',
+            'name' => 'Budi Warga Baru',
+            'nik' => '3202119901990001',
+            'email' => 'budiwarga@desa.id',
             'phone' => '081299988877',
             'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard'));
+        $response->assertRedirect(route('masyarakat.dashboard'));
 
         $this->assertDatabaseHas('users', [
-            'name' => 'Budi Staf Baru',
-            'email' => 'budistaf@desa.id',
+            'name' => 'Budi Warga Baru',
+            'email' => 'budiwarga@desa.id',
             'phone' => '081299988877',
             'is_active' => true,
         ]);
 
-        $user = User::where('email', 'budistaf@desa.id')->first();
-        $this->assertTrue($user->hasRole('Staff Desa'));
+        $this->assertDatabaseHas('citizen_profiles', [
+            'nik' => '3202119901990001',
+            'nama_lengkap' => 'Budi Warga Baru',
+        ]);
+
+        $user = User::where('email', 'budiwarga@desa.id')->first();
+        $this->assertTrue($user->hasRole('Masyarakat'));
     }
 
     public function test_registration_validation_fails_with_duplicate_email(): void
     {
         $response = $this->post('/register', [
             'name' => 'Duplikat Admin',
+            'nik' => '3202119901990002',
             'email' => 'admin@desa.id',
             'phone' => '081234567890',
             'password' => 'password123',
@@ -70,10 +78,26 @@ class RegistrationTest extends TestCase
         $this->assertGuest();
     }
 
+    public function test_registration_validation_fails_with_invalid_nik(): void
+    {
+        $response = $this->post('/register', [
+            'name' => 'Invalid NIK',
+            'nik' => '12345', // Not 16 digits
+            'email' => 'invalidnik@desa.id',
+            'phone' => '081234567890',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+
+        $response->assertSessionHasErrors('nik');
+        $this->assertGuest();
+    }
+
     public function test_registration_validation_fails_with_unmatched_password(): void
     {
         $response = $this->post('/register', [
             'name' => 'User Password Mismatch',
+            'nik' => '3202119901990003',
             'email' => 'mismatch@desa.id',
             'phone' => '081234567890',
             'password' => 'password123',

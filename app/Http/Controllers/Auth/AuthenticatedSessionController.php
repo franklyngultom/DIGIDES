@@ -38,6 +38,11 @@ class AuthenticatedSessionController extends Controller
             ->performedOn($user)
             ->log("Pengguna {$user->name} berhasil masuk ke sistem.");
 
+        if ($user->hasRole('Masyarakat')) {
+            return redirect()->intended(route('masyarakat.dashboard'))
+                ->with('success', "Selamat datang di Portal Layanan Mandiri, {$user->name}!");
+        }
+
         return redirect()->intended(route('dashboard'))
             ->with('success', "Selamat datang kembali, {$user->name}!");
     }

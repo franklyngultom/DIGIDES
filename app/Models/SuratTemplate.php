@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class SuratTemplate extends Model
 {
@@ -15,13 +16,19 @@ class SuratTemplate extends Model
 
     protected $fillable = [
         'kode_surat',
+        'slug',
         'nama_surat',
         'penomoran_format',
         'template_blade',
         'schema_fields_json',
+        'persyaratan_json',
+        'dokumen_wajib_json',
+        'estimasi_proses',
+        'biaya',
         'icon',
         'deskripsi',
         'is_active',
+        'is_online_available',
     ];
 
     /**
@@ -31,8 +38,22 @@ class SuratTemplate extends Model
     {
         return [
             'schema_fields_json' => 'array',
+            'persyaratan_json' => 'array',
+            'dokumen_wajib_json' => 'array',
             'is_active' => 'boolean',
+            'is_online_available' => 'boolean',
         ];
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($template) {
+            if (empty($template->slug)) {
+                $template->slug = Str::slug($template->nama_surat) . '-' . Str::lower(Str::random(4));
+            }
+        });
     }
 
     /**
@@ -49,5 +70,14 @@ class SuratTemplate extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);
+    }
+
+    /**
+     * Online available scope.
+     */
+    public function scopeOnline(Builder $query): Builder
+    {
+        return $query->where('is_active', true)
+            ->where('is_online_available', true);
     }
 }

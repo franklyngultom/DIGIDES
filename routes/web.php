@@ -28,23 +28,34 @@ use App\Http\Controllers\Keuangan\ApbdesController;
 use App\Http\Controllers\Keuangan\BukuKasController;
 use App\Http\Controllers\Keuangan\KeuanganHubController;
 use App\Http\Controllers\Keuangan\RabController;
+use App\Http\Controllers\Masyarakat\CitizenDashboardController;
+use App\Http\Controllers\Masyarakat\CitizenPengajuanController;
+use App\Http\Controllers\Masyarakat\CitizenProfileController;
 use App\Http\Controllers\Pembangunan\InventarisHasilController;
 use App\Http\Controllers\Pembangunan\KaderPemberdayaanController;
 use App\Http\Controllers\Pembangunan\PembangunanHubController;
 use App\Http\Controllers\Pembangunan\ProyekPembangunanController;
+use App\Http\Controllers\Persuratan\ArsipSuratController;
+use App\Http\Controllers\Persuratan\PelayananSuratController;
+use App\Http\Controllers\Persuratan\PengajuanAntreanController;
+use App\Http\Controllers\PublicWebsiteController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes - DIGIDES v2
+| Web Routes - DIGIDES v3
 |--------------------------------------------------------------------------
 */
 
-// Redirect root to dashboard or login
-Route::get('/', function () {
-    return Auth::check() ? redirect()->route('dashboard') : redirect()->route('login');
-});
+// Public Website Routes (Fase 01 - Website Profil & Layanan Desa)
+Route::get('/', [PublicWebsiteController::class, 'home'])->name('public.home');
+Route::get('/profil-desa', [PublicWebsiteController::class, 'profil'])->name('public.profil');
+Route::get('/layanan', [PublicWebsiteController::class, 'layanan'])->name('public.layanan');
+Route::get('/berita', [PublicWebsiteController::class, 'berita'])->name('public.berita');
+Route::get('/berita/{slug}', [PublicWebsiteController::class, 'beritaDetail'])->name('public.berita.detail');
+Route::get('/kontak', [PublicWebsiteController::class, 'kontak'])->name('public.kontak');
+Route::get('/lacak-surat', [PublicWebsiteController::class, 'lacakSurat'])->name('public.lacak-surat');
 
 // Guest Authentication Routes
 Route::middleware('guest')->group(function () {
@@ -58,6 +69,21 @@ Route::middleware('guest')->group(function () {
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
+    // Portal Masyarakat (Fase 02 - Layanan Mandiri Warga)
+    Route::prefix('masyarakat')->name('masyarakat.')->group(function () {
+        Route::get('/dashboard', [CitizenDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/profil', [CitizenProfileController::class, 'show'])->name('profil');
+        Route::put('/profil', [CitizenProfileController::class, 'update'])->name('profil.update');
+        Route::put('/profil/password', [CitizenProfileController::class, 'updatePassword'])->name('profil.password');
+
+        // Pengajuan Surat Online (Fase 04)
+        Route::get('/pengajuan', [CitizenPengajuanController::class, 'index'])->name('pengajuan.index');
+        Route::get('/pengajuan/buat', [CitizenPengajuanController::class, 'create'])->name('pengajuan.create');
+        Route::post('/pengajuan', [CitizenPengajuanController::class, 'store'])->name('pengajuan.store');
+        Route::get('/pengajuan/{pengajuan}', [CitizenPengajuanController::class, 'show'])->name('pengajuan.show');
+        Route::get('/pengajuan/{pengajuan}/dokumen/{index}', [CitizenPengajuanController::class, 'downloadDokumen'])->name('pengajuan.dokumen.download');
+    });
 
     // Main 3-Column Working Productivity Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -172,6 +198,27 @@ Route::middleware('auth')->group(function () {
         // Pemindai Duplikasi NIK
         Route::middleware('permission:kependudukan.view')->group(function () {
             Route::get('/tools/duplicate-scanner', [DuplicateScannerController::class, 'index'])->name('duplicates');
+        });
+    });
+
+    // =============================================================
+    // Modul Persuratan Walk-In, Arsip, & Antrean Pengajuan Online
+    // =============================================================
+    Route::prefix('persuratan')->name('persuratan.')->group(function () {
+        Route::middleware('permission:persuratan.view')->group(function () {
+            // Antrean Pengajuan Online (Fase 05)
+            Route::get('/antrean', [PengajuanAntreanController::class, 'index'])->name('antrean.index');
+            Route::get('/antrean/{pengajuan}', [PengajuanAntreanController::class, 'show'])->name('antrean.show');
+            Route::post('/antrean/{pengajuan}/status', [PengajuanAntreanController::class, 'updateStatus'])->name('antrean.status');
+            Route::get('/antrean/{pengajuan}/dokumen/{index}', [PengajuanAntreanController::class, 'downloadDokumen'])->name('antrean.dokumen.download');
+
+            // Layanan Walk-In & Arsip
+            Route::get('/pelayanan', [PelayananSuratController::class, 'create'])->name('create');
+            Route::get('/search-penduduk', [PelayananSuratController::class, 'searchPenduduk'])->name('search-penduduk');
+            Route::get('/arsip', [ArsipSuratController::class, 'index'])->name('arsip.index');
+        });
+        Route::middleware('permission:persuratan.create')->group(function () {
+            Route::post('/pelayanan', [PelayananSuratController::class, 'store'])->name('store');
         });
     });
 

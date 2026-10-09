@@ -185,6 +185,18 @@
                     </a>
                     @endcan
 
+                    @can('persuratan.view')
+                    <!-- Antrean Persuratan & Walk-in -->
+                    <a href="{{ route('persuratan.antrean.index') }}" 
+                       @click="mobileSidebarOpen = false"
+                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'persuratan.') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        <span>Antrean Persuratan</span>
+                    </a>
+                    @endcan
+
                     @can('kependudukan.view')
                     <!-- 3. Kependudukan -->
                     <a href="{{ route('kependudukan.index') }}" 
@@ -516,6 +528,25 @@
                           x-transition:enter-end="opacity-100 translate-x-0"
                           class="text-xs truncate">
                         Administrasi
+                    </span>
+                </a>
+                @endcan
+
+                @can('persuratan.view')
+                <!-- Persuratan & Antrean Online -->
+                <a href="{{ route('persuratan.antrean.index') }}" 
+                   title="Antrean Persuratan Online"
+                   id="nav-persuratan"
+                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'persuratan.') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'persuratan.') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    <span x-show="sidebarExpanded" 
+                          x-transition:enter="transition ease-out duration-150" 
+                          x-transition:enter-start="opacity-0 -translate-x-2" 
+                          x-transition:enter-end="opacity-100 translate-x-0"
+                          class="text-xs truncate">
+                        Persuratan
                     </span>
                 </a>
                 @endcan

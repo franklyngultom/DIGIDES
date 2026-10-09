@@ -14,9 +14,15 @@ class DashboardController extends Controller
     /**
      * Display the main working productivity dashboard.
      */
-    public function index(): View
+    public function index()
     {
         $user = Auth::user();
+
+        // Redirect warga/masyarakat ke portal layanan mandiri mereka
+        if ($user && $user->hasRole('Masyarakat')) {
+            return redirect()->route('masyarakat.dashboard');
+        }
+
         $desa = DesaProfile::current();
 
         $recentActivities = Activity::with('causer')

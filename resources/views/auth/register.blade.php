@@ -11,27 +11,49 @@
                 </svg>
             </div>
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-[#e2f0ed] text-[#114443] border border-[#10b981]/30">
-                Pendaftaran Akun
+                Portal Warga Mandiri
             </span>
-            <h1 class="text-2xl font-extrabold text-[#0c3837] tracking-tight mt-3">Daftar Akun Baru</h1>
-            <p class="text-xs text-[#64748b] mt-1">Lengkapi data diri untuk membuat akun staf pelayanan desa</p>
+            <h1 class="text-2xl font-extrabold text-[#0c3837] tracking-tight mt-3">Daftar Akun Masyarakat</h1>
+            <p class="text-xs text-[#64748b] mt-1">Lengkapi data diri Anda untuk mengakses layanan persuratan online desa</p>
         </div>
 
         <!-- Register Form -->
         <form method="POST" action="{{ route('register.store') }}" class="space-y-4" x-data="{ showPass: false, showPassConfirm: false }">
             @csrf
 
+            <!-- NIK 16 Digit -->
+            <div>
+                <label for="nik" class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5">
+                    Nomor Induk Kependudukan (NIK) <span class="text-rose-500">*</span>
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/>
+                        </svg>
+                    </div>
+                    <input id="nik" type="text" name="nik" value="{{ old('nik') }}" required autofocus maxlength="16"
+                           placeholder="16 digit nomor KTP"
+                           class="w-full pl-10 pr-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-sm text-[#0f172a] focus:bg-white focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-[#10b981]/20 transition-all">
+                </div>
+                @error('nik')
+                    <p class="text-xs text-rose-600 mt-1 font-medium">{{ $message }}</p>
+                @enderror
+            </div>
+
             <!-- Full Name -->
             <div>
-                <label for="name" class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5">Nama Lengkap</label>
+                <label for="name" class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5">
+                    Nama Lengkap <span class="text-rose-500">*</span>
+                </label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
                     </div>
-                    <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name"
-                           placeholder="Nama lengkap staf"
+                    <input id="name" type="text" name="name" value="{{ old('name') }}" required autocomplete="name"
+                           placeholder="Nama sesuai KTP"
                            class="w-full pl-10 pr-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-sm text-[#0f172a] focus:bg-white focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-[#10b981]/20 transition-all">
                 </div>
                 @error('name')
@@ -41,7 +63,9 @@
 
             <!-- Email Address -->
             <div>
-                <label for="email" class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5">Alamat Email</label>
+                <label for="email" class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5">
+                    Alamat Email <span class="text-rose-500">*</span>
+                </label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -49,7 +73,7 @@
                         </svg>
                     </div>
                     <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="username"
-                           placeholder="nama@desa.id"
+                           placeholder="nama@email.com"
                            class="w-full pl-10 pr-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-sm text-[#0f172a] focus:bg-white focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-[#10b981]/20 transition-all">
                 </div>
                 @error('email')
@@ -59,14 +83,16 @@
 
             <!-- Phone Number -->
             <div>
-                <label for="phone" class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5">Nomor Telepon / WhatsApp</label>
+                <label for="phone" class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5">
+                    Nomor WhatsApp / HP Aktif <span class="text-rose-500">*</span>
+                </label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                         </svg>
                     </div>
-                    <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" autocomplete="tel"
+                    <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" required autocomplete="tel"
                            placeholder="081234567890"
                            class="w-full pl-10 pr-4 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-sm text-[#0f172a] focus:bg-white focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-[#10b981]/20 transition-all">
                 </div>
@@ -77,7 +103,9 @@
 
             <!-- Password with Toggle -->
             <div>
-                <label for="password" class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5">Kata Sandi</label>
+                <label for="password" class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5">
+                    Kata Sandi <span class="text-rose-500">*</span>
+                </label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,16 +116,12 @@
                            placeholder="Minimal 8 karakter"
                            class="w-full pl-10 pr-11 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-sm text-[#0f172a] focus:bg-white focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-[#10b981]/20 transition-all">
                     
-                    <!-- Toggle Visibility Button -->
                     <button type="button" @click="showPass = !showPass" tabindex="-1"
-                            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-[#114443] transition-colors cursor-pointer"
-                            :title="showPass ? 'Sembunyikan Kata Sandi' : 'Tampilkan Kata Sandi'">
-                        <!-- Eye Icon (Hidden state) -->
+                            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-[#114443] transition-colors cursor-pointer">
                         <svg x-show="!showPass" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                         </svg>
-                        <!-- Eye Slash Icon (Visible state) -->
                         <svg x-show="showPass" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/>
                         </svg>
@@ -110,7 +134,9 @@
 
             <!-- Password Confirmation with Toggle -->
             <div>
-                <label for="password_confirmation" class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5">Konfirmasi Kata Sandi</label>
+                <label for="password_confirmation" class="block text-xs font-bold text-[#0c3837] uppercase tracking-wider mb-1.5">
+                    Konfirmasi Kata Sandi <span class="text-rose-500">*</span>
+                </label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,16 +147,12 @@
                            placeholder="Ulangi kata sandi"
                            class="w-full pl-10 pr-11 py-2.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-sm text-[#0f172a] focus:bg-white focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-[#10b981]/20 transition-all">
                     
-                    <!-- Toggle Visibility Button -->
                     <button type="button" @click="showPassConfirm = !showPassConfirm" tabindex="-1"
-                            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-[#114443] transition-colors cursor-pointer"
-                            :title="showPassConfirm ? 'Sembunyikan Konfirmasi Kata Sandi' : 'Tampilkan Konfirmasi Kata Sandi'">
-                        <!-- Eye Icon (Hidden state) -->
+                            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-[#114443] transition-colors cursor-pointer">
                         <svg x-show="!showPassConfirm" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                         </svg>
-                        <!-- Eye Slash Icon (Visible state) -->
                         <svg x-show="showPassConfirm" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/>
                         </svg>
@@ -141,7 +163,7 @@
             <!-- Submit Button -->
             <div class="pt-3">
                 <button type="submit" class="w-full py-3.5 px-6 bg-gradient-to-r from-[#114443] to-[#0c3837] hover:from-[#0c3837] hover:to-[#082424] text-white font-bold rounded-full shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer text-sm">
-                    <span>Daftarkan Akun Baru</span>
+                    <span>Daftar Akun Masyarakat</span>
                     <svg class="w-4 h-4 text-[#d4ed31] group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                     </svg>
@@ -154,7 +176,7 @@
             <p class="text-xs text-slate-500">
                 Sudah memiliki akun terdaftar?
                 <a href="{{ route('login') }}" class="font-bold text-[#114443] hover:text-[#10b981] hover:underline transition-colors ml-1">
-                    Masuk ke Sistem
+                    Masuk ke Portal
                 </a>
             </p>
         </div>

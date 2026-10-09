@@ -61,6 +61,12 @@ class RoleAndPermissionSeeder extends Seeder
             // Audit Trail & Backup System
             'audit.view',
             'backup.manage',
+
+            // Layanan Mandiri Portal Masyarakat (Fase 02)
+            'masyarakat.view_dashboard',
+            'masyarakat.manage_profile',
+            'masyarakat.submit_request',
+            'masyarakat.view_own_request',
         ];
 
         foreach ($permissions as $permission) {
@@ -84,6 +90,15 @@ class RoleAndPermissionSeeder extends Seeder
             'kelembagaan.view',
             'kelembagaan.edit_content',
             'administrasi.view',
+        ]);
+
+        // 4. Role Masyarakat (Portal Warga / Layanan Mandiri)
+        $masyarakatRole = Role::firstOrCreate(['name' => 'Masyarakat', 'guard_name' => 'web']);
+        $masyarakatRole->syncPermissions([
+            'masyarakat.view_dashboard',
+            'masyarakat.manage_profile',
+            'masyarakat.submit_request',
+            'masyarakat.view_own_request',
         ]);
     }
 }
