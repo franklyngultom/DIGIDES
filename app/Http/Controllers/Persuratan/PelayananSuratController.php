@@ -31,9 +31,9 @@ class PelayananSuratController extends Controller
     {
         $term = $request->query('term');
         $results = Penduduk::where('nik', 'like', "%{$term}%")
-            ->orWhere('nama', 'like', "%{$term}%")
+            ->orWhere('nama_lengkap', 'like', "%{$term}%")
             ->take(10)
-            ->get(['id', 'nik', 'nama', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'pekerjaan', 'alamat', 'status']);
+            ->get(['id', 'nik', 'nama_lengkap', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'pekerjaan', 'alamat_lengkap', 'status_penduduk']);
         return response()->json($results);
     }
 
@@ -54,13 +54,10 @@ class PelayananSuratController extends Controller
         // Snapshot data + custom fields
         $payload = array_merge(
             $penduduk->only([
-                'nik', 'nama', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'pekerjaan', 'alamat', 'status'
+                'nik', 'nama_lengkap', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'pekerjaan', 'alamat_lengkap', 'status_penduduk'
             ]),
             $request->except(['_token', 'template_id', 'penduduk_id'])
         );
-
-        // Render PDF and store
-        $pdfPath = $pdfAction->execute($template->template_blade, $payload, $nomor);
 
         // Archive record
         $arsip = SuratArsip::create([
@@ -70,17 +67,25 @@ class PelayananSuratController extends Controller
             'user_id' => $request->user()->id,
             'keperluan' => $request->input('keperluan'),
             'payload_data' => $payload,
-            'file_pdf_path' => $pdfPath,
             'tanggal_terbit' => now(),
             'status' => 'terbit',
         ]);
 
+        // Render PDF and store
+        $pdfPath = $pdfAction->renderAndStore($arsip);
+
         // Dispatch event for sync
         SuratDiterbitkanEvent::dispatch($arsip);
 
-        return response()->json([
-            'message' => 'Surat berhasil diterbitkan',
-            'pdf_url' => Storage::url($pdfPath),
-        ]);
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'message' => 'Surat berhasil diterbitkan',
+                'pdf_url' => Storage::url($pdfPath),
+                'arsip_id' => $arsip->id,
+            ]);
+        }
+
+        return redirect()->route('persuratan.arsip.index')
+            ->with('success', "Surat nomor {$nomor} berhasil diterbitkan.");
     }
 }

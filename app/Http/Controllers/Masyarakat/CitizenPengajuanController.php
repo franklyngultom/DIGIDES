@@ -75,10 +75,12 @@ class CitizenPengajuanController extends Controller
         $request->validate([
             'surat_template_id'  => ['required', 'exists:surat_templates,id'],
             'keperluan'          => ['required', 'string', 'max:500'],
+            'dokumen'            => ['nullable', 'array', 'max:5'],
             'dokumen.*'          => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
         ], [
             'surat_template_id.required' => 'Pilih jenis surat yang ingin diajukan.',
             'keperluan.required'         => 'Tuliskan keperluan pengajuan surat ini.',
+            'dokumen.max'                => 'Jumlah dokumen pendukung maksimal 5 file.',
             'dokumen.*.max'              => 'Ukuran setiap dokumen maksimal 5 MB.',
             'dokumen.*.mimes'            => 'Format dokumen yang diterima: PDF, JPG, PNG.',
         ]);
@@ -177,5 +179,32 @@ class CitizenPengajuanController extends Controller
         }
 
         return Storage::disk('private')->download($dokumen['path'], $dokumen['original_name']);
+    }
+
+    /**
+     * Download the officially issued letter PDF for this submission.
+     */
+    public function downloadSurat(PengajuanSurat $pengajuan, \App\Actions\Persuratan\RenderSuratPdfAction $pdfAction)
+    {
+        $user = Auth::user();
+
+        if (! $pengajuan->isOwnedBy($user) && ! $user->hasAnyPermission(['persuratan.view'])) {
+            abort(403, 'Anda tidak memiliki hak untuk mengunduh dokumen surat ini.');
+        }
+
+        $arsip = $pengajuan->suratArsip;
+        if (! $arsip) {
+            abort(404, 'Dokumen surat resmi belum diterbitkan.');
+        }
+
+        if (! $arsip->file_pdf_path || ! Storage::disk('local')->exists($arsip->file_pdf_path)) {
+            $pdfAction->renderAndStore($arsip);
+        }
+
+        $filename = 'Surat_Resmi_' . str_replace(['/', '\\', ' '], '_', $arsip->nomor_surat) . '.pdf';
+
+        return Storage::disk('local')->download($arsip->file_pdf_path, $filename, [
+            'Content-Type' => 'application/pdf',
+        ]);
     }
 }

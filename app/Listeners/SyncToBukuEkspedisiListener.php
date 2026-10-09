@@ -29,7 +29,9 @@ class SyncToBukuEkspedisiListener
                 'perihal' => ($surat->template?->nama_surat ?? 'Surat Keterangan') . ' - ' . ($surat->penduduk?->nama_lengkap ?? '-'),
                 'tujuan_penerima' => $surat->payload_data['tujuan_surat'] ?? $surat->payload_data['keperluan'] ?? 'Pemohon / Instansi Terkait',
                 'petugas_pengirim' => $surat->user?->name ?? 'Petugas Pelayanan',
-                'catatan' => 'Diterbitkan otomatis melalui Pelayanan Walk-In Desk',
+                'catatan' => $surat->pengajuan
+                    ? "Diterbitkan melalui Pengajuan Online ({$surat->pengajuan->nomor_pengajuan})"
+                    : 'Diterbitkan otomatis melalui Pelayanan Walk-In Desk',
             ]
         );
     }

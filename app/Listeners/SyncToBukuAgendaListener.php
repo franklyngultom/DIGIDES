@@ -32,7 +32,9 @@ class SyncToBukuAgendaListener
                 'asal_tujuan' => $surat->penduduk?->nama_lengkap ?? 'Pemohon',
                 'perihal' => ($surat->template?->nama_surat ?? 'Surat Keterangan') . ' (' . ($surat->keperluan ?? '-') . ')',
                 'file_surat_path' => $surat->file_pdf_path,
-                'keterangan' => 'Pelayanan Surat Walk-In Desk',
+                'keterangan' => $surat->pengajuan
+                    ? "Pengajuan Online ({$surat->pengajuan->nomor_pengajuan})"
+                    : 'Pelayanan Surat Walk-In Desk',
                 'created_by' => $surat->user_id,
             ]
         );

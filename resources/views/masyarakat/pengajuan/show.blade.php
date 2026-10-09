@@ -49,6 +49,30 @@
         @endif
     </div>
 
+    {{-- Official Issued Letter Banner & Download --}}
+    @if($pengajuan->suratArsip)
+    <div class="bg-gradient-to-r from-[#0c3837] to-[#114443] rounded-3xl p-6 text-white shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="space-y-1">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-[#d4ed31] text-[10px] font-bold uppercase tracking-wider">
+                &check; Dokumen Resmi Sah Telah Terbit
+            </span>
+            <h3 class="text-base sm:text-lg font-black tracking-tight text-white font-mono">No. {{ $pengajuan->suratArsip->nomor_surat }}</h3>
+            <p class="text-xs text-white/80">
+                Diterbitkan pada {{ $pengajuan->suratArsip->tanggal_terbit ? \Carbon\Carbon::parse($pengajuan->suratArsip->tanggal_terbit)->isoFormat('D MMMM Y') : '-' }} &bull; Terdaftar di Register Desa
+            </p>
+        </div>
+
+        <a href="{{ route('masyarakat.pengajuan.surat.download', $pengajuan) }}"
+           target="_blank"
+           class="px-5 py-3 rounded-2xl bg-[#10b981] hover:bg-[#059669] text-white text-xs font-black shadow-md transition-all flex items-center gap-2 shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            <span>Unduh Surat Resmi (PDF)</span>
+        </a>
+    </div>
+    @endif
+
     {{-- Detail Cards --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {{-- Applicant Data --}}
@@ -96,6 +120,12 @@
                 <div class="flex justify-between">
                     <dt class="text-[#64748b] font-semibold">Tgl. Selesai</dt>
                     <dd class="font-bold text-[#0c3837]">{{ $pengajuan->selesai_pada->format('d M Y H:i') }}</dd>
+                </div>
+                @endif
+                @if($pengajuan->suratArsip)
+                <div class="flex justify-between">
+                    <dt class="text-[#64748b] font-semibold">Nomor Surat</dt>
+                    <dd class="font-bold font-mono text-[#10b981]">{{ $pengajuan->suratArsip->nomor_surat }}</dd>
                 </div>
                 @endif
             </dl>

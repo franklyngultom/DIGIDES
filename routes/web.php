@@ -29,6 +29,7 @@ use App\Http\Controllers\Keuangan\BukuKasController;
 use App\Http\Controllers\Keuangan\KeuanganHubController;
 use App\Http\Controllers\Keuangan\RabController;
 use App\Http\Controllers\Masyarakat\CitizenDashboardController;
+use App\Http\Controllers\Masyarakat\CitizenNotificationController;
 use App\Http\Controllers\Masyarakat\CitizenPengajuanController;
 use App\Http\Controllers\Masyarakat\CitizenProfileController;
 use App\Http\Controllers\Pembangunan\InventarisHasilController;
@@ -55,7 +56,7 @@ Route::get('/layanan', [PublicWebsiteController::class, 'layanan'])->name('publi
 Route::get('/berita', [PublicWebsiteController::class, 'berita'])->name('public.berita');
 Route::get('/berita/{slug}', [PublicWebsiteController::class, 'beritaDetail'])->name('public.berita.detail');
 Route::get('/kontak', [PublicWebsiteController::class, 'kontak'])->name('public.kontak');
-Route::get('/lacak-surat', [PublicWebsiteController::class, 'lacakSurat'])->name('public.lacak-surat');
+Route::get('/lacak-surat', [PublicWebsiteController::class, 'lacakSurat'])->name('public.lacak-surat')->middleware('throttle:60,1');
 
 // Guest Authentication Routes
 Route::middleware('guest')->group(function () {
@@ -80,9 +81,15 @@ Route::middleware('auth')->group(function () {
         // Pengajuan Surat Online (Fase 04)
         Route::get('/pengajuan', [CitizenPengajuanController::class, 'index'])->name('pengajuan.index');
         Route::get('/pengajuan/buat', [CitizenPengajuanController::class, 'create'])->name('pengajuan.create');
-        Route::post('/pengajuan', [CitizenPengajuanController::class, 'store'])->name('pengajuan.store');
+        Route::post('/pengajuan', [CitizenPengajuanController::class, 'store'])->name('pengajuan.store')->middleware('throttle:20,1');
         Route::get('/pengajuan/{pengajuan}', [CitizenPengajuanController::class, 'show'])->name('pengajuan.show');
         Route::get('/pengajuan/{pengajuan}/dokumen/{index}', [CitizenPengajuanController::class, 'downloadDokumen'])->name('pengajuan.dokumen.download');
+        Route::get('/pengajuan/{pengajuan}/surat-download', [CitizenPengajuanController::class, 'downloadSurat'])->name('pengajuan.surat.download');
+
+        // Notifikasi Mandiri Warga (Fase 07)
+        Route::get('/notifikasi', [CitizenNotificationController::class, 'index'])->name('notifikasi.index');
+        Route::get('/notifikasi/{id}/baca', [CitizenNotificationController::class, 'read'])->name('notifikasi.read');
+        Route::post('/notifikasi/tandai-semua', [CitizenNotificationController::class, 'markAllAsRead'])->name('notifikasi.read-all');
     });
 
     // Main 3-Column Working Productivity Dashboard
@@ -206,19 +213,22 @@ Route::middleware('auth')->group(function () {
     // =============================================================
     Route::prefix('persuratan')->name('persuratan.')->group(function () {
         Route::middleware('permission:persuratan.view')->group(function () {
-            // Antrean Pengajuan Online (Fase 05)
+            // Antrean Pengajuan Online (Fase 05 & Fase 06)
             Route::get('/antrean', [PengajuanAntreanController::class, 'index'])->name('antrean.index');
             Route::get('/antrean/{pengajuan}', [PengajuanAntreanController::class, 'show'])->name('antrean.show');
             Route::post('/antrean/{pengajuan}/status', [PengajuanAntreanController::class, 'updateStatus'])->name('antrean.status');
             Route::get('/antrean/{pengajuan}/dokumen/{index}', [PengajuanAntreanController::class, 'downloadDokumen'])->name('antrean.dokumen.download');
+            Route::get('/antrean/{pengajuan}/surat-download', [PengajuanAntreanController::class, 'downloadSurat'])->name('antrean.surat.download');
 
             // Layanan Walk-In & Arsip
             Route::get('/pelayanan', [PelayananSuratController::class, 'create'])->name('create');
             Route::get('/search-penduduk', [PelayananSuratController::class, 'searchPenduduk'])->name('search-penduduk');
             Route::get('/arsip', [ArsipSuratController::class, 'index'])->name('arsip.index');
+            Route::get('/arsip/{suratArsip}/download', [ArsipSuratController::class, 'download'])->name('arsip.download');
         });
         Route::middleware('permission:persuratan.create')->group(function () {
             Route::post('/pelayanan', [PelayananSuratController::class, 'store'])->name('store');
+            Route::post('/antrean/{pengajuan}/terbitkan', [PengajuanAntreanController::class, 'terbitkanSurat'])->name('antrean.terbitkan');
         });
     });
 

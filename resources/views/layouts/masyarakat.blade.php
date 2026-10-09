@@ -72,14 +72,33 @@
                        class="px-5 py-2 rounded-full text-xs font-bold transition-all {{ $currentRoute === 'masyarakat.profil' ? 'bg-[#0c3837] text-white shadow-xs' : 'text-[#64748b] hover:text-[#0c3837]' }}">
                         Profil Saya
                     </a>
+                    <a href="{{ route('masyarakat.notifikasi.index') }}" 
+                       class="px-5 py-2 rounded-full text-xs font-bold transition-all {{ $currentRoute === 'masyarakat.notifikasi.index' ? 'bg-[#0c3837] text-white shadow-xs' : 'text-[#64748b] hover:text-[#0c3837]' }}">
+                        Notifikasi
+                    </a>
                     <a href="{{ route('public.home') }}" 
                        class="px-4 py-2 rounded-full text-xs font-semibold text-[#94a3b8] hover:text-[#0c3837]" target="_blank">
                         Web Publik &nearr;
                     </a>
                 </nav>
 
-                <!-- Right User Account & Logout -->
+                <!-- Right User Account & Notifications & Logout -->
                 <div class="flex items-center gap-3" x-data="{ userMenuOpen: false }">
+                    @php
+                        $unreadNotifCount = $currentUser ? $currentUser->unreadNotifications()->count() : 0;
+                    @endphp
+                    <a href="{{ route('masyarakat.notifikasi.index') }}" 
+                       title="Pemberitahuan Layanan"
+                       class="relative w-10 h-10 rounded-full flex items-center justify-center bg-[#f7faf9] hover:bg-[#e2f0ed] text-[#0c3837] border border-[#e1ede8] transition-all cursor-pointer">
+                        <svg class="w-5 h-5 text-[#0c3837]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                        </svg>
+                        @if($unreadNotifCount > 0)
+                            <span class="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-emerald-500 text-white text-[10px] font-black flex items-center justify-center shadow-xs">
+                                {{ $unreadNotifCount > 99 ? '99+' : $unreadNotifCount }}
+                            </span>
+                        @endif
+                    </a>
                     <div class="relative">
                         <button @click="userMenuOpen = !userMenuOpen" 
                                 class="flex items-center gap-2.5 p-1.5 pr-3 rounded-full hover:bg-[#f7faf9] border border-transparent hover:border-[#e1ede8] transition-all cursor-pointer">

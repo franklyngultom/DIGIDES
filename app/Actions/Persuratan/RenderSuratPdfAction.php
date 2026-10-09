@@ -21,9 +21,14 @@ class RenderSuratPdfAction
         $payload = $suratArsip->payload_data ?? [];
 
         // Check if blade template exists, fallback to default
-        $bladeView = view()->exists($template->template_blade)
-            ? $template->template_blade
-            : 'pdf.surat.default';
+        $bladeView = 'pdf.surat.default';
+        if ($template && $template->template_blade) {
+            if (view()->exists($template->template_blade)) {
+                $bladeView = $template->template_blade;
+            } elseif (view()->exists('pdf.surat.' . $template->template_blade)) {
+                $bladeView = 'pdf.surat.' . $template->template_blade;
+            }
+        }
 
         $pdf = Pdf::loadView($bladeView, [
             'surat' => $suratArsip,
@@ -53,6 +58,7 @@ class RenderSuratPdfAction
         $fileName = 'surat_' . str_replace(['/', '\\', ' '], '_', $suratArsip->nomor_surat) . '_' . time() . '.pdf';
         $storagePath = "surat/arsip/{$suratArsip->id}/{$fileName}";
 
+        Storage::disk('local')->makeDirectory("surat/arsip/{$suratArsip->id}");
         Storage::disk('local')->put($storagePath, $pdf->output());
 
         $suratArsip->update(['file_pdf_path' => $storagePath]);

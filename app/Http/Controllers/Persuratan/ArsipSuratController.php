@@ -13,7 +13,7 @@ class ArsipSuratController extends Controller
      */
     public function index(Request $request)
     {
-        $query = SuratArsip::query();
+        $query = SuratArsip::with(['template', 'penduduk', 'user', 'pengajuan']);
 
         if ($request->filled('template_id')) {
             $query->where('surat_template_id', $request->input('template_id'));
@@ -28,5 +28,21 @@ class ArsipSuratController extends Controller
         $arsips = $query->orderByDesc('tanggal_terbit')->paginate(15);
 
         return view('persuratan.arsip_surat', compact('arsips'));
+    }
+
+    /**
+     * Download or stream the letter PDF from archives.
+     */
+    public function download(SuratArsip $suratArsip, \App\Actions\Persuratan\RenderSuratPdfAction $pdfAction)
+    {
+        if (! $suratArsip->file_pdf_path || ! \Illuminate\Support\Facades\Storage::disk('local')->exists($suratArsip->file_pdf_path)) {
+            $pdfAction->renderAndStore($suratArsip);
+        }
+
+        $filename = 'Arsip_' . str_replace(['/', '\\', ' '], '_', $suratArsip->nomor_surat) . '.pdf';
+
+        return \Illuminate\Support\Facades\Storage::disk('local')->download($suratArsip->file_pdf_path, $filename, [
+            'Content-Type' => 'application/pdf',
+        ]);
     }
 }

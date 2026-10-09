@@ -97,6 +97,20 @@ class PengajuanAntreanController extends Controller
 
         $previousStatus = $pengajuan->status;
 
+        // Jika petugas memilih aksi 'selesai' dan surat belum pernah diterbitkan, otomatis terbitkan surat resmi
+        if ($newStatus === 'selesai' && ! $pengajuan->surat_arsip_id) {
+            /** @var \App\Actions\Persuratan\TerbitkanSuratPengajuanAction $action */
+            $action = app(\App\Actions\Persuratan\TerbitkanSuratPengajuanAction::class);
+            $arsip = $action->execute($pengajuan, Auth::user(), [
+                'catatan_petugas'  => $request->catatan_petugas,
+                'pesan_ke_pemohon' => $request->pesan_ke_pemohon,
+            ]);
+
+            return redirect()
+                ->route('persuratan.antrean.show', $pengajuan)
+                ->with('success', "Permohonan selesai dan surat resmi nomor {$arsip->nomor_surat} berhasil diterbitkan serta dicatat ke Buku Ekspedisi & Agenda.");
+        }
+
         $logNote = $request->catatan_petugas;
         if ($request->filled('pesan_ke_pemohon')) {
             $logNote = $logNote ? "{$logNote} | Pesan Warga: {$request->pesan_ke_pemohon}" : "Pesan Warga: {$request->pesan_ke_pemohon}";
@@ -111,6 +125,18 @@ class PengajuanAntreanController extends Controller
             'selesai_pada'     => in_array($newStatus, ['selesai', 'ditolak']) ? now() : $pengajuan->selesai_pada,
         ]);
 
+        $pengajuan->logs()->create([
+            'user_id'        => Auth::id(),
+            'status_sebelum' => $previousStatus,
+            'status_sesudah' => $newStatus,
+            'catatan'        => $request->pesan_ke_pemohon ?? $request->catatan_petugas ?? "Status diubah menjadi {$newStatus}",
+        ]);
+
+        // Kirim notifikasi aman ke akun warga pemohon
+        if ($pengajuan->user) {
+            $pengajuan->user->notify(new \App\Notifications\StatusPengajuanNotification($pengajuan, $request->pesan_ke_pemohon));
+        }
+
         activity('pengajuan_antrean')
             ->causedBy(Auth::user())
             ->performedOn($pengajuan)
@@ -120,6 +146,55 @@ class PengajuanAntreanController extends Controller
         return redirect()
             ->route('persuratan.antrean.show', $pengajuan)
             ->with('success', "Status pengajuan {$pengajuan->nomor_pengajuan} berhasil diubah menjadi: {$label}.");
+    }
+
+    /**
+     * Terbitkan surat resmi dari antrean permohonan.
+     */
+    public function terbitkanSurat(Request $request, PengajuanSurat $pengajuan, \App\Actions\Persuratan\TerbitkanSuratPengajuanAction $action): RedirectResponse
+    {
+        Gate::authorize('update', $pengajuan);
+
+        $request->validate([
+            'catatan_petugas'  => ['nullable', 'string', 'max:1000'],
+            'pesan_ke_pemohon' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        try {
+            $arsip = $action->execute($pengajuan, Auth::user(), [
+                'catatan_petugas'  => $request->catatan_petugas,
+                'pesan_ke_pemohon' => $request->pesan_ke_pemohon,
+            ]);
+
+            return redirect()
+                ->route('persuratan.antrean.show', $pengajuan)
+                ->with('success', "Surat resmi nomor {$arsip->nomor_surat} berhasil diterbitkan dan otomatis terdaftar di Buku Ekspedisi serta Buku Agenda.");
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal menerbitkan surat: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download dokumen surat resmi yang telah diterbitkan (PDF).
+     */
+    public function downloadSurat(PengajuanSurat $pengajuan, \App\Actions\Persuratan\RenderSuratPdfAction $pdfAction)
+    {
+        Gate::authorize('view', $pengajuan);
+
+        $arsip = $pengajuan->suratArsip;
+        if (! $arsip) {
+            abort(404, 'Surat fisik/digital belum diterbitkan untuk pengajuan ini.');
+        }
+
+        if (! $arsip->file_pdf_path || ! Storage::disk('local')->exists($arsip->file_pdf_path)) {
+            $pdfAction->renderAndStore($arsip);
+        }
+
+        $filename = 'Surat_' . str_replace(['/', '\\', ' '], '_', $arsip->nomor_surat) . '.pdf';
+
+        return Storage::disk('local')->download($arsip->file_pdf_path, $filename, [
+            'Content-Type' => 'application/pdf',
+        ]);
     }
 
     /**
@@ -143,7 +218,7 @@ class PengajuanAntreanController extends Controller
     {
         return match ($current) {
             'menunggu'        => ['diproses', 'perlu_perbaikan', 'ditolak'],
-            'diproses'        => ['perlu_perbaikan', 'disetujui', 'ditolak'],
+            'diproses'        => ['perlu_perbaikan', 'disetujui', 'selesai', 'ditolak'],
             'perlu_perbaikan' => ['diproses', 'ditolak'],
             'disetujui'       => ['selesai', 'ditolak'],
             'selesai'         => [],       // Terminal

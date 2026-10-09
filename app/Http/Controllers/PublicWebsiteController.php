@@ -185,13 +185,22 @@ class PublicWebsiteController extends Controller
         $desa = DesaProfile::current();
         $keyword = trim($request->query('nomor', ''));
         $result = null;
+        $pengajuanResult = null;
 
         if (!empty($keyword)) {
+            // Cek nomor surat resmi terlebih dahulu
             $result = SuratArsip::with(['template', 'penduduk'])
                 ->where('nomor_surat', $keyword)
                 ->first();
+
+            // Jika tidak ditemukan, cek nomor registrasi pengajuan online
+            if (! $result) {
+                $pengajuanResult = \App\Models\PengajuanSurat::with(['suratTemplate', 'suratArsip.template'])
+                    ->where('nomor_pengajuan', $keyword)
+                    ->first();
+            }
         }
 
-        return view('public.lacak_surat', compact('desa', 'keyword', 'result'));
+        return view('public.lacak_surat', compact('desa', 'keyword', 'result', 'pengajuanResult'));
     }
 }

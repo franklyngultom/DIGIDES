@@ -81,6 +81,11 @@ class SuratArsip extends Model
         return $this->hasOne(BukuAgenda::class, 'surat_arsip_id');
     }
 
+    public function pengajuan(): HasOne
+    {
+        return $this->hasOne(PengajuanSurat::class, 'surat_arsip_id');
+    }
+
     /**
      * Scopes.
      */

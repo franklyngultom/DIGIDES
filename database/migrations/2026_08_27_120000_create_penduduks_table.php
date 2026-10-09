@@ -27,11 +27,11 @@ return new class extends Migration
             $table->string('kewarganegaraan')->default('WNI');
             $table->string('golongan_darah', 3)->nullable();
             $table->text('alamat_lengkap');
-            $table->string('rt', 3)->index();
-            $table->string('rw', 3)->index();
+            $table->string('rt', 3)->nullable()->index();
+            $table->string('rw', 3)->nullable()->index();
             $table->string('dusun')->nullable()->index();
             $table->string('telepon')->nullable();
-            $table->enum('sumber_data', ['prodeskel', 'manual', 'migrasi_legacy'])->default('manual');
+            $table->enum('sumber_data', ['prodeskel', 'manual', 'migrasi_legacy', 'online'])->default('manual');
             $table->enum('status_penduduk', ['tetap', 'sementara', 'pindah', 'meninggal'])->default('tetap')->index();
             $table->timestamps();
         });

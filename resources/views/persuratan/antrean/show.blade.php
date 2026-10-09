@@ -194,6 +194,87 @@
 
             {{-- Kolom Kanan: Panel Aksi Petugas & Audit Trail (5 cols) --}}
             <div class="lg:col-span-5 space-y-6">
+
+                {{-- Status Surat Resmi Jika Telah Diterbitkan --}}
+                @if($pengajuan->suratArsip)
+                    <div class="bg-[#0c3837] text-white rounded-3xl p-6 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between pb-3 border-b border-white/10">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-[#d4ed31]">Surat Resmi Diterbitkan</span>
+                            <span class="px-2.5 py-0.5 rounded-full bg-[#10b981] text-[10px] font-black text-white">TERDAFTAR</span>
+                        </div>
+
+                        <div class="space-y-1.5 text-xs">
+                            <p class="text-[11px] text-white/70">Nomor Registrasi Surat Keluar:</p>
+                            <p class="text-base font-black font-mono text-white tracking-wide">{{ $pengajuan->suratArsip->nomor_surat }}</p>
+                            <p class="text-[11px] text-white/70 mt-1">Tanggal Terbit: <strong class="text-white">{{ $pengajuan->suratArsip->tanggal_terbit ? \Carbon\Carbon::parse($pengajuan->suratArsip->tanggal_terbit)->isoFormat('D MMMM Y') : '-' }}</strong></p>
+                        </div>
+
+                        <div class="pt-2 flex flex-col sm:flex-row gap-2">
+                            <a href="{{ route('persuratan.antrean.surat.download', $pengajuan) }}" 
+                               target="_blank"
+                               class="flex-1 py-2.5 px-4 bg-[#10b981] hover:bg-[#059669] text-white text-xs font-bold rounded-2xl flex items-center justify-center gap-2 transition-all shadow-xs">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                                <span>Unduh Surat (PDF)</span>
+                            </a>
+                        </div>
+
+                        <div class="pt-3 border-t border-white/10 grid grid-cols-2 gap-2 text-[11px]">
+                            <a href="{{ route('administrasi.buku-ekspedisi.index', ['search' => $pengajuan->suratArsip->nomor_surat]) }}" 
+                               class="py-2 px-3 bg-white/10 hover:bg-white/20 rounded-xl text-center text-white/90 hover:text-white transition-colors">
+                                &rarr; Buku Ekspedisi
+                            </a>
+                            <a href="{{ route('administrasi.buku-agenda.index', ['search' => $pengajuan->suratArsip->nomor_surat]) }}" 
+                               class="py-2 px-3 bg-white/10 hover:bg-white/20 rounded-xl text-center text-white/90 hover:text-white transition-colors">
+                                &rarr; Buku Agenda
+                            </a>
+                        </div>
+                    </div>
+                @elseif(!in_array($pengajuan->status, ['ditolak', 'selesai']))
+                    {{-- Tombol Cepat: Terbitkan Surat Resmi Sekarang --}}
+                    @can('persuratan.create')
+                        <div class="bg-emerald-50 rounded-3xl border border-emerald-200 p-6 space-y-4 shadow-xs">
+                            <div class="flex items-center gap-2 text-[#0c3837]">
+                                <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xs font-black uppercase tracking-wider text-emerald-900">Penerbitan Surat Resmi</h3>
+                                    <p class="text-[11px] text-emerald-700">Terbitkan dokumen resmi dengan nomor urut otomatis & sinkron ke Buku Ekspedisi</p>
+                                </div>
+                            </div>
+
+                            <form method="POST" action="{{ route('persuratan.antrean.terbitkan', $pengajuan) }}" class="space-y-3">
+                                @csrf
+                                <div>
+                                    <label class="block text-[11px] font-bold text-emerald-950 mb-1">Catatan Verifikasi Petugas</label>
+                                    <input type="text" name="catatan_petugas" 
+                                           placeholder="Contoh: Berkas persyaratan telah lengkap dan terverifikasi sah." 
+                                           class="w-full px-3.5 py-2 bg-white border border-emerald-200 rounded-xl text-xs text-[#0c3837] focus:outline-none focus:border-emerald-500">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-emerald-950 mb-1">Pesan Notifikasi untuk Warga</label>
+                                    <input type="text" name="pesan_ke_pemohon" 
+                                           value="Surat permohonan Anda telah resmi diterbitkan. Dokumen digital dapat diunduh melalui portal ini."
+                                           class="w-full px-3.5 py-2 bg-white border border-emerald-200 rounded-xl text-xs text-[#0c3837] focus:outline-none focus:border-emerald-500">
+                                </div>
+
+                                <button type="submit" 
+                                        onclick="return confirm('Terbitkan surat resmi sekarang? Sistem akan membuat nomor surat sequential, mengompilasi PDF, dan mencatatkannya ke Buku Ekspedisi.');"
+                                        class="w-full py-3 bg-[#0c3837] hover:bg-[#114443] text-white text-xs font-bold rounded-2xl flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer">
+                                    <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                    <span>Terbitkan Surat & Selesaikan Permohonan</span>
+                                </button>
+                            </form>
+                        </div>
+                    @endcan
+                @endif
+
                 {{-- Form Pemrosesan Status (Action Box) --}}
                 <div class="bg-white rounded-3xl border border-[#e1ede8] p-6 shadow-xs space-y-4">
                     <h2 class="text-sm font-bold text-[#0c3837] pb-3 border-b border-[#e1ede8] flex items-center gap-2">
@@ -206,7 +287,7 @@
                     @if(in_array($pengajuan->status, ['selesai', 'ditolak']))
                         <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-slate-700 text-xs">
                             <div class="font-bold">Permohonan ini telah berstatus terminal ({{ $pengajuan->statusLabel() }}).</div>
-                            <p class="text-[11px] text-[#64748b] mt-1">Tidak ada tindakan lanjutan yang dapat dilakukan untuk pengajuan yang telah selesai atau ditolak.</p>
+                            <p class="text-[11px] text-[#64748b] mt-1">Tidak ada tindakan perubahan status lanjutan yang dapat dilakukan untuk pengajuan yang telah selesai atau ditolak.</p>
                         </div>
                     @else
                         <form method="POST" action="{{ route('persuratan.antrean.status', $pengajuan) }}" class="space-y-4">
@@ -222,13 +303,14 @@
                                         <option value="ditolak">Tolak Permohonan</option>
                                     @elseif($pengajuan->status === 'diproses')
                                         <option value="disetujui">Setujui Permohonan (Siap Terbit)</option>
+                                        <option value="selesai">Selesaikan & Terbitkan Surat Otomatis</option>
                                         <option value="perlu_perbaikan">Minta Perbaikan Berkas</option>
                                         <option value="ditolak">Tolak Permohonan</option>
                                     @elseif($pengajuan->status === 'perlu_perbaikan')
                                         <option value="diproses">Lanjutkan Proses (Setelah Koreksi Warga)</option>
                                         <option value="ditolak">Tolak Permohonan</option>
                                     @elseif($pengajuan->status === 'disetujui')
-                                        <option value="selesai">Selesaikan & Tandai Dokumen Telah Diambil/Terbit</option>
+                                        <option value="selesai">Selesaikan & Terbitkan Surat Otomatis</option>
                                         <option value="ditolak">Batalkan / Tolak Permohonan</option>
                                     @endif
                                 </select>

@@ -48,17 +48,44 @@
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-[#0c3837] uppercase tracking-wider">Status Dokumen</span>
                             <span class="px-3 py-1 rounded-full bg-[#10b981] text-white text-xs font-extrabold uppercase">
-                                {{ $result->status ?? 'Terbit' }}
+                                {{ ucfirst($result->status ?? 'Terbit') }}
                             </span>
                         </div>
                         <div class="text-xs space-y-1 text-[#0c3837]">
                             <p><strong>Nomor Surat:</strong> {{ $result->nomor_surat }}</p>
                             <p><strong>Jenis Dokumen:</strong> {{ $result->template->nama_surat ?? '-' }}</p>
-                            <p><strong>Nama Pemohon:</strong> {{ $result->penduduk->nama ?? '-' }}</p>
+                            <p><strong>Nama Pemohon:</strong> {{ $result->penduduk?->nama_lengkap ?? $result->payload_data['pemohon_nama'] ?? '-' }}</p>
                             <p><strong>Tanggal Terbit:</strong> {{ $result->tanggal_terbit ? \Carbon\Carbon::parse($result->tanggal_terbit)->isoFormat('D MMMM Y') : '-' }}</p>
                         </div>
                         <div class="pt-2 text-[11px] text-[#4fa394] font-medium">
                             &check; Dokumen sah dan terverifikasi dalam arsip register persuratan resmi Pemerintah {{ $desa->nama_desa }}.
+                        </div>
+                    </div>
+                @elseif($pengajuanResult)
+                    <div class="p-5 rounded-2xl bg-[#f7faf9] border border-[#e1ede8] space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-[#0c3837] uppercase tracking-wider">Status Permohonan Online</span>
+                            <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase {{ $pengajuanResult->status === 'selesai' ? 'bg-[#10b981] text-white' : ($pengajuanResult->status === 'ditolak' ? 'bg-rose-500 text-white' : 'bg-amber-500 text-white') }}">
+                                {{ $pengajuanResult->statusLabel() }}
+                            </span>
+                        </div>
+                        <div class="text-xs space-y-1 text-[#0c3837]">
+                            <p><strong>Nomor Registrasi:</strong> {{ $pengajuanResult->nomor_pengajuan }}</p>
+                            <p><strong>Jenis Layanan:</strong> {{ $pengajuanResult->suratTemplate->nama_surat ?? '-' }}</p>
+                            <p><strong>Pemohon:</strong> {{ $pengajuanResult->pemohon_nama }}</p>
+                            <p><strong>Tanggal Pengajuan:</strong> {{ $pengajuanResult->created_at->isoFormat('D MMMM Y HH:mm') }}</p>
+                            @if($pengajuanResult->suratArsip)
+                                <p class="pt-1 text-[#10b981] font-bold"><strong>Nomor Surat Terbit:</strong> {{ $pengajuanResult->suratArsip->nomor_surat }}</p>
+                            @endif
+                        </div>
+                        <div class="pt-2 text-[11px] text-[#64748b] font-medium">
+                            @if($pengajuanResult->status === 'selesai')
+                                &check; Surat telah resmi diterbitkan oleh kantor desa dan siap diambil / diunduh melalui akun warga.
+                            @elseif($pengajuanResult->status === 'diproses' || $pengajuanResult->status === 'menunggu')
+                                &bull; Berkas Anda sedang dalam proses pemeriksaan dan verifikasi oleh staf pelayanan desa.
+                            @elseif($pengajuanResult->status === 'perlu_perbaikan')
+                                &bull; Petugas memerlukan perbaikan kelengkapan berkas. Silakan login ke portal masyarakat Anda.
+                            @endif
                         </div>
                     </div>
                 @else
