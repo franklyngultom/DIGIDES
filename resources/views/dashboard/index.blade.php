@@ -4,20 +4,20 @@
     <!-- Top Workspace Header -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-3xl font-extrabold text-[#0c3837] tracking-tight">Working Productivity</h1>
-            <p class="text-sm text-[#64748b] mt-0.5">Let's check your village service progress and daily activities</p>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-[#0c3837] tracking-tight">Working Productivity</h1>
+            <p class="text-xs sm:text-sm text-[#64748b] mt-0.5">Pantau kinerja pelayanan desa dan koordinasi kegiatan terkini</p>
         </div>
         
-        <div class="flex items-center gap-3">
-            <div class="relative w-72 sm:w-80">
+        <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full md:w-auto">
+            <div class="relative w-full sm:w-72 md:w-80">
                 <input type="text" placeholder="Cari layanan, surat, atau warga..." 
-                       class="w-full pl-11 pr-4 py-2.5 bg-white border border-[#e1ede8] rounded-2xl text-sm focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-[#10b981]/20 shadow-xs transition-all">
+                       class="w-full pl-11 pr-4 py-2.5 bg-white border border-[#e1ede8] rounded-2xl text-xs sm:text-sm focus:outline-none focus:border-[#10b981] focus:ring-2 focus:ring-[#10b981]/20 shadow-xs transition-all">
                 <svg class="w-4 h-4 text-[#94a3b8] absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
             </div>
             @can('user.create')
-            <x-ui.button href="{{ route('admin.users.create') }}" variant="primary" size="sm">
+            <x-ui.button href="{{ route('admin.users.create') }}" variant="primary" size="sm" class="shrink-0 w-full sm:w-auto justify-center">
                 <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
                 </svg>
@@ -113,12 +113,14 @@
                     </x-ui.badge>
                 </div>
 
-                <div class="flex items-center gap-6">
+                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5 sm:gap-6">
                     <!-- Donut Gauge Indicator Component -->
-                    <x-ui.progress-ring :percentage="82" label="Efisiensi" />
+                    <div class="shrink-0">
+                        <x-ui.progress-ring :percentage="82" label="Efisiensi" />
+                    </div>
 
                     <!-- Module Status Breakdown -->
-                    <div class="space-y-3 flex-1">
+                    <div class="space-y-3 flex-1 w-full">
                         <div>
                             <div class="flex justify-between text-xs font-semibold mb-1">
                                 <span class="text-[#0c3837]">Staf Aktif Terdaftar</span>
@@ -167,7 +169,7 @@
     </div>
 
     <!-- 3. Quick Actions & Core Module Hub Shortcuts -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
         @can('administrasi.view')
         <a href="{{ route('administrasi.index') }}" class="p-4 rounded-3xl bg-white hover:bg-[#edf5f2] border border-[#e1ede8] flex items-center gap-3.5 transition-all shadow-xs group">
             <div class="w-11 h-11 rounded-2xl bg-[#114443] text-[#d4ed31] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">

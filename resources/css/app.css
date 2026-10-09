@@ -44,6 +44,11 @@
     background: #94a3b8;
 }
 
+/* Alpine x-cloak */
+[x-cloak] {
+    display: none !important;
+}
+
 /* Micro animations */
 @keyframes pulse-subtle {
     0%, 100% { opacity: 1; transform: scale(1); }
@@ -53,3 +58,4 @@
 .animate-pulse-subtle {
     animation: pulse-subtle 3s ease-in-out infinite;
 }
+
