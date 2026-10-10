@@ -25,7 +25,7 @@ class DesaProfileSeeder extends Seeder
                 'email_desa' => 'kontak@desa-sukamaju.id',
                 'telepon_desa' => '0266-221144',
                 'website' => 'https://desa-sukamaju.id',
-                'logo_path' => null,
+                'logo_path' => 'images/logo-provinsi-riau.png',
                 'nama_kades' => 'H. Rahmat Hidayat, S.IP',
                 'nip_kades' => '197508172005011003',
                 'nik_kades' => '3202111708750001',

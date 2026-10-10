@@ -3,6 +3,10 @@
         <td style="width: 75px; text-align: center; vertical-align: middle;">
             @if(!empty($desa->logo_path) && file_exists(storage_path('app/public/' . $desa->logo_path)))
                 <img src="{{ storage_path('app/public/' . $desa->logo_path) }}" style="width: 65px; height: auto;" alt="Logo">
+            @elseif(!empty($desa->logo_path) && file_exists(public_path($desa->logo_path)))
+                <img src="{{ public_path($desa->logo_path) }}" style="width: 65px; height: auto;" alt="Logo">
+            @elseif(file_exists(public_path('images/logo-provinsi-riau.png')))
+                <img src="{{ public_path('images/logo-provinsi-riau.png') }}" style="width: 65px; height: auto;" alt="Logo">
             @else
                 <div style="width: 65px; height: 65px; background: #114443; border-radius: 8px; color: #d4ed31; line-height: 65px; text-align: center; font-size: 24px; font-weight: bold; margin: auto;">
                     DS

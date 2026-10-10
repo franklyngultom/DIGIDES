@@ -53,7 +53,7 @@
 
                 <!-- Village Brand Logo & Name -->
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 min-w-0 group">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#0c3837] to-[#114443] text-[#d4ed31] flex items-center justify-center shadow-xs shrink-0 p-1 border border-[#1b5e5c]/30">
+                    <div class="w-9 h-9 rounded-xl {{ !empty($desaProfile->logo_url) ? 'bg-white border border-[#e1ede8] shadow-xs' : 'bg-gradient-to-br from-[#0c3837] to-[#114443] text-[#d4ed31] border border-[#1b5e5c]/30' }} flex items-center justify-center shrink-0 p-1">
                         @if(!empty($desaProfile->logo_url))
                             <img src="{{ $desaProfile->logo_url }}" alt="Logo {{ $desaProfile->nama_desa }}" class="w-full h-full object-contain">
                         @else
@@ -131,7 +131,7 @@
                 <!-- Drawer Header -->
                 <div class="px-5 py-4 border-b border-[#e1ede8] bg-[#f7faf9] flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#0c3837] to-[#114443] text-[#d4ed31] flex items-center justify-center shadow-md shrink-0 p-1 border border-[#1b5e5c]/30">
+                        <div class="w-10 h-10 rounded-2xl {{ !empty($desaProfile->logo_url) ? 'bg-white border border-[#e1ede8] shadow-xs' : 'bg-gradient-to-br from-[#0c3837] to-[#114443] text-[#d4ed31] border border-[#1b5e5c]/30' }} flex items-center justify-center shrink-0 p-1">
                             @if(!empty($desaProfile->logo_url))
                                 <img src="{{ $desaProfile->logo_url }}" alt="Logo {{ $desaProfile->nama_desa }}" class="w-full h-full object-contain">
                             @else
@@ -446,7 +446,7 @@
                        class="flex items-center gap-3 overflow-hidden group min-w-0"
                        :class="sidebarExpanded ? 'flex-1' : 'justify-center'">
                         <!-- Village Logo Brand Icon -->
-                        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#0c3837] to-[#114443] text-[#d4ed31] flex items-center justify-center shadow-md group-hover:scale-105 transition-all shrink-0 p-1.5 overflow-hidden border border-[#1b5e5c]/30">
+                        <div class="w-11 h-11 rounded-2xl {{ !empty($desaProfile->logo_url) ? 'bg-white border border-[#e1ede8] shadow-xs' : 'bg-gradient-to-br from-[#0c3837] to-[#114443] text-[#d4ed31] border border-[#1b5e5c]/30 shadow-md' }} flex items-center justify-center group-hover:scale-105 transition-all shrink-0 p-1 overflow-hidden">
                             @if(!empty($desaProfile->logo_url))
                                 <img src="{{ $desaProfile->logo_url }}" alt="Logo {{ $desaProfile->nama_desa }}" class="w-full h-full object-contain">
                             @else

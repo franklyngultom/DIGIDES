@@ -85,6 +85,10 @@ class DesaProfile extends Model
                     return asset($this->logo_path);
                 }
 
+                if (file_exists(public_path('images/logo-provinsi-riau.png'))) {
+                    return asset('images/logo-provinsi-riau.png');
+                }
+
                 return null;
             }
         );

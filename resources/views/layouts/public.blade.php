@@ -41,7 +41,7 @@
                 
                 <!-- Brand / Logo -->
                 <a href="{{ route('public.home') }}" class="flex items-center gap-3 group">
-                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#0c3837] to-[#114443] text-[#d4ed31] flex items-center justify-center shadow-sm p-1.5 transition-transform group-hover:scale-105">
+                    <div class="w-11 h-11 rounded-2xl {{ !empty($desa->logo_url) ? 'bg-white border border-[#e1ede8] shadow-xs' : 'bg-gradient-to-br from-[#0c3837] to-[#114443] text-[#d4ed31] shadow-sm' }} flex items-center justify-center p-1 transition-transform group-hover:scale-105 shrink-0 overflow-hidden">
                         @if(!empty($desa->logo_url))
                             <img src="{{ $desa->logo_url }}" alt="Logo {{ $desa->nama_desa }}" class="w-full h-full object-contain">
                         @else
@@ -186,7 +186,7 @@
                 <!-- Col 1: About Village -->
                 <div class="space-y-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-2xl bg-white/10 p-1 border border-white/20 flex items-center justify-center">
+                        <div class="w-10 h-10 rounded-2xl {{ !empty($desa->logo_url) ? 'bg-white p-1' : 'bg-white/10 p-1 border border-white/20' }} flex items-center justify-center shrink-0 overflow-hidden">
                             @if(!empty($desa->logo_url))
                                 <img src="{{ $desa->logo_url }}" alt="Logo" class="w-full h-full object-contain">
                             @else

@@ -1,17 +1,24 @@
 <x-layouts.auth>
+    @php
+        $desa = \App\Models\DesaProfile::current();
+    @endphp
     <div class="bg-white rounded-3xl p-8 sm:p-10 border border-[#e1ede8] shadow-xl backdrop-blur-md relative">
         <!-- Logo & Header -->
         <div class="text-center mb-8">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#0c3837] to-[#114443] text-[#d4ed31] mx-auto flex items-center justify-center shadow-md mb-4 border border-[#1b5e5c]">
-                <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                </svg>
+            <div class="w-16 h-16 rounded-2xl {{ !empty($desa->logo_url) ? 'bg-white border border-[#e1ede8] shadow-md p-1.5' : 'bg-gradient-to-tr from-[#0c3837] to-[#114443] text-[#d4ed31] mx-auto flex items-center justify-center shadow-md mb-4 border border-[#1b5e5c]' }} mx-auto flex items-center justify-center mb-4 overflow-hidden">
+                @if(!empty($desa->logo_url))
+                    <img src="{{ $desa->logo_url }}" alt="Logo {{ $desa->nama_desa }}" class="w-full h-full object-contain">
+                @else
+                    <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                @endif
             </div>
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-[#e2f0ed] text-[#114443] border border-[#10b981]/30">
                 Portal Internal Staf
             </span>
             <h1 class="text-2xl font-extrabold text-[#0c3837] tracking-tight mt-3">DIGIDES v2.0</h1>
-            <p class="text-xs text-[#64748b] mt-1">Digitalisasi Administrasi & Pelayanan Kantor Desa</p>
+            <p class="text-xs text-[#64748b] mt-1">{{ $desa->nama_desa ? 'Kantor Desa ' . $desa->nama_desa : 'Digitalisasi Administrasi & Pelayanan Kantor Desa' }}</p>
         </div>
 
         <!-- Login Form -->

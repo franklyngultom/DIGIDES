@@ -38,7 +38,7 @@
                 <!-- Left Brand / Logo -->
                 <div class="flex items-center gap-3">
                     <a href="{{ route('masyarakat.dashboard') }}" class="flex items-center gap-3 group">
-                        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#0c3837] to-[#114443] text-[#d4ed31] flex items-center justify-center shadow-sm p-1.5 transition-transform group-hover:scale-105">
+                        <div class="w-11 h-11 rounded-2xl {{ !empty($desa->logo_url) ? 'bg-white border border-[#e1ede8] shadow-xs' : 'bg-gradient-to-br from-[#0c3837] to-[#114443] text-[#d4ed31] shadow-sm' }} flex items-center justify-center p-1 transition-transform group-hover:scale-105 shrink-0 overflow-hidden">
                             @if(!empty($desa->logo_url))
                                 <img src="{{ $desa->logo_url }}" alt="Logo" class="w-full h-full object-contain">
                             @else
