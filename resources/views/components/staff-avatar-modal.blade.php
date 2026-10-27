@@ -58,7 +58,7 @@
             <!-- Modal Header -->
             <div class="px-6 py-5 bg-gradient-to-r from-[#114443] to-[#0c3837] text-white flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-[#d4ed31] border border-white/10">
+                    <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-emerald-300 border border-white/10">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -114,7 +114,7 @@
                            class="border-2 border-dashed rounded-2xl p-5 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors text-center group">
                         <input x-ref="fileInput" type="file" name="avatar" accept="image/jpeg,image/png,image/jpg,image/webp" required class="hidden" @change="handleFileChange($event)">
                         
-                        <div class="w-12 h-12 rounded-2xl bg-[#e2f0ed] group-hover:bg-[#114443] group-hover:text-[#d4ed31] text-[#114443] flex items-center justify-center transition-colors shadow-xs">
+                        <div class="w-12 h-12 rounded-2xl bg-[#e2f0ed] group-hover:bg-[#114443] group-hover:text-emerald-300 text-[#114443] flex items-center justify-center transition-colors shadow-xs">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
@@ -151,7 +151,7 @@
                         </button>
                         <button type="submit" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#114443] to-[#0c3837] hover:from-[#0c3837] hover:to-[#082424] text-white font-bold text-xs shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer">
                             <span>Simpan Foto Profil</span>
-                            <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                         </button>
                     </div>
                 </div>

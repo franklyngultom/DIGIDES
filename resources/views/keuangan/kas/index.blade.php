@@ -36,7 +36,7 @@
 
                 @can('keuangan.manage')
                 <a href="{{ route('keuangan.kas.create', ['type' => $type, 'pembantu' => $pembantu]) }}" class="px-4 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-2xl shadow-sm transition-colors flex items-center gap-2">
-                    <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     <span>Catat Transaksi {{ $kategori === 'bank' ? 'Bank' : 'Tunai' }}</span>
                 </a>
                 @endcan
@@ -95,7 +95,7 @@
             <div class="flex items-center gap-3 text-xs">
                 <span class="px-3 py-1 bg-emerald-50 text-emerald-800 rounded-xl font-medium">Masuk: <strong>Rp {{ number_format($totalPenerimaan, 0, ',', '.') }}</strong></span>
                 <span class="px-3 py-1 bg-rose-50 text-rose-800 rounded-xl font-medium">Keluar: <strong>Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</strong></span>
-                <span class="px-3 py-1 bg-[#114443] text-[#d4ed31] rounded-xl font-extrabold">Saldo: <strong>Rp {{ number_format($saldoKas, 0, ',', '.') }}</strong></span>
+                <span class="px-3 py-1 bg-[#0c3837] text-emerald-300 rounded-xl font-extrabold">Saldo: <strong>Rp {{ number_format($saldoKas, 0, ',', '.') }}</strong></span>
             </div>
         </div>
 
@@ -132,7 +132,7 @@
                                     {{ $item->nomor_bukti }}
                                 </td>
                                 <td class="px-4 py-4 text-center whitespace-nowrap">
-                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold {{ $item->kategori_kas === 'bank' ? 'bg-[#0c3837] text-[#d4ed31]' : 'bg-[#e2f48f] text-[#0c3837]' }}">
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold {{ $item->kategori_kas === 'bank' ? 'bg-[#0c3837] text-emerald-300' : 'bg-emerald-100 text-[#0c3837]' }}">
                                         {{ $item->kategori_kas === 'bank' ? 'Bank' : 'Tunai' }}
                                     </span>
                                     @if($item->jenis_pembantu)

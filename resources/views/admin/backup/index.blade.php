@@ -17,7 +17,7 @@
         <form method="POST" action="{{ route('admin.backup.store') }}">
             @csrf
             <button type="submit" class="px-5 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-full shadow-md flex items-center gap-2 transition-all cursor-pointer">
-                <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
                 </svg>
                 <span>Buat Cadangan Sekarang</span>
@@ -39,12 +39,12 @@
                         {{ $totalSize }} Bytes
                     @endif
                 </span>
-                <span class="text-xs text-[#d4ed31] font-semibold">Tersimpan di Server</span>
+                <span class="text-xs text-emerald-300 font-semibold">Tersimpan di Server</span>
             </div>
         </x-card>
 
         <x-card class="p-5 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-[#e2f48f] text-[#0c3837] flex items-center justify-center font-bold">
+            <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-[#0c3837] flex items-center justify-center font-bold">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
             </div>
             <div>
@@ -124,7 +124,7 @@
                                 @if($b->status === 'success')
                                 <a href="{{ route('admin.backup.download', $b) }}" 
                                    class="px-3 py-1 bg-[#114443] hover:bg-[#0c3837] text-white rounded-full text-[11px] font-bold transition-all flex items-center gap-1">
-                                    <svg class="w-3.5 h-3.5 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-3.5 h-3.5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                                     </svg>
                                     <span>Unduh</span>

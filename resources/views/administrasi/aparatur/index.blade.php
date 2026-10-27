@@ -30,7 +30,7 @@
                 </button>
 
                 <a href="{{ route('administrasi.aparatur.create') }}" 
-                   class="px-4 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-[#d4ed31] font-bold text-xs rounded-2xl shadow-sm transition-colors flex items-center gap-2">
+                   class="px-4 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white font-bold text-xs rounded-2xl shadow-sm transition-colors flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
@@ -78,7 +78,7 @@
 
             <div class="flex items-center gap-2 text-xs font-bold text-[#114443] whitespace-nowrap">
                 <span class="px-3 py-1.5 bg-[#e2f0ed] rounded-xl">{{ $stats['total'] }} Total</span>
-                <span class="px-3 py-1.5 bg-[#e2f48f] text-[#0c3837] rounded-xl">{{ $stats['aktif'] }} Aktif</span>
+                <span class="px-3 py-1.5 bg-emerald-100 text-[#0c3837] rounded-xl">{{ $stats['aktif'] }} Aktif</span>
             </div>
         </div>
 

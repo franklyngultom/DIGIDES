@@ -30,20 +30,24 @@ class RenderSuratPdfAction
             }
         }
 
+        $pengaturan = \App\Models\SuratPengaturan::current();
+        $paperSize = str_contains($pengaturan->ukuran_kertas ?? '', 'F4') ? [0, 0, 609.45, 935.43] : 'A4'; // F4 / Folio points
+
         $pdf = Pdf::loadView($bladeView, [
             'surat' => $suratArsip,
             'template' => $template,
             'penduduk' => $penduduk,
             'desa' => $desa,
+            'pengaturan' => $pengaturan,
             'payload' => $payload,
         ]);
 
-        $pdf->setPaper('A4', 'portrait');
+        $pdf->setPaper($paperSize, 'portrait');
         $pdf->setOption([
             'isRemoteEnabled' => true,
             'isHtml5ParserEnabled' => true,
             'dpi' => 150,
-            'defaultFont' => 'sans-serif',
+            'defaultFont' => $pengaturan->jenis_font ?? 'sans-serif',
         ]);
 
         return $pdf;

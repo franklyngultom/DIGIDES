@@ -7,7 +7,7 @@
 @php
 $variants = [
     'default' => 'bg-white border-[#e1ede8] text-[#0f172a] shadow-xs',
-    'lime'    => 'bg-gradient-to-br from-[#e2f48f] to-[#f4fce0] border-[#d4ed31]/60 text-[#0c3837] shadow-xs',
+    'lime'    => 'bg-gradient-to-br from-[#ecfdf5] via-[#f0fdf4] to-white border-emerald-200/80 text-[#0c3837] shadow-xs',
     'sage'    => 'bg-[#4fa394] border-transparent text-white shadow-xs',
     'pine'    => 'bg-[#0c3837] border-transparent text-white shadow-xs',
     'soft'    => 'bg-[#edf5f2] border-[#e1ede8] text-[#0c3837]',

@@ -307,7 +307,7 @@
                 <!-- Ringkasan Anggaran Real-time Box -->
                 <div class="p-6 rounded-2xl bg-[#0c3837] text-white space-y-4">
                     <div class="flex items-center justify-between border-b border-white/10 pb-3">
-                        <span class="text-xs font-bold uppercase tracking-wider text-[#d4ed31]">Rekapitulasi Anggaran RAB Real-Time</span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-300">Rekapitulasi Anggaran RAB Real-Time</span>
                         <span class="text-xs font-semibold text-slate-300" x-text="`${items.length} Item Terdaftar`"></span>
                     </div>
 
@@ -332,7 +332,7 @@
 
                     <div class="pt-3 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <span class="text-sm font-extrabold text-white">TOTAL RENCANA ANGGARAN BIAYA (RAB) :</span>
-                        <span class="text-xl font-extrabold text-[#d4ed31] font-mono" x-text="formatRupiah(totalAnggaran())"></span>
+                        <span class="text-xl font-extrabold text-emerald-300 font-mono" x-text="formatRupiah(totalAnggaran())"></span>
                     </div>
                 </div>
             </div>
@@ -343,7 +343,7 @@
                     Batal
                 </a>
                 <button type="submit" class="px-7 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-2xl shadow-sm transition-colors flex items-center gap-2 cursor-pointer">
-                    <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                     <span>{{ isset($rab) ? 'Simpan Perubahan RAB' : 'Simpan Dokumen RAB' }}</span>
                 </button>
             </div>

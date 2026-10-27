@@ -18,11 +18,11 @@
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="font-sans antialiased bg-[#f7faf9] text-[#0f172a] min-h-screen selection:bg-[#d4ed31] selection:text-[#0c3837]">
+<body class="font-sans antialiased bg-[#f7faf9] text-[#0f172a] min-h-screen selection:bg-[#10b981] selection:text-white">
     <div class="min-h-screen flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-radial from-[#114443]/15 via-[#f7faf9] to-[#f7faf9]">
         <!-- Decorative Ambient Orbs -->
         <div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-[#10b981]/15 blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-[#d4ed31]/20 blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none"></div>
 
         <div class="w-full max-w-md relative z-10">
             {{ $slot }}

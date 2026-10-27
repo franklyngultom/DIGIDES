@@ -28,19 +28,25 @@ class GenerateNomorSuratAction
         $month = $date->month;
         $romanMonth = self::ROMAN_MONTHS[$month] ?? (string) $month;
 
-        // Count existing letters of this template in the same year
-        $count = SuratArsip::where('surat_template_id', $template->id)
-            ->whereYear('tanggal_terbit', $year)
-            ->count();
+        $pengaturan = \App\Models\SuratPengaturan::current();
+        if ($pengaturan && $pengaturan->aturan_penomoran === 'Berlaku Secara Umum' && ! empty($pengaturan->format_nomor_umum)) {
+            $pengaturan->increment('inkremen_terakhir');
+            $sequence = $pengaturan->inkremen_terakhir;
+            $format = $pengaturan->format_nomor_umum;
+        } else {
+            // Count existing letters of this template in the same year
+            $count = SuratArsip::where('surat_template_id', $template->id)
+                ->whereYear('tanggal_terbit', $year)
+                ->count();
+            $sequence = $count + 1;
+            $format = $template->penomoran_format ?: '{nomor}/{kode}/{bulan}/{tahun}';
+        }
 
-        $sequence = $count + 1;
         $formattedSequence = str_pad((string) $sequence, 3, '0', STR_PAD_LEFT);
 
-        $format = $template->penomoran_format;
-
         return str_replace(
-            ['{no}', '{kode}', '{bulan}', '{romawi_bulan}', '{tahun}'],
-            [$formattedSequence, $template->kode_surat, str_pad((string) $month, 2, '0', STR_PAD_LEFT), $romanMonth, (string) $year],
+            ['[nnn]', '{no}', '{nomor}', '[kode]', '{kode}', '[br]', '{romawi_bulan}', '[bln]', '{bulan}', '[t]', '{tahun}'],
+            [$formattedSequence, $formattedSequence, $formattedSequence, $template->kode_surat, $template->kode_surat, $romanMonth, $romanMonth, str_pad((string) $month, 2, '0', STR_PAD_LEFT), str_pad((string) $month, 2, '0', STR_PAD_LEFT), (string) $year, (string) $year],
             $format
         );
     }

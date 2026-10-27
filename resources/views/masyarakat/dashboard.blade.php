@@ -8,7 +8,7 @@
         <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
             
             <div class="md:col-span-8 space-y-3">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-xs font-bold text-[#d4ed31]">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-xs font-bold text-emerald-300">
                     <span>Portal Layanan Mandiri</span>
                 </div>
                 <h1 class="text-2xl sm:text-3xl font-black">
@@ -37,7 +37,7 @@
                 <div class="w-full max-w-xs bg-white/10 backdrop-blur-md p-5 rounded-2xl border border-white/15 space-y-2">
                     <span class="block text-[10px] uppercase font-bold text-[#8bc3b8]">Status Kependudukan</span>
                     @if($profile?->isVerified())
-                        <div class="flex items-center gap-2 text-sm font-black text-[#d4ed31]">
+                        <div class="flex items-center gap-2 text-sm font-black text-emerald-300">
                             <svg class="w-5 h-5 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>

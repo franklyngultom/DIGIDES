@@ -245,7 +245,7 @@
                 @can('desa.update')
                 <x-card>
                     <button type="submit" class="w-full py-3 px-6 bg-[#114443] hover:bg-[#0c3837] text-white font-bold rounded-full shadow-md transition-all text-xs cursor-pointer flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
                         </svg>
                         <span>Simpan Perubahan Profil</span>

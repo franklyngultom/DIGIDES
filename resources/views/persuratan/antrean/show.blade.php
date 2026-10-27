@@ -199,7 +199,7 @@
                 @if($pengajuan->suratArsip)
                     <div class="bg-[#0c3837] text-white rounded-3xl p-6 shadow-sm space-y-4">
                         <div class="flex items-center justify-between pb-3 border-b border-white/10">
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-[#d4ed31]">Surat Resmi Diterbitkan</span>
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-300">Surat Resmi Diterbitkan</span>
                             <span class="px-2.5 py-0.5 rounded-full bg-[#10b981] text-[10px] font-black text-white">TERDAFTAR</span>
                         </div>
 
@@ -265,7 +265,7 @@
                                 <button type="submit" 
                                         onclick="return confirm('Terbitkan surat resmi sekarang? Sistem akan membuat nomor surat sequential, mengompilasi PDF, dan mencatatkannya ke Buku Ekspedisi.');"
                                         class="w-full py-3 bg-[#0c3837] hover:bg-[#114443] text-white text-xs font-bold rounded-2xl flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer">
-                                    <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                                     </svg>
                                     <span>Terbitkan Surat & Selesaikan Permohonan</span>

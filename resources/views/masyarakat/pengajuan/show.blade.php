@@ -53,7 +53,7 @@
     @if($pengajuan->suratArsip)
     <div class="bg-gradient-to-r from-[#0c3837] to-[#114443] rounded-3xl p-6 text-white shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div class="space-y-1">
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-[#d4ed31] text-[10px] font-bold uppercase tracking-wider">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold uppercase tracking-wider">
                 &check; Dokumen Resmi Sah Telah Terbit
             </span>
             <h3 class="text-base sm:text-lg font-black tracking-tight text-white font-mono">No. {{ $pengajuan->suratArsip->nomor_surat }}</h3>

@@ -46,7 +46,7 @@ class DesignSystemTest extends TestCase
     {
         $rendered = Blade::render('<x-ui.card variant="lime">Konten Card Lime</x-ui.card>');
         $this->assertStringContainsString('Konten Card Lime', $rendered);
-        $this->assertStringContainsString('bg-gradient-to-br from-[#e2f48f]', $rendered);
+        $this->assertStringContainsString('bg-gradient-to-br from-[#ecfdf5]', $rendered);
     }
 
     public function test_blade_ui_button_component_renders_correctly(): void
@@ -57,14 +57,14 @@ class DesignSystemTest extends TestCase
 
         $renderedLink = Blade::render('<x-ui.button href="/dashboard" variant="lime">Dashboard</x-ui.button>');
         $this->assertStringContainsString('href="/dashboard"', $renderedLink);
-        $this->assertStringContainsString('bg-[#d4ed31]', $renderedLink);
+        $this->assertStringContainsString('bg-emerald-400', $renderedLink);
     }
 
     public function test_blade_ui_badge_component_renders_correctly(): void
     {
         $rendered = Blade::render('<x-ui.badge variant="lime" :dot="true">Aktif</x-ui.badge>');
         $this->assertStringContainsString('Aktif', $rendered);
-        $this->assertStringContainsString('bg-[#e2f48f]', $rendered);
+        $this->assertStringContainsString('bg-emerald-100', $rendered);
     }
 
     public function test_blade_ui_stat_card_component_renders_correctly(): void

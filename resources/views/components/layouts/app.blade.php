@@ -18,7 +18,7 @@
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="font-sans antialiased bg-[#f7faf9] text-[#0f172a] selection:bg-[#d4ed31] selection:text-[#0c3837]">
+<body class="font-sans antialiased bg-[#f7faf9] text-[#0f172a] selection:bg-[#10b981] selection:text-white">
     @php
         $currentRoute = request()->route() ? request()->route()->getName() : '';
         $desaProfile = \App\Models\DesaProfile::current();
@@ -53,7 +53,7 @@
 
                 <!-- Village Brand Logo & Name -->
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 min-w-0 group">
-                    <div class="w-9 h-9 rounded-xl {{ !empty($desaProfile->logo_url) ? 'bg-white border border-[#e1ede8] shadow-xs' : 'bg-gradient-to-br from-[#0c3837] to-[#114443] text-[#d4ed31] border border-[#1b5e5c]/30' }} flex items-center justify-center shrink-0 p-1">
+                    <div class="w-9 h-9 rounded-xl {{ !empty($desaProfile->logo_url) ? 'bg-white border border-[#e1ede8] shadow-xs' : 'bg-gradient-to-br from-[#0c3837] to-[#114443] text-emerald-300 border border-[#1b5e5c]/30' }} flex items-center justify-center shrink-0 p-1">
                         @if(!empty($desaProfile->logo_url))
                             <img src="{{ $desaProfile->logo_url }}" alt="Logo {{ $desaProfile->nama_desa }}" class="w-full h-full object-contain">
                         @else
@@ -91,7 +91,7 @@
                         type="button"
                         class="w-9 h-9 rounded-full border-2 border-[#10b981] p-0.5 shadow-xs overflow-hidden cursor-pointer"
                         title="{{ $currentUser?->name }}">
-                    <img src="{{ $currentUser?->avatar_url ?? 'https://ui-avatars.com/api/?name=User&background=114443&color=d4ed31' }}" 
+                    <img src="{{ $currentUser?->avatar_url ?? 'https://ui-avatars.com/api/?name=User&background=114443&color=34d399' }}" 
                          class="w-full h-full rounded-full object-cover" 
                          alt="{{ $currentUser?->name }}">
                 </button>
@@ -131,7 +131,7 @@
                 <!-- Drawer Header -->
                 <div class="px-5 py-4 border-b border-[#e1ede8] bg-[#f7faf9] flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-2xl {{ !empty($desaProfile->logo_url) ? 'bg-white border border-[#e1ede8] shadow-xs' : 'bg-gradient-to-br from-[#0c3837] to-[#114443] text-[#d4ed31] border border-[#1b5e5c]/30' }} flex items-center justify-center shrink-0 p-1">
+                        <div class="w-10 h-10 rounded-2xl {{ !empty($desaProfile->logo_url) ? 'bg-white border border-[#e1ede8] shadow-xs' : 'bg-gradient-to-br from-[#0c3837] to-[#114443] text-emerald-300 border border-[#1b5e5c]/30' }} flex items-center justify-center shrink-0 p-1">
                             @if(!empty($desaProfile->logo_url))
                                 <img src="{{ $desaProfile->logo_url }}" alt="Logo {{ $desaProfile->nama_desa }}" class="w-full h-full object-contain">
                             @else
@@ -166,7 +166,7 @@
                     <!-- 1. Dashboard -->
                     <a href="{{ route('dashboard') }}" 
                        @click="mobileSidebarOpen = false"
-                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'dashboard') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'dashboard') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
                         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
                         </svg>
@@ -177,7 +177,7 @@
                     <!-- 2. Administrasi Umum -->
                     <a href="{{ route('administrasi.index') }}" 
                        @click="mobileSidebarOpen = false"
-                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'administrasi.') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'administrasi.') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
                         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                         </svg>
@@ -189,7 +189,7 @@
                     <!-- 3. Kependudukan -->
                     <a href="{{ route('kependudukan.index') }}" 
                        @click="mobileSidebarOpen = false"
-                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'kependudukan.') && !str_contains($currentRoute, 'mutasi') && !str_contains($currentRoute, 'duplicates') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'kependudukan.') && !str_contains($currentRoute, 'mutasi') && !str_contains($currentRoute, 'duplicates') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
                         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
@@ -199,7 +199,7 @@
                     <!-- 4. Mutasi Penduduk -->
                     <a href="{{ route('kependudukan.mutasi.index') }}" 
                        @click="mobileSidebarOpen = false"
-                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_contains($currentRoute, 'mutasi') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_contains($currentRoute, 'mutasi') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
                         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
                         </svg>
@@ -211,7 +211,7 @@
                     <!-- 5. Keuangan -->
                     <a href="{{ route('keuangan.index') }}" 
                        @click="mobileSidebarOpen = false"
-                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'keuangan.') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'keuangan.') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
                         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
@@ -223,7 +223,7 @@
                     <!-- 6. Pembangunan -->
                     <a href="{{ route('pembangunan.index') }}" 
                        @click="mobileSidebarOpen = false"
-                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'pembangunan.') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'pembangunan.') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
                         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                         </svg>
@@ -235,7 +235,7 @@
                     <!-- 7. Duplikasi NIK -->
                     <a href="{{ route('kependudukan.duplicates') }}" 
                        @click="mobileSidebarOpen = false"
-                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_contains($currentRoute, 'duplicates') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_contains($currentRoute, 'duplicates') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
                         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                         </svg>
@@ -247,7 +247,7 @@
                     <!-- 8. Profil Desa -->
                     <a href="{{ route('admin.desa.index') }}" 
                        @click="mobileSidebarOpen = false"
-                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'admin.desa') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'admin.desa') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
                         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                         </svg>
@@ -259,7 +259,7 @@
                     <!-- 9. Audit Trail -->
                     <a href="{{ route('admin.audit.index') }}" 
                        @click="mobileSidebarOpen = false"
-                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'admin.audit') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'admin.audit') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
                         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
@@ -271,7 +271,7 @@
                     <!-- 10. Manajemen Staff -->
                     <a href="{{ route('admin.users.index') }}" 
                        @click="mobileSidebarOpen = false"
-                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'admin.users') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'admin.users') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
                         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                         </svg>
@@ -283,7 +283,7 @@
                     <!-- 11. Backup Data -->
                     <a href="{{ route('admin.backup.index') }}" 
                        @click="mobileSidebarOpen = false"
-                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'admin.backup') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
+                       class="px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all text-xs font-semibold {{ str_starts_with($currentRoute, 'admin.backup') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}">
                         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
                         </svg>
@@ -295,7 +295,7 @@
                 <!-- Drawer Footer: User Profile & Logout -->
                 <div class="p-4 border-t border-[#e1ede8] bg-[#f7faf9] space-y-3 mt-auto">
                     <div class="flex items-center gap-3">
-                        <img src="{{ $currentUser?->avatar_url ?? 'https://ui-avatars.com/api/?name=User&background=114443&color=d4ed31' }}" 
+                        <img src="{{ $currentUser?->avatar_url ?? 'https://ui-avatars.com/api/?name=User&background=114443&color=34d399' }}" 
                              class="w-10 h-10 rounded-full object-cover border border-[#e1ede8] shadow-xs" 
                              alt="{{ $currentUser?->name }}">
                         <div class="min-w-0 flex-1">
@@ -350,7 +350,7 @@
                 
                 <!-- Close Button -->
                 <div class="flex items-center justify-between pb-3 border-b border-white/10">
-                    <span class="text-xs font-bold text-[#d4ed31] uppercase tracking-wider">Profil & Status Desa</span>
+                    <span class="text-xs font-bold text-emerald-300 uppercase tracking-wider">Profil & Status Desa</span>
                     <button @click="mobileProfileOpen = false" 
                             type="button" 
                             class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
@@ -421,7 +421,7 @@
                         </div>
                         <div class="flex justify-between">
                             <span class="text-white/60">Kode Wilayah:</span>
-                            <span class="font-medium font-mono text-[#d4ed31]">{{ $desaProfile->kode_desa ?? '-' }}</span>
+                            <span class="font-medium font-mono text-emerald-300">{{ $desaProfile->kode_desa ?? '-' }}</span>
                         </div>
                     </div>
                 </div>
@@ -446,7 +446,7 @@
                        class="flex items-center gap-3 overflow-hidden group min-w-0"
                        :class="sidebarExpanded ? 'flex-1' : 'justify-center'">
                         <!-- Village Logo Brand Icon -->
-                        <div class="w-11 h-11 rounded-2xl {{ !empty($desaProfile->logo_url) ? 'bg-white border border-[#e1ede8] shadow-xs' : 'bg-gradient-to-br from-[#0c3837] to-[#114443] text-[#d4ed31] border border-[#1b5e5c]/30 shadow-md' }} flex items-center justify-center group-hover:scale-105 transition-all shrink-0 p-1 overflow-hidden">
+                        <div class="w-11 h-11 rounded-2xl {{ !empty($desaProfile->logo_url) ? 'bg-white border border-[#e1ede8] shadow-xs' : 'bg-gradient-to-br from-[#0c3837] to-[#114443] text-emerald-300 border border-[#1b5e5c]/30 shadow-md' }} flex items-center justify-center group-hover:scale-105 transition-all shrink-0 p-1 overflow-hidden">
                             @if(!empty($desaProfile->logo_url))
                                 <img src="{{ $desaProfile->logo_url }}" alt="Logo {{ $desaProfile->nama_desa }}" class="w-full h-full object-contain">
                             @else
@@ -488,7 +488,7 @@
                 <!-- 1. Dashboard Produktivitas -->
                 <a href="{{ route('dashboard') }}" 
                    title="Dashboard Produktivitas"
-                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'dashboard') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'dashboard') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
+                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'dashboard') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'dashboard') ? 'bg-[#0c3837] text-emerald-300 shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
                     </svg>
@@ -506,7 +506,7 @@
                 <a href="{{ route('administrasi.index') }}" 
                    title="Administrasi Umum"
                    id="nav-administrasi"
-                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'administrasi.') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'administrasi.') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
+                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'administrasi.') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'administrasi.') ? 'bg-[#0c3837] text-emerald-300 shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                     </svg>
@@ -525,7 +525,7 @@
                 <a href="{{ route('kependudukan.index') }}" 
                    title="Kependudukan"
                    id="nav-kependudukan"
-                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'kependudukan.') && !str_contains($currentRoute, 'mutasi') && !str_contains($currentRoute, 'duplicates') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'kependudukan.') && !str_contains($currentRoute, 'mutasi') && !str_contains($currentRoute, 'duplicates') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
+                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'kependudukan.') && !str_contains($currentRoute, 'mutasi') && !str_contains($currentRoute, 'duplicates') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'kependudukan.') && !str_contains($currentRoute, 'mutasi') && !str_contains($currentRoute, 'duplicates') ? 'bg-[#0c3837] text-emerald-300 shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
@@ -542,7 +542,7 @@
                 <a href="{{ route('kependudukan.mutasi.index') }}" 
                    title="Mutasi Penduduk"
                    id="nav-mutasi"
-                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_contains($currentRoute, 'mutasi') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_contains($currentRoute, 'mutasi') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
+                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_contains($currentRoute, 'mutasi') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_contains($currentRoute, 'mutasi') ? 'bg-[#0c3837] text-emerald-300 shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
                     </svg>
@@ -561,7 +561,7 @@
                 <a href="{{ route('keuangan.index') }}" 
                    title="Keuangan Desa (APBDes & Kas)"
                    id="nav-keuangan"
-                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'keuangan.') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'keuangan.') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
+                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'keuangan.') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'keuangan.') ? 'bg-[#0c3837] text-emerald-300 shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
@@ -580,7 +580,7 @@
                 <a href="{{ route('pembangunan.index') }}" 
                    title="Pembangunan & KPM Desa"
                    id="nav-pembangunan"
-                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'pembangunan.') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'pembangunan.') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
+                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'pembangunan.') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'pembangunan.') ? 'bg-[#0c3837] text-emerald-300 shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                     </svg>
@@ -599,7 +599,7 @@
                 <a href="{{ route('kependudukan.duplicates') }}" 
                    title="Pemindai Duplikasi NIK"
                    id="nav-nik-scanner"
-                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_contains($currentRoute, 'duplicates') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_contains($currentRoute, 'duplicates') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
+                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_contains($currentRoute, 'duplicates') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_contains($currentRoute, 'duplicates') ? 'bg-[#0c3837] text-emerald-300 shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                     </svg>
@@ -617,7 +617,7 @@
                 <!-- 8. Profil dan Identitas Desa -->
                 <a href="{{ route('admin.desa.index') }}" 
                    title="Profil & Identitas Desa"
-                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.desa') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.desa') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
+                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.desa') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.desa') ? 'bg-[#0c3837] text-emerald-300 shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                     </svg>
@@ -635,7 +635,7 @@
                 <!-- 10. Riwayat Aktivitas (Audit Trail) -->
                 <a href="{{ route('admin.audit.index') }}" 
                    title="Riwayat Aktivitas (Audit Trail)"
-                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.audit') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.audit') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
+                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.audit') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.audit') ? 'bg-[#0c3837] text-emerald-300 shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
@@ -653,7 +653,7 @@
                 <!-- 11. Management Staff / Pengguna -->
                 <a href="{{ route('admin.users.index') }}" 
                    title="Management Staff & Pengguna"
-                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.users') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.users') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
+                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.users') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.users') ? 'bg-[#0c3837] text-emerald-300 shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                     </svg>
@@ -671,7 +671,7 @@
                 <!-- 12. Cadangan Database -->
                 <a href="{{ route('admin.backup.index') }}" 
                    title="Cadangan Database"
-                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.backup') ? 'bg-[#114443] text-[#d4ed31] shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.backup') ? 'bg-[#114443] text-[#d4ed31] shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
+                   :class="sidebarExpanded ? 'w-full px-3.5 py-2.5 rounded-2xl flex items-center gap-3 transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.backup') ? 'bg-[#0c3837] text-emerald-300 shadow-sm font-bold' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}' : 'w-12 h-12 mx-auto rounded-2xl flex items-center justify-center transition-all duration-200 relative group {{ str_starts_with($currentRoute, 'admin.backup') ? 'bg-[#0c3837] text-emerald-300 shadow-sm' : 'text-[#64748b] hover:bg-[#e2f0ed] hover:text-[#114443]' }}'">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
                     </svg>
@@ -782,7 +782,7 @@
                         </div>
                         <div class="flex justify-between">
                             <span class="text-white/60">Kode Wilayah:</span>
-                            <span class="font-medium font-mono text-[#d4ed31]">{{ $desaProfile->kode_desa ?? '-' }}</span>
+                            <span class="font-medium font-mono text-emerald-300">{{ $desaProfile->kode_desa ?? '-' }}</span>
                         </div>
                     </div>
                 </div>

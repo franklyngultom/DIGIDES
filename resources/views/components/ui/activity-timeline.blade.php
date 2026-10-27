@@ -58,7 +58,7 @@
                 @click="createModal = true"
                 id="btn-tambah-schedule"
                 class="px-3.5 py-1.5 bg-[#114443] hover:bg-[#0c3837] text-white rounded-full text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 cursor-pointer">
-            <svg class="w-3.5 h-3.5 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
             </svg>
             <span>Tambah Jadwal</span>
@@ -78,7 +78,7 @@
             @foreach($items as $item)
                 <div class="relative flex items-start gap-4 group">
                     <!-- Milestone Dot -->
-                    <div class="w-7 h-7 rounded-full bg-[#114443] text-[#d4ed31] flex items-center justify-center shrink-0 shadow-xs border-2 border-white relative">
+                    <div class="w-7 h-7 rounded-full bg-[#114443] text-emerald-300 flex items-center justify-center shrink-0 shadow-xs border-2 border-white relative">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
@@ -91,7 +91,7 @@
                                 <span class="text-xs font-bold text-[#0c3837]">{{ $item->title ?? 'Aktivitas' }}</span>
                                 @php
                                     $tagClass = match(strtolower($item->tag ?? '')) {
-                                        'persuratan' => 'bg-[#e2f48f] text-[#0c3837]',
+                                        'persuratan' => 'bg-emerald-100 text-[#0c3837]',
                                         'kependudukan' => 'bg-[#e2f0ed] text-[#114443]',
                                         'administrasi' => 'bg-[#dbeafe] text-[#1e40af]',
                                         'keuangan' => 'bg-[#ecfdf5] text-[#047857]',

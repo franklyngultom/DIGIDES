@@ -40,7 +40,7 @@
                 </button>
 
                 <a href="{{ route('administrasi.anggaran-desa.create') }}" class="px-4 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-2xl shadow-sm transition-colors flex items-center gap-2">
-                    <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     <span>Tambah Dokumen APBDes</span>
                 </a>
                 @endcan
@@ -98,7 +98,7 @@
                                 </td>
                                 <td class="px-4 py-4">
                                     <div class="font-bold text-[#0c3837]">T.A {{ $item->tahun }}</div>
-                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider {{ $item->jenis_dokumen === 'apbdes' ? 'bg-[#e2f48f] text-[#0c3837]' : 'bg-[#e2f0ed] text-[#114443]' }}">
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider {{ $item->jenis_dokumen === 'apbdes' ? 'bg-emerald-100 text-[#0c3837]' : 'bg-[#e2f0ed] text-[#114443]' }}">
                                         {{ str_replace('_', ' ', $item->jenis_dokumen) }}
                                     </span>
                                 </td>

@@ -28,7 +28,7 @@
 
                 @can('pembangunan.manage')
                 <a href="{{ route('pembangunan.inventaris-hasil.edit', $item) }}" class="px-4 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-2xl shadow-sm transition-colors flex items-center gap-2 cursor-pointer">
-                    <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                     <span>Edit Aset</span>
                 </a>
                 @endcan
@@ -39,7 +39,7 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <x-card class="p-4 bg-[#0c3837] text-white">
                 <span class="text-[11px] text-slate-300 font-medium block">Nilai Perolehan Aset</span>
-                <span class="text-xl font-extrabold text-[#d4ed31] block mt-1 font-mono">Rp {{ number_format($item->nilai_aset, 0, ',', '.') }}</span>
+                <span class="text-xl font-extrabold text-emerald-300 block mt-1 font-mono">Rp {{ number_format($item->nilai_aset, 0, ',', '.') }}</span>
                 <span class="text-[10px] text-slate-300 block mt-0.5">Sumber Dana: {{ $item->sumber_dana }}</span>
             </x-card>
 

@@ -21,7 +21,7 @@
 
                 @can('pembangunan.manage')
                 <a href="{{ route('pembangunan.kader.create') }}" class="px-4 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-2xl shadow-sm transition-colors flex items-center gap-2">
-                    <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     <span>Tambah Kader Baru</span>
                 </a>
                 @endcan
@@ -58,7 +58,7 @@
             <div class="flex items-center gap-3 text-xs">
                 <span class="px-3 py-1 bg-slate-100 rounded-xl font-medium text-slate-700">Total: <strong>{{ $totalKader }}</strong> Kader</span>
                 <span class="px-3 py-1 bg-emerald-50 text-emerald-800 rounded-xl font-medium">Aktif: <strong>{{ $totalAktif }}</strong></span>
-                <span class="px-3 py-1 bg-[#114443] text-[#d4ed31] rounded-xl font-bold">Honor/bln: <strong>Rp {{ number_format($totalHonor, 0, ',', '.') }}</strong></span>
+                <span class="px-3 py-1 bg-[#0c3837] text-emerald-300 rounded-xl font-bold">Honor/bln: <strong>Rp {{ number_format($totalHonor, 0, ',', '.') }}</strong></span>
             </div>
         </div>
 

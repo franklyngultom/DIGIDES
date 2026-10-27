@@ -129,7 +129,7 @@
                     @if($act->properties && count($act->properties) > 0)
                     <tr x-show="expandedRow === {{ $act->id }}" class="bg-[#f0f7f5]" style="display: none;">
                         <td colspan="6" class="p-4">
-                            <div class="p-3 bg-slate-900 text-[#d4ed31] rounded-2xl font-mono text-[11px] overflow-x-auto max-h-48">
+                            <div class="p-3 bg-slate-900 text-emerald-300 rounded-2xl font-mono text-[11px] overflow-x-auto max-h-48">
                                 <pre>{{ json_encode($act->properties, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
                             </div>
                         </td>

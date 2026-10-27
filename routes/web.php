@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\BackupController;
 use App\Http\Controllers\Admin\DesaProfileController;
+use App\Http\Controllers\Admin\PengaturanSuratController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Administrasi\AdministrasiHubController;
 use App\Http\Controllers\Administrasi\AparaturController;
@@ -52,9 +53,15 @@ use Illuminate\Support\Facades\Route;
 // Public Website Routes (Fase 01 - Website Profil & Layanan Desa)
 Route::get('/', [PublicWebsiteController::class, 'home'])->name('public.home');
 Route::get('/profil-desa', [PublicWebsiteController::class, 'profil'])->name('public.profil');
-Route::get('/layanan', [PublicWebsiteController::class, 'layanan'])->name('public.layanan');
+Route::get('/infografis', [PublicWebsiteController::class, 'infografis'])->name('public.infografis');
+Route::get('/listing', [PublicWebsiteController::class, 'listing'])->name('public.listing');
+Route::get('/idm', [PublicWebsiteController::class, 'idm'])->name('public.idm');
 Route::get('/berita', [PublicWebsiteController::class, 'berita'])->name('public.berita');
 Route::get('/berita/{slug}', [PublicWebsiteController::class, 'beritaDetail'])->name('public.berita.detail');
+Route::get('/belanja', [PublicWebsiteController::class, 'belanja'])->name('public.belanja');
+Route::get('/ppid', [PublicWebsiteController::class, 'ppid'])->name('public.ppid');
+Route::post('/pengaduan', [PublicWebsiteController::class, 'submitPengaduan'])->name('public.pengaduan.submit');
+Route::get('/layanan', [PublicWebsiteController::class, 'layanan'])->name('public.layanan');
 Route::get('/kontak', [PublicWebsiteController::class, 'kontak'])->name('public.kontak');
 Route::get('/lacak-surat', [PublicWebsiteController::class, 'lacakSurat'])->name('public.lacak-surat')->middleware('throttle:60,1');
 
@@ -230,7 +237,38 @@ Route::middleware('auth')->group(function () {
             Route::post('/pelayanan', [PelayananSuratController::class, 'store'])->name('store');
             Route::post('/antrean/{pengajuan}/terbitkan', [PengajuanAntreanController::class, 'terbitkanSurat'])->name('antrean.terbitkan');
         });
+
+        // Pengaturan Persuratan (Format Cetak, Penomoran, Kop, Tanda Tangan)
+        // Dapat diakses oleh Admin Desa dan Staff yang memiliki izin persuratan.pengaturan
+        Route::middleware('permission:persuratan.pengaturan')->prefix('pengaturan')->name('pengaturan.')->group(function () {
+            Route::get('/', [PengaturanSuratController::class, 'pengaturan'])->name('index');
+            Route::post('/', [PengaturanSuratController::class, 'updatePengaturan'])->name('update');
+
+            Route::get('/format-cetak', [PengaturanSuratController::class, 'formatCetak'])->name('format-cetak');
+            Route::post('/format-cetak', [PengaturanSuratController::class, 'updateFormatCetak'])->name('format-cetak.update');
+            Route::put('/format-cetak/template/{template}', [PengaturanSuratController::class, 'updateTemplateFormatCetak'])->name('format-cetak.template');
+
+            Route::get('/penomoran', [PengaturanSuratController::class, 'penomoran'])->name('penomoran');
+            Route::post('/penomoran', [PengaturanSuratController::class, 'updatePenomoran'])->name('penomoran.update');
+
+            Route::get('/kop-surat', [PengaturanSuratController::class, 'kopSurat'])->name('kop-surat');
+            Route::post('/kop-surat', [PengaturanSuratController::class, 'updateKopSurat'])->name('kop-surat.update');
+
+            Route::get('/tanda-tangan', [PengaturanSuratController::class, 'tandaTangan'])->name('tanda-tangan');
+            Route::post('/tanda-tangan', [PengaturanSuratController::class, 'storeSigner'])->name('tanda-tangan.store');
+            Route::put('/tanda-tangan/{signer}', [PengaturanSuratController::class, 'updateSigner'])->name('tanda-tangan.update');
+            Route::patch('/tanda-tangan/{signer}/toggle', [PengaturanSuratController::class, 'toggleSigner'])->name('tanda-tangan.toggle');
+            Route::delete('/tanda-tangan/{signer}', [PengaturanSuratController::class, 'destroySigner'])->name('tanda-tangan.destroy');
+            Route::post('/tanda-tangan/sync-aparatur', [PengaturanSuratController::class, 'syncAparatur'])->name('tanda-tangan.sync-aparatur');
+        });
     });
+
+    // Alias URL /admin/persuratan/pengaturan agar sinkron dengan jalur admin
+    Route::redirect('/admin/persuratan/pengaturan', '/persuratan/pengaturan');
+    Route::redirect('/admin/persuratan/format-cetak', '/persuratan/pengaturan/format-cetak');
+    Route::redirect('/admin/persuratan/penomoran', '/persuratan/pengaturan/penomoran');
+    Route::redirect('/admin/persuratan/kop-surat', '/persuratan/pengaturan/kop-surat');
+    Route::redirect('/admin/persuratan/tanda-tangan', '/persuratan/pengaturan/tanda-tangan');
 
     // =============================================================
     // Modul Administrasi Umum (Fase 6 - 8 Buku Register Desa)

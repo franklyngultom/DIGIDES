@@ -16,7 +16,7 @@
         @can('user.create')
         <a href="{{ route('admin.users.create') }}" 
            class="px-5 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-full shadow-xs flex items-center gap-2 transition-all cursor-pointer">
-            <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
             </svg>
             <span>Tambah Pengguna Baru</span>
@@ -37,7 +37,7 @@
         </x-card>
 
         <x-card class="p-4 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-[#e2f48f] text-[#0c3837] flex items-center justify-center font-bold">
+            <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-[#0c3837] flex items-center justify-center font-bold">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
             <div>
@@ -47,7 +47,7 @@
         </x-card>
 
         <x-card class="p-4 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-[#0c3837] text-[#d4ed31] flex items-center justify-center font-bold">
+            <div class="w-10 h-10 rounded-2xl bg-[#0c3837] text-emerald-300 flex items-center justify-center font-bold">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
             </div>
             <div>

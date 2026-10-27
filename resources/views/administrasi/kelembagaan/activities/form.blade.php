@@ -99,7 +99,7 @@
                     <a href="{{ route('administrasi.kelembagaan.show', ['institution' => $institution->slug, 'tab' => 'kegiatan']) }}" class="px-5 py-2.5 bg-[#f7faf9] text-[#64748b] hover:text-[#0c3837] font-bold text-xs rounded-2xl transition-colors">
                         Batal
                     </a>
-                    <button type="submit" class="px-6 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-[#d4ed31] font-bold text-xs rounded-2xl shadow-sm transition-colors">
+                    <button type="submit" class="px-6 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white font-bold text-xs rounded-2xl shadow-sm transition-colors">
                         {{ isset($activity) ? 'Simpan Perubahan' : 'Catat Kegiatan' }}
                     </button>
                 </div>

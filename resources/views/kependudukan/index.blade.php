@@ -59,7 +59,7 @@
                 @can('kependudukan.create')
                 <a href="{{ route('kependudukan.create') }}" 
                    class="px-5 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-full shadow-xs flex items-center gap-2 transition-all cursor-pointer">
-                    <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
                     </svg>
                     <span>Daftarkan Warga Baru</span>
@@ -81,7 +81,7 @@
             </x-card>
 
             <x-card class="p-4 flex items-center gap-3">
-                <div class="w-11 h-11 rounded-2xl bg-[#e2f48f] text-[#0c3837] flex items-center justify-center font-bold text-lg shadow-inner">
+                <div class="w-11 h-11 rounded-2xl bg-emerald-100 text-[#0c3837] flex items-center justify-center font-bold text-lg shadow-inner">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 </div>
                 <div>
@@ -91,7 +91,7 @@
             </x-card>
 
             <x-card class="p-4 flex items-center gap-3">
-                <div class="w-11 h-11 rounded-2xl bg-[#0c3837] text-[#d4ed31] flex items-center justify-center font-bold text-lg shadow-inner">
+                <div class="w-11 h-11 rounded-2xl bg-[#0c3837] text-emerald-300 flex items-center justify-center font-bold text-lg shadow-inner">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 </div>
                 <div>
@@ -487,7 +487,7 @@
                     <a href="{{ route('kependudukan.import-template') }}" 
                        id="btn-download-template"
                        class="px-3.5 py-1.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-xl shadow-2xs flex items-center gap-1.5 transition-all">
-                        <svg class="w-3.5 h-3.5 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        <svg class="w-3.5 h-3.5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                         <span>Unduh Template</span>
                     </a>
                 </div>
@@ -509,7 +509,7 @@
                             Batal
                         </button>
                         <button type="submit" id="btn-submit-import" class="px-5 py-2 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-full shadow-xs transition-all cursor-pointer flex items-center gap-1.5">
-                            <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                            <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                             <span>Mulai Impor Data</span>
                         </button>
                     </div>

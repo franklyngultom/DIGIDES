@@ -40,7 +40,7 @@
                 </button>
 
                 <a href="{{ route('administrasi.peraturan-desa.create') }}" class="px-4 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-2xl shadow-sm transition-colors flex items-center gap-2">
-                    <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     <span>Tambah Peraturan</span>
                 </a>
                 @endcan
@@ -96,7 +96,7 @@
                                     {{ $data->firstItem() + $index }}
                                 </td>
                                 <td class="px-4 py-4">
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider {{ $item->jenis_peraturan === 'perdes' ? 'bg-[#e2f48f] text-[#0c3837]' : ($item->jenis_peraturan === 'perkades' ? 'bg-[#e2f0ed] text-[#114443]' : 'bg-slate-100 text-slate-700') }}">
+                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider {{ $item->jenis_peraturan === 'perdes' ? 'bg-emerald-100 text-[#0c3837]' : ($item->jenis_peraturan === 'perkades' ? 'bg-[#e2f0ed] text-[#114443]' : 'bg-slate-100 text-slate-700') }}">
                                         {{ str_replace('_', ' ', $item->jenis_peraturan) }}
                                     </span>
                                 </td>

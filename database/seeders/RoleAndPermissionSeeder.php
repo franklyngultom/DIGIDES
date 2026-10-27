@@ -36,10 +36,11 @@ class RoleAndPermissionSeeder extends Seeder
             'kependudukan.delete',
             'kependudukan.verify',
 
-            // Persuratan Walk-In & Ekspedisi
+            // Persuratan Walk-In & Ekspedisi & Pengaturan
             'persuratan.view',
             'persuratan.create',
             'persuratan.print',
+            'persuratan.pengaturan',
 
             // Dynamic Institution (Kelembagaan)
             'kelembagaan.view',

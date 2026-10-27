@@ -34,7 +34,7 @@ $canEdit = auth()->check() && auth()->user()->can('desa.update');
             <button type="button" 
                     @click="openModal = true"
                     title="Edit atau Hapus Foto Desa"
-                    class="p-1.5 bg-black/40 hover:bg-[#114443] text-white/90 hover:text-[#d4ed31] backdrop-blur-md rounded-xl border border-white/20 shadow-md transition-all flex items-center gap-1.5 text-[11px] font-semibold cursor-pointer">
+                    class="p-1.5 bg-black/40 hover:bg-[#114443] text-white/90 hover:text-emerald-300 backdrop-blur-md rounded-xl border border-white/20 shadow-md transition-all flex items-center gap-1.5 text-[11px] font-semibold cursor-pointer">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -48,7 +48,7 @@ $canEdit = auth()->check() && auth()->user()->can('desa.update');
     <div class="absolute inset-0 bg-gradient-to-t from-[#0c3837]/95 via-[#0c3837]/40 to-transparent flex flex-col justify-end p-4 pointer-events-none">
         <h4 class="text-base font-extrabold text-white tracking-wide">{{ $desaProfile?->nama_desa ?? 'Desa Sukamaju' }}</h4>
         <p class="text-[11px] text-[#8bc3b8] flex items-center gap-1 mt-0.5">
-            <svg class="w-3.5 h-3.5 text-[#d4ed31] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 text-emerald-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
@@ -123,7 +123,7 @@ $canEdit = auth()->check() && auth()->user()->can('desa.update');
                         </div>
 
                         <button type="submit" class="w-full py-2.5 px-4 bg-[#114443] hover:bg-[#0c3837] text-white font-bold rounded-2xl text-xs shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer">
-                            <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
                             </svg>
                             <span>Simpan Foto Lanskap Baru</span>

@@ -62,7 +62,7 @@
             
             <!-- Quick Letter CTA Box -->
             <div class="bg-gradient-to-br from-[#0c3837] to-[#114443] rounded-3xl p-6 text-white shadow-md space-y-4 border border-[#1b5e5c]/40">
-                <span class="text-[10px] font-bold text-[#d4ed31] uppercase tracking-wider block">Layanan Cepat</span>
+                <span class="text-[10px] font-bold text-emerald-300 uppercase tracking-wider block">Layanan Cepat</span>
                 <h3 class="text-lg font-bold">Butuh Surat Keterangan Desa?</h3>
                 <p class="text-xs text-[#8bc3b8] leading-relaxed">
                     Ajukan permohonan surat secara online tanpa antre. Cek persyaratan dan mulai permohonan sekarang.

@@ -221,10 +221,11 @@ class UserController extends Controller
             'kependudukan.delete' => 'Hapus Data Penduduk',
             'kependudukan.verify' => 'Verifikasi & Scan NIK Ganda',
 
-            // Persuratan Walk-In
+            // Persuratan Walk-In & Pengaturan
             'persuratan.view' => 'Lihat Arsip Persuratan',
             'persuratan.create' => 'Buat Surat Permohonan',
             'persuratan.print' => 'Cetak & Download Dokumen Surat',
+            'persuratan.pengaturan' => 'Kelola Pengaturan Persuratan (Format Cetak, Penomoran, Kop, Tanda Tangan)',
 
             // Kelembagaan Dinamis
             'kelembagaan.view' => 'Lihat Data Lembaga Desa',

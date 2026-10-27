@@ -23,17 +23,17 @@
 
 ## Daftar fase
 
-| Fase | Dokumen | Hasil utama |
-|---|---|---|
-| 00 | `00_phase0_audit_dan_pemetaan.md` | Audit sistem dan rencana teknis berbasis kode aktual |
-| 01 | `01_phase1_website_publik.md` | Website profil desa, berita, dan informasi layanan |
-| 02 | `02_phase2_akun_masyarakat.md` | Registrasi/login dan profil masyarakat |
-| 03 | `03_phase3_katalog_layanan.md` | Katalog layanan dan persyaratan |
-| 04 | `04_phase4_pengajuan_online.md` | Form pengajuan dan unggah dokumen |
-| 05 | `05_phase5_antrean_petugas.md` | Antrean, pemeriksaan, status, dan riwayat |
-| 06 | `06_phase6_integrasi_persuratan.md` | Integrasi dengan generator surat dan Buku Ekspedisi/Agenda |
-| 07 | `07_phase7_notifikasi_keamanan.md` | Notifikasi dan penguatan keamanan |
-| 08 | `08_phase8_pengujian_dan_rilis.md` | Uji regresi, backup, dan rilis |
+| Fase | Dokumen | Hasil utama | Status |
+|---|---|---|:---:|
+| 00 | `00_phase0_audit_dan_pemetaan.md` | Audit sistem dan rencana teknis berbasis kode aktual | Selesai |
+| 01 | `01_phase1_website_publik.md` | Website profil desa, berita, dan informasi layanan | Selesai |
+| 02 | `02_phase2_akun_masyarakat.md` | Registrasi/login dan profil masyarakat | Selesai |
+| 03 | `03_phase3_katalog_layanan.md` | Katalog layanan dan persyaratan | Selesai |
+| 04 | `04_phase4_pengajuan_online.md` | Form pengajuan dan unggah dokumen | Selesai |
+| 05 | `05_phase5_antrean_petugas.md` | Antrean, pemeriksaan, status, dan riwayat | Selesai |
+| 06 | `06_phase6_integrasi_persuratan.md` | Integrasi dengan generator surat dan Buku Ekspedisi/Agenda | Selesai |
+| 07 | `07_phase7_notifikasi_keamanan.md` | Notifikasi dan penguatan keamanan | Selesai |
+| 08 | `08_phase8_pengujian_dan_rilis.md` | Uji regresi, backup, dan rilis | Selesai |
 
 ## Definition of Done umum
 

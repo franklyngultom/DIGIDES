@@ -8,7 +8,7 @@
 @php
 $variants = [
     'primary' => 'bg-[#114443] hover:bg-[#0c3837] text-white shadow-xs focus:ring-2 focus:ring-[#10b981]/50',
-    'lime' => 'bg-[#d4ed31] hover:bg-[#c2dc26] text-[#0c3837] font-semibold shadow-xs focus:ring-2 focus:ring-[#d4ed31]/50',
+    'lime' => 'bg-emerald-400 hover:bg-emerald-300 text-[#0c3837] font-bold shadow-xs focus:ring-2 focus:ring-emerald-400/50',
     'emerald' => 'bg-[#10b981] hover:bg-[#059669] text-white shadow-xs focus:ring-2 focus:ring-[#10b981]/50',
     'secondary' => 'bg-white hover:bg-[#f7faf9] text-[#0c3837] border border-[#e1ede8] shadow-xs focus:ring-2 focus:ring-[#10b981]/30',
     'danger' => 'bg-rose-600 hover:bg-rose-700 text-white shadow-xs focus:ring-2 focus:ring-rose-500/50',

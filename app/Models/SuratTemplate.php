@@ -29,6 +29,7 @@ class SuratTemplate extends Model
         'deskripsi',
         'is_active',
         'is_online_available',
+        'custom_print_settings_json',
     ];
 
     /**
@@ -40,6 +41,7 @@ class SuratTemplate extends Model
             'schema_fields_json' => 'array',
             'persyaratan_json' => 'array',
             'dokumen_wajib_json' => 'array',
+            'custom_print_settings_json' => 'array',
             'is_active' => 'boolean',
             'is_online_available' => 'boolean',
         ];

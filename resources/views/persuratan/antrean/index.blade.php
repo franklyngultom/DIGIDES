@@ -26,7 +26,7 @@
                 </a>
                 <a href="{{ route('persuratan.arsip.index') }}" 
                    class="px-4 py-2.5 bg-[#0c3837] hover:bg-[#114443] text-white text-xs font-bold rounded-full shadow-xs flex items-center gap-2 transition-all">
-                    <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
                     </svg>
                     <span>Buku Arsip Terbit</span>

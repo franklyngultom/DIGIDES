@@ -40,7 +40,7 @@
                 </form>
 
                 <a href="{{ route('keuangan.rab.edit', $rab) }}" class="px-4 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-2xl shadow-sm transition-colors flex items-center gap-2 cursor-pointer">
-                    <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                     <span>Edit RAB</span>
                 </a>
                 @endcan
@@ -71,7 +71,7 @@
 
             <x-card class="p-4 bg-[#0c3837] text-white">
                 <span class="text-[11px] text-slate-300 font-medium block">Total Anggaran RAB</span>
-                <span class="text-lg font-extrabold text-[#d4ed31] block mt-1 font-mono">Rp {{ number_format($rab->total_anggaran, 0, ',', '.') }}</span>
+                <span class="text-lg font-extrabold text-emerald-300 block mt-1 font-mono">Rp {{ number_format($rab->total_anggaran, 0, ',', '.') }}</span>
                 <span class="text-[10px] text-slate-300 block mt-0.5">{{ $rab->items->count() }} Komponen Item</span>
             </x-card>
         </div>
@@ -183,7 +183,7 @@
                             <td colspan="6" class="px-6 py-4 text-right uppercase tracking-wider text-sm font-extrabold">
                                 TOTAL ANGGARAN BIAYA (RAB) :
                             </td>
-                            <td class="px-5 py-4 text-right font-extrabold text-[#d4ed31] text-sm font-mono">
+                            <td class="px-5 py-4 text-right font-extrabold text-emerald-300 text-sm font-mono">
                                 Rp {{ number_format($rab->total_anggaran, 0, ',', '.') }}
                             </td>
                         </tr>

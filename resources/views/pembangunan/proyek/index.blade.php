@@ -21,7 +21,7 @@
 
                 @can('pembangunan.manage')
                 <a href="{{ route('pembangunan.proyek.create') }}" class="px-4 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-2xl shadow-sm transition-colors flex items-center gap-2">
-                    <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     <span>Tambah Proyek Baru</span>
                 </a>
                 @endcan
@@ -91,7 +91,7 @@
                                 </span>
                             </div>
 
-                            <div class="absolute bottom-3 right-3 bg-[#0c3837]/80 backdrop-blur-md text-[#d4ed31] px-2.5 py-0.5 rounded-xl text-xs font-bold">
+                            <div class="absolute bottom-3 right-3 bg-[#0c3837]/80 backdrop-blur-md text-emerald-300 px-2.5 py-0.5 rounded-xl text-xs font-bold">
                                 {{ $item->persentase_selesai }}%
                             </div>
                         </div>

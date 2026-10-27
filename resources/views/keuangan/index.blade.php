@@ -27,7 +27,7 @@
                 @can('keuangan.manage')
                 <div class="flex items-center gap-2">
                     <a href="{{ route('keuangan.kas.create') }}" class="px-4 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-2xl shadow-sm transition-colors flex items-center gap-2">
-                        <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         <span>Catat Transaksi Kas</span>
                     </a>
                 </div>
@@ -92,7 +92,7 @@
             <div class="bg-white p-5 rounded-3xl border border-[#e1ede8] shadow-xs relative overflow-hidden group">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-xs font-bold text-[#64748b] uppercase tracking-wider">Saldo Rekening Bank</span>
-                    <div class="w-8 h-8 rounded-xl bg-[#e2f48f] text-[#0c3837] flex items-center justify-center">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-100 text-[#0c3837] flex items-center justify-center">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/></svg>
                     </div>
                 </div>
@@ -159,7 +159,7 @@
             <!-- Modul 3: Buku Kas Umum (BKU) -->
             <div class="bg-white p-6 rounded-3xl border border-[#e1ede8] shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
                 <div>
-                    <div class="w-12 h-12 rounded-2xl bg-[#e2f48f] text-[#0c3837] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-[#0c3837] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     </div>
                     <span class="text-[11px] font-bold uppercase tracking-wider text-[#10b981]">Buku Register Kas</span>

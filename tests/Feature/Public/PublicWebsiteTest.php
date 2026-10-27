@@ -82,4 +82,58 @@ class PublicWebsiteTest extends TestCase
         $response->assertStatus(200);
         $response->assertSeeText('Lacak Status Permohonan Surat');
     }
+
+    public function test_public_infografis_page_can_be_rendered(): void
+    {
+        $response = $this->get('/infografis');
+
+        $response->assertStatus(200);
+        $response->assertSeeText('Infografis Kependudukan & APBDes');
+        $response->assertSeeText('Statistik Kependudukan');
+    }
+
+    public function test_public_listing_page_can_be_rendered(): void
+    {
+        $response = $this->get('/listing');
+
+        $response->assertStatus(200);
+        $response->assertSeeText('Listing Potensi & Fasilitas Desa');
+    }
+
+    public function test_public_idm_page_can_be_rendered(): void
+    {
+        $response = $this->get('/idm');
+
+        $response->assertStatus(200);
+        $response->assertSeeText('Indeks Desa Membangun (IDM)');
+        $response->assertSeeText('DESA MANDIRI');
+    }
+
+    public function test_public_belanja_page_can_be_rendered(): void
+    {
+        $response = $this->get('/belanja');
+
+        $response->assertStatus(200);
+        $response->assertSeeText('Lapak Belanja UMKM & BUMDes');
+    }
+
+    public function test_public_ppid_page_can_be_rendered(): void
+    {
+        $response = $this->get('/ppid');
+
+        $response->assertStatus(200);
+        $response->assertSeeText('Pejabat Pengelola Informasi & Dokumentasi (PPID)');
+    }
+
+    public function test_public_pengaduan_can_be_submitted(): void
+    {
+        $response = $this->post('/pengaduan', [
+            'nama_pelapor' => 'Warga Peduli',
+            'kontak' => '081234567890',
+            'kategori' => 'Pelayanan Publik',
+            'isi_laporan' => 'Pengaduan uji coba terkait perbaikan lampu jalan dusun.',
+        ]);
+
+        $response->assertSessionHas('success');
+    }
 }

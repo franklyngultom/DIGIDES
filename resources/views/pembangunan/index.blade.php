@@ -27,7 +27,7 @@
                 @can('pembangunan.manage')
                 <div class="flex items-center gap-2">
                     <a href="{{ route('pembangunan.proyek.create') }}" class="px-4 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-2xl shadow-sm transition-colors flex items-center gap-2">
-                        <svg class="w-4 h-4 text-[#d4ed31]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         <span>Tambah Proyek Baru</span>
                     </a>
                 </div>
@@ -75,7 +75,7 @@
             <div class="bg-white p-5 rounded-3xl border border-[#e1ede8] shadow-xs relative overflow-hidden group">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-xs font-bold text-[#64748b] uppercase tracking-wider">Kader Pemberdayaan</span>
-                    <div class="w-8 h-8 rounded-xl bg-[#e2f48f] text-[#0c3837] flex items-center justify-center">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-100 text-[#0c3837] flex items-center justify-center">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                     </div>
                 </div>
@@ -159,7 +159,7 @@
             <!-- Card 3: Buku Kader Pemberdayaan Masyarakat -->
             <div class="bg-white p-6 rounded-3xl border border-[#e1ede8] shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
                 <div>
-                    <div class="w-12 h-12 rounded-2xl bg-[#e2f48f] text-[#0c3837] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-[#0c3837] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                     </div>
                     <span class="text-[11px] font-bold uppercase tracking-wider text-[#10b981]">SDM & Kelembagaan</span>

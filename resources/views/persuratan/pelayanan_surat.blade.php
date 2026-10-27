@@ -108,7 +108,7 @@
                 <!-- Kolom Kanan: Summary & Action -->
                 <div class="lg:col-span-5 space-y-6">
                     <div class="bg-[#0c3837] text-white rounded-3xl p-6 shadow-sm space-y-4">
-                        <h2 class="text-xs font-bold uppercase tracking-wider text-[#d4ed31] pb-2 border-b border-white/10 flex items-center gap-2">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-emerald-300 pb-2 border-b border-white/10 flex items-center gap-2">
                             <svg class="w-4 h-4 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             <span>Informasi Penerbitan Surat</span>
                         </h2>

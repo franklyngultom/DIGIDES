@@ -10,13 +10,13 @@
 
     @if (session('success'))
     <div class="bg-[#0c3837] text-white p-4 rounded-3xl shadow-xl border border-[#10b981]/40 flex items-start gap-3">
-        <div class="w-8 h-8 rounded-full bg-[#10b981]/20 text-[#d4ed31] flex items-center justify-center shrink-0 mt-0.5">
+        <div class="w-8 h-8 rounded-full bg-[#10b981]/20 text-emerald-300 flex items-center justify-center shrink-0 mt-0.5">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
             </svg>
         </div>
         <div class="flex-1">
-            <h4 class="text-sm font-bold text-[#d4ed31]">Berhasil</h4>
+            <h4 class="text-sm font-bold text-emerald-300">Berhasil</h4>
             <p class="text-xs text-[#e2f0ed] mt-0.5">{{ session('success') }}</p>
         </div>
         <button @click="show = false" class="text-white/60 hover:text-white">
@@ -44,13 +44,13 @@
 
     @if (session('info'))
     <div class="bg-[#114443] text-white p-4 rounded-3xl shadow-xl border border-white/20 flex items-start gap-3">
-        <div class="w-8 h-8 rounded-full bg-white/20 text-[#d4ed31] flex items-center justify-center shrink-0 mt-0.5">
+        <div class="w-8 h-8 rounded-full bg-white/20 text-emerald-300 flex items-center justify-center shrink-0 mt-0.5">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
         </div>
         <div class="flex-1">
-            <h4 class="text-sm font-bold text-[#d4ed31]">Informasi</h4>
+            <h4 class="text-sm font-bold text-emerald-300">Informasi</h4>
             <p class="text-xs text-[#e2f0ed] mt-0.5">{{ session('info') }}</p>
         </div>
         <button @click="show = false" class="text-white/60 hover:text-white">

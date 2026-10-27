@@ -60,7 +60,7 @@
                         <span class="text-xs font-semibold text-[#114443] truncate">Unduh format kolom template baku</span>
                     </div>
                     <a href="{{ $templateUrl }}" 
-                       class="px-3 py-1.5 bg-[#114443] hover:bg-[#0c3837] text-[#d4ed31] rounded-xl text-xs font-bold shadow-2xs transition-colors shrink-0 flex items-center gap-1">
+                       class="px-3 py-1.5 bg-[#114443] hover:bg-[#0c3837] text-emerald-300 rounded-xl text-xs font-bold shadow-2xs transition-colors shrink-0 flex items-center gap-1">
                         <span>Unduh Template</span>
                     </a>
                 </div>
@@ -112,7 +112,7 @@
                             Batal
                         </button>
                         <button type="submit" 
-                                class="px-5 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-[#d4ed31] text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer flex items-center gap-2">
+                                class="px-5 py-2.5 bg-[#114443] hover:bg-[#0c3837] text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
                             </svg>

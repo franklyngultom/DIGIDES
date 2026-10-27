@@ -62,6 +62,24 @@ Dokumen ini mendefinisikan standar keamanan, privasi data warga, kebijakan reten
 | **Notifikasi Akun Warga** | Basis Data (`notifications`) | 6 Bulan sejak status dibaca (`read_at`) | Dibersihkan via batch prune command berkala |
 | **Log Aktivitas (Audit Log)** | Basis Data (`activity_log`) | Minimal 2 Tahun | Diekspor ke cold storage log |
 
+### 3.1 Otomasi Pembersihan Data (Automated Batch Pruning)
+Sistem dilengkapi dengan artisan command terintegrasi `App\Console\Commands\PruneRetentionDataCommand`:
+```bash
+# Simulasi pembersihan tanpa menghapus data fisik (dry-run):
+php artisan digides:prune-retention --dry-run
+
+# Eksekusi pembersihan dengan parameter default (180 hari notifikasi, 730 hari audit log):
+php artisan digides:prune-retention
+
+# Kustomisasi periode hari retensi:
+php artisan digides:prune-retention --days-notifications=90 --days-logs=365
+```
+Perintah ini terdaftar dalam scheduler aplikasi (`routes/console.php`) dan berjalan otomatis setiap hari pada pukul **02:00 WIB**:
+```php
+Schedule::command('digides:prune-retention')->dailyAt('02:00');
+```
+Setiap eksekusi pembersihan yang memodifikasi data dicatat secara transparan ke dalam `activity_log`.
+
 ---
 
 ## 4. Prosedur Pencadangan (Backup) dan Pemulihan (Disaster Recovery)
