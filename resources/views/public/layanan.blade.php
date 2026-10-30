@@ -6,14 +6,24 @@
     <!-- Header Title -->
     <div class="text-center max-w-3xl mx-auto space-y-3">
         <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#e2f0ed] text-xs font-bold text-[#0c3837]">
-            Katalog Dokumen Mandiri
+            Pelayanan Mandiri Tanpa Ke Kantor Desa
         </span>
         <h1 class="text-4xl sm:text-5xl font-black text-[#0c3837] tracking-tight">
-            Katalog Layanan Surat Desa
+            Katalog & Pengajuan Surat Online
         </h1>
         <p class="text-sm sm:text-base text-[#64748b]">
-            Daftar jenis surat keterangan dan dokumen administrasi kependudukan yang dapat diajukan secara online maupun langsung di kantor desa.
+            Pilih jenis surat keterangan atau pengantar yang sering diajukan masyarakat di bawah ini untuk langsung mengisi formulir permohonan dari rumah.
         </p>
+        <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+            <a href="{{ route('public.ajukan-surat') }}"
+               class="px-6 py-3 rounded-full bg-[#10b981] hover:bg-[#059669] text-white text-xs sm:text-sm font-extrabold shadow-sm transition-all">
+                Buka Formulir Pengajuan Surat Online &rarr;
+            </a>
+            <a href="{{ route('public.lacak-surat') }}"
+               class="px-6 py-3 rounded-full bg-white hover:bg-[#f7faf9] text-[#0c3837] border border-[#e1ede8] text-xs sm:text-sm font-bold transition-all">
+                Lacak Status & Unduh Surat PDF
+            </a>
+        </div>
     </div>
 
     <!-- Search & Filter Form -->
@@ -22,12 +32,8 @@
             <input type="text" 
                    name="q" 
                    value="{{ $search ?? '' }}" 
-                   placeholder="Ketik nama surat atau kata kunci (contoh: SKCK, Domisili, Usaha, Kematian)..." 
-                   class="w-full pl-12 pr-28 py-3.5 bg-white border border-[#e1ede8] rounded-full text-sm font-semibold text-[#0c3837] focus:outline-none focus:border-[#10b981] shadow-sm">
-            
-            <svg class="w-5 h-5 text-[#94a3b8] absolute left-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
+                   placeholder="Ketik nama surat atau kata kunci (contoh: SKCK, Domisili, Usaha, SKTM, Nikah, Kelahiran)..." 
+                   class="w-full pl-5 pr-28 py-3.5 bg-white border border-[#e1ede8] rounded-full text-sm font-semibold text-[#0c3837] focus:outline-none focus:border-[#10b981] shadow-sm">
 
             <button type="submit" class="absolute right-2 px-5 py-2 bg-[#10b981] hover:bg-[#059669] text-white text-xs font-bold rounded-full transition-colors cursor-pointer">
                 Cari
@@ -40,34 +46,50 @@
         @forelse($templates as $tpl)
             <div x-data="{ openModal: false }" class="bg-white rounded-3xl p-6 border border-[#e1ede8] shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
                 <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 rounded-2xl bg-[#e2f0ed] text-[#0c3837] flex items-center justify-center font-black text-sm group-hover:bg-[#10b981] group-hover:text-white transition-colors">
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                        <span class="px-3 py-1 rounded-full bg-[#e2f0ed] text-xs font-extrabold text-[#0c3837]">
                             {{ $tpl->kode_surat ?? 'SRT' }}
-                        </div>
-                        <span class="px-3 py-1 rounded-full bg-[#f7faf9] border border-[#e1ede8] text-[11px] font-bold text-[#0c3837]">
-                            Tersedia Online
                         </span>
+                        <div class="flex items-center gap-1.5">
+                            <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
+                                {{ $tpl->biaya ?? 'Gratis' }}
+                            </span>
+                            <span class="px-2.5 py-0.5 rounded-full bg-[#f7faf9] border border-[#e1ede8] text-[10px] font-bold text-[#0c3837]">
+                                {{ $tpl->estimasi_proses ?? '1 Hari Kerja' }}
+                            </span>
+                        </div>
                     </div>
 
-                    <h3 class="text-lg font-bold text-[#0c3837] group-hover:text-[#10b981] transition-colors">
+                    <h3 class="text-lg font-extrabold text-[#0c3837] group-hover:text-[#10b981] transition-colors">
                         {{ $tpl->nama_surat }}
                     </h3>
 
                     <p class="text-xs text-[#64748b] mt-2 leading-relaxed">
                         {{ $tpl->deskripsi ?? 'Surat keterangan resmi yang diterbitkan oleh Pemerintah Desa untuk keperluan administrasi warga yang bersangkutan.' }}
                     </p>
+
+                    @if(!empty($tpl->persyaratan_json))
+                        <div class="mt-4 pt-3 border-t border-[#f1f5f4]">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-[#64748b] block mb-1.5">Syarat Berkas Utama:</span>
+                            <ul class="list-disc list-inside text-[11px] text-[#475569] space-y-0.5">
+                                @foreach(array_slice($tpl->persyaratan_json, 0, 3) as $syarat)
+                                    <li class="truncate">{{ $syarat }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                 </div>
 
-                <div class="pt-6 mt-4 border-t border-[#f1f5f4] flex items-center justify-between">
+                <div class="pt-5 mt-5 border-t border-[#f1f5f4] flex items-center justify-between gap-3">
                     <button @click="openModal = true" 
                             type="button" 
-                            class="text-xs font-bold text-[#10b981] hover:text-[#0c3837] transition-colors cursor-pointer">
-                        Lihat Persyaratan &raquo;
+                            class="text-xs font-bold text-[#64748b] hover:text-[#0c3837] transition-colors cursor-pointer">
+                        Detail Persyaratan &raquo;
                     </button>
 
-                    <a href="{{ route('login') }}" 
-                       class="px-4 py-2 rounded-full bg-[#0c3837] hover:bg-[#114443] text-white font-bold text-xs shadow-xs transition-colors">
-                        Ajukan Sekarang
+                    <a href="{{ route('public.ajukan-surat', ['template' => $tpl->id]) }}" 
+                       class="px-5 py-2.5 rounded-full bg-[#10b981] hover:bg-[#059669] text-white font-extrabold text-xs shadow-xs transition-colors">
+                        Ajukan Online
                     </a>
                 </div>
 
@@ -80,35 +102,38 @@
                         
                         <div class="flex items-center justify-between pb-3 border-b border-[#e1ede8]">
                             <div>
-                                <span class="text-[10px] font-bold text-[#10b981] uppercase tracking-wider">Persyaratan Layanan</span>
+                                <span class="text-[10px] font-bold text-[#10b981] uppercase tracking-wider">Persyaratan Layanan ({{ $tpl->kode_surat }})</span>
                                 <h4 class="text-base font-bold text-[#0c3837]">{{ $tpl->nama_surat }}</h4>
                             </div>
-                            <button @click="openModal = false" class="text-slate-400 hover:text-slate-600">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                </svg>
+                            <button @click="openModal = false" class="text-slate-400 hover:text-slate-600 cursor-pointer">
+                                &times;
                             </button>
                         </div>
 
                         <div class="space-y-3 text-xs text-[#475569]">
-                            <p class="font-bold text-[#0c3837]">Dokumen yang wajib disiapkan:</p>
+                            <p class="font-bold text-[#0c3837]">Dokumen yang perlu disiapkan:</p>
                             <ul class="list-disc pl-5 space-y-1.5">
-                                <li>Kartu Tanda Penduduk (KTP) asli / foto jelas.</li>
-                                <li>Kartu Keluarga (KK) yang masih berlaku.</li>
-                                <li>Surat Pengantar dari Ketua RT / RW setempat (jika ada).</li>
-                                <li>Dokumen pendukung khusus sesuai keperluan surat (seperti Surat Keterangan Usaha / Surat Kematian).</li>
+                                @if(!empty($tpl->persyaratan_json))
+                                    @foreach($tpl->persyaratan_json as $syarat)
+                                        <li>{{ $syarat }}</li>
+                                    @endforeach
+                                @else
+                                    <li>Kartu Tanda Penduduk (KTP) asli / foto jelas.</li>
+                                    <li>Kartu Keluarga (KK) yang masih berlaku.</li>
+                                    <li>Surat Pengantar dari Ketua RT / RW setempat (jika ada).</li>
+                                @endif
                             </ul>
                             <div class="p-3 rounded-xl bg-[#f7faf9] border border-[#e1ede8] text-[11px] text-[#64748b]">
-                                <strong>Waktu Proses:</strong> 15 - 30 Menit pada jam operasional kerja setelah diverifikasi oleh petugas pelayanan desa.
+                                <strong>Estimasi Proses:</strong> {{ $tpl->estimasi_proses ?? '1 Hari Kerja' }} &bull; <strong>Biaya:</strong> {{ $tpl->biaya ?? 'Gratis / Rp 0' }}
                             </div>
                         </div>
 
                         <div class="pt-2 flex justify-end gap-2">
-                            <button @click="openModal = false" type="button" class="px-4 py-2 rounded-full border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50">
+                            <button @click="openModal = false" type="button" class="px-4 py-2 rounded-full border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer">
                                 Tutup
                             </button>
-                            <a href="{{ route('login') }}" class="px-4 py-2 rounded-full bg-[#10b981] text-white text-xs font-bold hover:bg-[#059669]">
-                                Masuk & Ajukan
+                            <a href="{{ route('public.ajukan-surat', ['template' => $tpl->id]) }}" class="px-5 py-2 rounded-full bg-[#10b981] text-white text-xs font-bold hover:bg-[#059669]">
+                                Isi Formulir Pengajuan &rarr;
                             </a>
                         </div>
                     </div>

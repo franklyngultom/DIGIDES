@@ -74,6 +74,10 @@
                        class="relative px-3.5 py-2 text-sm font-semibold tracking-wide transition-all rounded-full {{ $currentRoute === 'public.home' ? 'text-emerald-300 font-bold bg-white/15 border border-white/20 shadow-xs' : 'text-white/85 hover:text-white hover:bg-white/10' }}">
                         Home
                     </a>
+                    <a href="{{ route('public.ajukan-surat') }}" 
+                       class="relative px-3.5 py-2 text-sm font-semibold tracking-wide transition-all rounded-full {{ in_array($currentRoute, ['public.ajukan-surat', 'public.layanan', 'public.lacak-surat']) ? 'text-emerald-300 font-bold bg-white/15 border border-white/20 shadow-xs' : 'text-white/85 hover:text-white hover:bg-white/10' }}">
+                        Ajukan Surat
+                    </a>
                     <a href="{{ route('public.profil') }}" 
                        class="relative px-3.5 py-2 text-sm font-semibold tracking-wide transition-all rounded-full {{ $currentRoute === 'public.profil' ? 'text-emerald-300 font-bold bg-white/15 border border-white/20 shadow-xs' : 'text-white/85 hover:text-white hover:bg-white/10' }}">
                         Profil Desa
@@ -106,18 +110,14 @@
 
                 <!-- Action Button / Portal -->
                 <div class="hidden lg:flex items-center gap-2.5">
-                    @auth
-                        <a href="{{ route('dashboard') }}" 
-                           class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 text-white font-bold text-xs shadow-sm transition-all hover:scale-102">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span>Dashboard Desa</span>
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}" 
-                           class="inline-flex items-center justify-center px-5 py-2 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 text-white font-bold text-xs shadow-sm transition-all hover:scale-102">
-                            <span>Masuk</span>
-                        </a>
-                    @endauth
+                    <a href="{{ route('login') }}" 
+                       class="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 text-white font-bold text-xs shadow-sm transition-all hover:scale-102">
+                        <span>Masuk</span>
+                    </a>
+                    <a href="{{ route('register') }}" 
+                       class="inline-flex items-center justify-center px-5 py-2 rounded-full bg-[#10b981] hover:bg-[#059669] text-white font-bold text-xs shadow-sm transition-all hover:scale-102">
+                        <span>Daftar</span>
+                    </a>
                 </div>
 
                 <!-- Mobile Hamburger Button -->
@@ -152,6 +152,10 @@
                class="block px-4 py-2.5 rounded-xl text-sm font-semibold {{ $currentRoute === 'public.home' ? 'bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-400/30' : 'text-white/85 hover:bg-white/10' }}">
                 Home
             </a>
+            <a href="{{ route('public.ajukan-surat') }}" 
+               class="block px-4 py-2.5 rounded-xl text-sm font-semibold {{ in_array($currentRoute, ['public.ajukan-surat', 'public.layanan', 'public.lacak-surat']) ? 'bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-400/30' : 'text-white/85 hover:bg-white/10' }}">
+                Ajukan Surat Online
+            </a>
             <a href="{{ route('public.profil') }}" 
                class="block px-4 py-2.5 rounded-xl text-sm font-semibold {{ $currentRoute === 'public.profil' ? 'bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-400/30' : 'text-white/85 hover:bg-white/10' }}">
                 Profil Desa
@@ -181,22 +185,14 @@
                 PPID
             </a>
             <div class="pt-3 border-t border-white/15 flex gap-2">
-                <button type="button" 
-                        @click="pengaduanModalOpen = true; mobileNavOpen = false" 
-                        class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs text-center shadow-xs">
-                    Pengaduan Warga
-                </button>
-                @auth
-                    <a href="{{ route('dashboard') }}" 
-                       class="flex-1 py-2.5 rounded-xl bg-[#10b981] text-white font-bold text-xs text-center">
-                        Dashboard
-                    </a>
-                @else
-                    <a href="{{ route('login') }}" 
-                       class="flex-1 py-2.5 rounded-xl bg-[#10b981] text-white font-bold text-xs text-center">
-                        Masuk Portal
-                    </a>
-                @endauth
+                <a href="{{ route('login') }}" 
+                   class="flex-1 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 text-white font-bold text-xs text-center">
+                    Masuk
+                </a>
+                <a href="{{ route('register') }}" 
+                   class="flex-1 py-2.5 rounded-xl bg-[#10b981] hover:bg-[#059669] text-white font-bold text-xs text-center">
+                    Daftar
+                </a>
             </div>
         </div>
     </header>

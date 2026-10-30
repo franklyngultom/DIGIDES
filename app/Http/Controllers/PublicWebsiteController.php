@@ -20,11 +20,13 @@ class PublicWebsiteController extends Controller
     {
         try {
             $desa = DesaProfile::current();
+            SuratTemplate::ensureDefaultTemplates();
             
+            // All online letter templates for quick submission
+            $onlineTemplates = SuratTemplate::online()->orderBy('id')->get();
+
             // Featured letter services
-            $featuredTemplates = SuratTemplate::where('is_active', true)
-                ->take(3)
-                ->get();
+            $featuredTemplates = $onlineTemplates->take(6);
 
             // If no templates yet, provide rich fallback objects with real images
             if ($featuredTemplates->isEmpty()) {
@@ -85,6 +87,7 @@ class PublicWebsiteController extends Controller
 
             return view('public.home', compact(
                 'desa',
+                'onlineTemplates',
                 'featuredTemplates',
                 'latestNews',
                 'totalPenduduk',
@@ -136,6 +139,7 @@ class PublicWebsiteController extends Controller
                     'biaya' => 'Gratis / Rp 0',
                 ],
             ]);
+            $onlineTemplates = $featuredTemplates;
 
             $latestNews = collect([]);
             $totalPenduduk = 3845;
@@ -146,6 +150,7 @@ class PublicWebsiteController extends Controller
 
             return view('public.home', compact(
                 'desa',
+                'onlineTemplates',
                 'featuredTemplates',
                 'latestNews',
                 'totalPenduduk',
@@ -186,9 +191,11 @@ class PublicWebsiteController extends Controller
     public function layanan(Request $request)
     {
         $desa = DesaProfile::current();
+        SuratTemplate::ensureDefaultTemplates();
+
         $search = $request->query('q');
 
-        $query = SuratTemplate::where('is_active', true);
+        $query = SuratTemplate::where('is_active', true)->orderBy('id');
 
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
@@ -201,6 +208,284 @@ class PublicWebsiteController extends Controller
         $templates = $query->get();
 
         return view('public.layanan', compact('desa', 'templates', 'search'));
+    }
+
+    /**
+     * Tampilkan halaman formulir pengajuan surat mandiri online untuk masyarakat umum
+     * tanpa perlu datang ke kantor desa.
+     */
+    public function ajukanSurat(Request $request)
+    {
+        $desa = DesaProfile::current();
+        SuratTemplate::ensureDefaultTemplates();
+
+        $templates = SuratTemplate::online()->orderBy('id')->get();
+
+        $selectedTemplate = null;
+        if ($request->filled('template')) {
+            $selectedTemplate = $templates->firstWhere('id', (int) $request->query('template'));
+        } elseif ($request->filled('kode')) {
+            $selectedTemplate = $templates->firstWhere('kode_surat', strtoupper($request->query('kode')));
+        }
+        if (! $selectedTemplate) {
+            $selectedTemplate = $templates->first();
+        }
+
+        // Pre-fill jika warga sedang login atau mengirimkan NIK dari halaman utama
+        $prefill = [
+            'nik' => $request->query('nik', ''),
+            'nama_lengkap' => $request->query('nama', ''),
+            'no_kk' => '',
+            'phone' => '',
+            'alamat' => '',
+        ];
+
+        if (auth()->check()) {
+            $user = auth()->user();
+            $profile = $user->citizenProfile;
+            $prefill['nama_lengkap'] = $profile?->nama_lengkap ?? $user->name;
+            $prefill['nik'] = $profile?->nik ?? $prefill['nik'];
+            $prefill['no_kk'] = $profile?->no_kk ?? '';
+            $prefill['phone'] = $user->phone ?? '';
+            $prefill['alamat'] = $profile?->full_address ?? $profile?->alamat ?? '';
+        } elseif (! empty($prefill['nik']) && strlen($prefill['nik']) === 16) {
+            $penduduk = Penduduk::where('nik', $prefill['nik'])->first();
+            if ($penduduk) {
+                $prefill['nama_lengkap'] = $penduduk->nama_lengkap;
+                $prefill['no_kk'] = $penduduk->no_kk ?? '';
+                $prefill['phone'] = $penduduk->telepon ?? '';
+                $prefill['alamat'] = trim(($penduduk->alamat_lengkap ?? '') . ($penduduk->rt ? " RT {$penduduk->rt}/RW {$penduduk->rw}" : '') . ($penduduk->dusun ? " Dusun {$penduduk->dusun}" : ''));
+            }
+        }
+
+        return view('public.ajukan_surat', compact('desa', 'templates', 'selectedTemplate', 'prefill'));
+    }
+
+    /**
+     * AJAX Cek NIK Otomatis dari Buku Induk Penduduk untuk memudahkan warga mengisi form.
+     */
+    public function cekNik(Request $request)
+    {
+        $nik = preg_replace('/[^0-9]/', '', (string) $request->query('nik', ''));
+        if (strlen($nik) !== 16) {
+            return response()->json(['found' => false, 'message' => 'NIK harus 16 digit angka.']);
+        }
+
+        $penduduk = Penduduk::where('nik', $nik)->first();
+        if ($penduduk) {
+            $alamat = trim(($penduduk->alamat_lengkap ?? '') . ($penduduk->rt ? " RT {$penduduk->rt}/RW {$penduduk->rw}" : '') . ($penduduk->dusun ? ", Dusun {$penduduk->dusun}" : ''));
+            return response()->json([
+                'found' => true,
+                'source' => 'Buku Induk Penduduk Desa',
+                'data' => [
+                    'nik' => $penduduk->nik,
+                    'nama_lengkap' => $penduduk->nama_lengkap,
+                    'no_kk' => $penduduk->no_kk ?? '',
+                    'phone' => $penduduk->telepon ?? '',
+                    'pekerjaan' => $penduduk->pekerjaan ?? '',
+                    'alamat' => $alamat ?: 'Desa ' . (DesaProfile::current()->nama_desa ?? 'Balam Sempurna'),
+                ],
+            ]);
+        }
+
+        $profile = \App\Models\CitizenProfile::with('user')->where('nik', $nik)->first();
+        if ($profile) {
+            return response()->json([
+                'found' => true,
+                'source' => 'Data Warga Terdaftar',
+                'data' => [
+                    'nik' => $profile->nik,
+                    'nama_lengkap' => $profile->nama_lengkap,
+                    'no_kk' => $profile->no_kk ?? '',
+                    'phone' => $profile->user?->phone ?? '',
+                    'pekerjaan' => $profile->pekerjaan ?? '',
+                    'alamat' => $profile->full_address ?: ($profile->alamat ?? ''),
+                ],
+            ]);
+        }
+
+        return response()->json([
+            'found' => false,
+            'message' => 'NIK belum tercatat di Buku Induk, silakan isi data identitas Anda secara manual.',
+        ]);
+    }
+
+    /**
+     * Simpan permohonan pengajuan surat online langsung dari masyarakat tanpa harus ke kantor desa.
+     */
+    public function storePengajuanSurat(Request $request)
+    {
+        SuratTemplate::ensureDefaultTemplates();
+
+        $request->validate([
+            'surat_template_id' => ['required', 'exists:surat_templates,id'],
+            'pemohon_nik'       => ['required', 'string', 'digits:16', 'regex:/^[0-9]{16}$/'],
+            'pemohon_nama'      => ['required', 'string', 'max:255'],
+            'pemohon_no_kk'     => ['nullable', 'string', 'max:20'],
+            'pemohon_phone'     => ['required', 'string', 'max:30'],
+            'pemohon_alamat'    => ['required', 'string', 'max:500'],
+            'keperluan'         => ['required', 'string', 'max:1000'],
+            'form_data'         => ['nullable', 'array'],
+            'dokumen'           => ['nullable', 'array', 'max:5'],
+            'dokumen.*'         => ['file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+        ], [
+            'surat_template_id.required' => 'Silakan pilih jenis surat yang ingin diajukan.',
+            'pemohon_nik.required'       => 'NIK Pemohon (16 digit) wajib diisi.',
+            'pemohon_nik.digits'         => 'NIK harus berjumlah tepat 16 digit angka.',
+            'pemohon_nik.regex'          => 'NIK hanya boleh berisi angka.',
+            'pemohon_nama.required'      => 'Nama lengkap sesuai KTP wajib diisi.',
+            'pemohon_phone.required'     => 'Nomor HP / WhatsApp aktif wajib diisi.',
+            'pemohon_alamat.required'    => 'Alamat lengkap domisili wajib diisi.',
+            'keperluan.required'         => 'Keperluan atau tujuan pengajuan surat wajib diisi.',
+            'dokumen.max'                => 'Maksimal 5 berkas pendukung yang dapat diunggah.',
+            'dokumen.*.mimes'            => 'Format lampiran harus berupa PDF, JPG, atau PNG.',
+            'dokumen.*.max'              => 'Ukuran setiap file maksimal 5 MB.',
+        ]);
+
+        $template = SuratTemplate::where('id', $request->surat_template_id)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        // Filter dynamic form_data supaya hanya menyimpan nilai yang terisi
+        $rawFormData = is_array($request->input('form_data')) ? $request->input('form_data') : [];
+        $cleanFormData = [];
+        foreach ($rawFormData as $key => $val) {
+            if (! is_null($val) && trim((string) $val) !== '') {
+                $cleanFormData[$key] = trim((string) $val);
+            }
+        }
+
+        // Upload berkas pendukung jika ada
+        $dokumenPaths = [];
+        if ($request->hasFile('dokumen')) {
+            foreach ($request->file('dokumen') as $file) {
+                $path = $file->store('pengajuan_surat/' . date('Y/m'), 'local');
+                $dokumenPaths[] = [
+                    'original_name' => $file->getClientOriginalName(),
+                    'path'          => $path,
+                    'mime'          => $file->getClientMimeType(),
+                    'size'          => $file->getSize(),
+                ];
+            }
+        }
+
+        $pengajuan = \Illuminate\Support\Facades\DB::transaction(function () use ($request, $template, $cleanFormData, $dokumenPaths) {
+            $nik = $request->pemohon_nik;
+            $penduduk = Penduduk::where('nik', $nik)->first();
+
+            // Cari atau buat CitizenProfile & User agar terintegrasi penuh dengan Antrean Persuratan & Portal Warga
+            $profile = \App\Models\CitizenProfile::where('nik', $nik)->first();
+            $user = $profile?->user;
+
+            if (! $user && auth()->check() && auth()->user()->isMasyarakat()) {
+                $user = auth()->user();
+                $profile = $user->citizenProfile;
+            }
+
+            if (! $user) {
+                $emailCandidate = 'warga.' . $nik . '@desa.id';
+                $user = \App\Models\User::firstOrCreate(
+                    ['email' => $emailCandidate],
+                    [
+                        'name'              => $request->pemohon_nama,
+                        'phone'             => $request->pemohon_phone,
+                        'password'          => \Illuminate\Support\Facades\Hash::make($nik),
+                        'is_active'         => true,
+                        'email_verified_at' => now(),
+                    ]
+                );
+
+                if (\Spatie\Permission\Models\Role::where('name', 'Masyarakat')->exists() && ! $user->hasRole('Masyarakat')) {
+                    $user->assignRole('Masyarakat');
+                }
+            }
+
+            if (! $profile) {
+                $profile = \App\Models\CitizenProfile::create([
+                    'user_id'            => $user->id,
+                    'penduduk_id'        => $penduduk?->id,
+                    'nik'                => $nik,
+                    'no_kk'              => $request->pemohon_no_kk ?: $penduduk?->no_kk,
+                    'nama_lengkap'       => $request->pemohon_nama,
+                    'tempat_lahir'       => $penduduk?->tempat_lahir,
+                    'tanggal_lahir'      => $penduduk?->tanggal_lahir,
+                    'jenis_kelamin'      => $penduduk?->jenis_kelamin,
+                    'alamat'             => $request->pemohon_alamat,
+                    'rt'                 => $penduduk?->rt,
+                    'rw'                 => $penduduk?->rw,
+                    'dusun'              => $penduduk?->dusun,
+                    'pekerjaan'          => $penduduk?->pekerjaan,
+                    'agama'              => $penduduk?->agama,
+                    'status_perkawinan'  => $penduduk?->status_perkawinan,
+                    'status_verifikasi'  => $penduduk ? 'terverifikasi' : 'menunggu_verifikasi',
+                    'verified_at'        => $penduduk ? now() : null,
+                    'catatan_verifikasi' => $penduduk ? 'Otomatis terverifikasi via Buku Induk Penduduk' : 'Pengajuan mandiri online via portal publik',
+                ]);
+            }
+
+            $nomor = \App\Models\PengajuanSurat::generateNomor();
+
+            $pengajuan = \App\Models\PengajuanSurat::create([
+                'nomor_pengajuan'    => $nomor,
+                'user_id'            => $user->id,
+                'citizen_profile_id' => $profile->id,
+                'surat_template_id'  => $template->id,
+                'pemohon_nama'       => $request->pemohon_nama,
+                'pemohon_nik'        => $nik,
+                'pemohon_no_kk'      => $request->pemohon_no_kk ?: $profile->no_kk,
+                'pemohon_alamat'     => $request->pemohon_alamat,
+                'pemohon_phone'      => $request->pemohon_phone,
+                'keperluan'          => $request->keperluan,
+                'form_data_json'     => ! empty($cleanFormData) ? $cleanFormData : null,
+                'dokumen_path_json'  => ! empty($dokumenPaths) ? $dokumenPaths : null,
+                'status'             => 'menunggu',
+            ]);
+
+            $pengajuan->logs()->create([
+                'user_id'        => $user->id,
+                'status_sebelum' => null,
+                'status_sesudah' => 'menunggu',
+                'catatan'        => 'Permohonan surat diajukan secara online oleh warga melalui Website Pelayanan Desa.',
+            ]);
+
+            activity('persuratan_online')
+                ->causedBy($user)
+                ->performedOn($pengajuan)
+                ->log("Warga {$request->pemohon_nama} (NIK: {$nik}) mengajukan {$template->nama_surat} secara online ({$nomor}).");
+
+            return $pengajuan;
+        });
+
+        return redirect()
+            ->route('public.lacak-surat', ['nomor' => $pengajuan->nomor_pengajuan])
+            ->with('pengajuan_sukses', [
+                'nomor_pengajuan' => $pengajuan->nomor_pengajuan,
+                'nama_surat'      => $template->nama_surat,
+                'pemohon_nama'    => $pengajuan->pemohon_nama,
+                'pemohon_nik'     => $pengajuan->pemohon_nik,
+            ]);
+    }
+
+    /**
+     * Unduh surat resmi (PDF) yang telah selesai diterbitkan langsung dari halaman Lacak Surat.
+     */
+    public function downloadSuratPublik(Request $request, \App\Models\PengajuanSurat $pengajuan)
+    {
+        if ($pengajuan->status !== 'selesai' || ! $pengajuan->suratArsip) {
+            return back()->with('error', 'Dokumen surat resmi belum selesai diterbitkan oleh petugas.');
+        }
+
+        $arsip = $pengajuan->suratArsip;
+        $path = $arsip->file_pdf_path;
+
+        if (! $path || ! \Illuminate\Support\Facades\Storage::disk('local')->exists($path)) {
+            $pdfAction = app(\App\Actions\Persuratan\RenderSuratPdfAction::class);
+            $path = $pdfAction->renderAndStore($arsip);
+        }
+
+        $safeName = 'Surat_Resmi_' . str_replace(['/', '\\', ' '], '_', $arsip->nomor_surat) . '.pdf';
+
+        return \Illuminate\Support\Facades\Storage::disk('local')->download($path, $safeName);
     }
 
     /**
@@ -263,22 +548,32 @@ class PublicWebsiteController extends Controller
         $keyword = trim($request->query('nomor', ''));
         $result = null;
         $pengajuanResult = null;
+        $pengajuanList = collect();
 
         if (!empty($keyword)) {
-            // Cek nomor surat resmi terlebih dahulu
-            $result = SuratArsip::with(['template', 'penduduk'])
-                ->where('nomor_surat', $keyword)
+            // 1. Cek nomor registrasi pengajuan online (PGJ-YYYY-XXXXXX)
+            $pengajuanResult = \App\Models\PengajuanSurat::with(['suratTemplate', 'suratArsip.template', 'logs.user'])
+                ->where('nomor_pengajuan', $keyword)
                 ->first();
 
-            // Jika tidak ditemukan, cek nomor registrasi pengajuan online
-            if (! $result) {
-                $pengajuanResult = \App\Models\PengajuanSurat::with(['suratTemplate', 'suratArsip.template'])
-                    ->where('nomor_pengajuan', $keyword)
+            // 2. Jika input berupa 16 digit NIK, tampilkan daftar pengajuan milik NIK tersebut
+            if (! $pengajuanResult && preg_match('/^[0-9]{16}$/', $keyword)) {
+                $pengajuanList = \App\Models\PengajuanSurat::with(['suratTemplate', 'suratArsip.template'])
+                    ->where('pemohon_nik', $keyword)
+                    ->latest()
+                    ->get();
+                $pengajuanResult = $pengajuanList->first();
+            }
+
+            // 3. Jika belum ditemukan, cek nomor surat resmi pada SuratArsip
+            if (! $pengajuanResult) {
+                $result = SuratArsip::with(['template', 'penduduk'])
+                    ->where('nomor_surat', $keyword)
                     ->first();
             }
         }
 
-        return view('public.lacak_surat', compact('desa', 'keyword', 'result', 'pengajuanResult'));
+        return view('public.lacak_surat', compact('desa', 'keyword', 'result', 'pengajuanResult', 'pengajuanList'));
     }
 
     /**

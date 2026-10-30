@@ -40,6 +40,8 @@ class CitizenPengajuanController extends Controller
         $desa    = DesaProfile::current();
         $profile = $user->citizenProfile;
 
+        SuratTemplate::ensureDefaultTemplates();
+
         // Citizen must complete their profile first
         if (! $profile || ! $profile->nik) {
             return redirect()->route('masyarakat.profil')
@@ -53,7 +55,7 @@ class CitizenPengajuanController extends Controller
             : null;
 
         // All available templates for the selection dropdown
-        $templates = SuratTemplate::where('is_active', true)->where('is_online_available', true)->orderBy('nama_surat')->get();
+        $templates = SuratTemplate::where('is_active', true)->where('is_online_available', true)->orderBy('id')->get();
 
         return view('masyarakat.pengajuan.create', compact('user', 'desa', 'profile', 'template', 'templates'));
     }
@@ -66,6 +68,8 @@ class CitizenPengajuanController extends Controller
         $user    = Auth::user();
         $profile = $user->citizenProfile;
 
+        SuratTemplate::ensureDefaultTemplates();
+
         // Guard: Profile must exist
         if (! $profile || ! $profile->nik) {
             return redirect()->route('masyarakat.profil')
@@ -75,6 +79,7 @@ class CitizenPengajuanController extends Controller
         $request->validate([
             'surat_template_id'  => ['required', 'exists:surat_templates,id'],
             'keperluan'          => ['required', 'string', 'max:500'],
+            'form_data'          => ['nullable', 'array'],
             'dokumen'            => ['nullable', 'array', 'max:5'],
             'dokumen.*'          => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
         ], [
@@ -90,12 +95,19 @@ class CitizenPengajuanController extends Controller
             ->findOrFail($request->surat_template_id);
 
         // Build dynamic form data
-        $formData = ['keperluan' => $request->keperluan];
+        $formData = [];
+        if (is_array($request->input('form_data'))) {
+            foreach ($request->input('form_data') as $k => $v) {
+                if (! is_null($v) && trim((string) $v) !== '') {
+                    $formData[$k] = trim((string) $v);
+                }
+            }
+        }
         if ($template->schema_fields_json) {
             foreach ($template->schema_fields_json as $field) {
                 $key = $field['name'] ?? null;
-                if ($key && $request->has("form_{$key}")) {
-                    $formData[$key] = $request->input("form_{$key}");
+                if ($key && $request->filled("form_{$key}")) {
+                    $formData[$key] = trim((string) $request->input("form_{$key}"));
                 }
             }
         }
@@ -104,11 +116,12 @@ class CitizenPengajuanController extends Controller
         $dokumenPaths = [];
         if ($request->hasFile('dokumen')) {
             foreach ($request->file('dokumen') as $file) {
-                $path           = $file->store("pengajuan/{$user->id}", 'private');
+                $path           = $file->store("pengajuan/{$user->id}", 'local');
                 $dokumenPaths[] = [
                     'path'          => $path,
                     'original_name' => $file->getClientOriginalName(),
                     'mime'          => $file->getMimeType(),
+                    'size'          => $file->getSize(),
                 ];
             }
         }
@@ -122,8 +135,9 @@ class CitizenPengajuanController extends Controller
             'pemohon_no_kk'     => $profile->no_kk,
             'pemohon_alamat'    => $profile->full_address ?? $profile->alamat,
             'pemohon_phone'     => $user->phone,
-            'form_data_json'    => $formData,
-            'dokumen_path_json' => $dokumenPaths,
+            'keperluan'         => $request->keperluan,
+            'form_data_json'    => ! empty($formData) ? $formData : null,
+            'dokumen_path_json' => ! empty($dokumenPaths) ? $dokumenPaths : null,
             'status'            => 'menunggu',
         ]);
 

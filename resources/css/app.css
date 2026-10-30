@@ -7,25 +7,25 @@
 @theme {
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     
-    --color-pine-900: #082424;
-    --color-pine-800: #0c3837;
-    --color-pine-700: #114443;
-    --color-pine-600: #1b5e5c;
-    --color-pine-500: #297a77;
-    --color-pine-100: #e2f0ed;
-    --color-pine-50: #f0f7f5;
+    --color-pine-900: #114227;
+    --color-pine-800: #175633;
+    --color-pine-700: #1e6d41;
+    --color-pine-600: #2b8953;
+    --color-pine-500: #44ad70;
+    --color-pine-100: #dff6e5;
+    --color-pine-50: #effbf2;
 
-    --color-emerald-accent: #10b981;
-    --color-emerald-light: #34d399;
-    --color-sage: #4fa394;
-    --color-sage-light: #8bc3b8;
+    --color-emerald-accent: #38a866;
+    --color-emerald-light: #7ee8a7;
+    --color-sage: #58c280;
+    --color-sage-light: #c8eea3;
 
-    --color-lime-accent: #10b981;
-    --color-lime-light: #a7f3d0;
-    --color-lime-soft: #ecfdf5;
+    --color-lime-accent: #52bc7a;
+    --color-lime-light: #d2f1a8;
+    --color-lime-soft: #f1fbe8;
 
-    --color-bg-workspace: #f7faf9;
-    --color-card-border: #e1ede8;
+    --color-bg-workspace: #eff9f1;
+    --color-card-border: #d5ebdc;
 }
 
 /* Custom Scrollbar for Smooth DIGIDES Feel */
@@ -34,14 +34,14 @@
     height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: #f7faf9;
+    background: #eff9f1;
 }
 ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: #a3d9b5;
     border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    background: #6bc48c;
 }
 
 /* Alpine x-cloak */
@@ -57,5 +57,101 @@
 
 .animate-pulse-subtle {
     animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   DIGIDES Reference Mesh Gradient System (Mint -> Warm Lime -> Meadow -> Forest)
+   ========================================================================== */
+
+/* 1. Soft Ambient Mesh Gradient for Main Workspace Background */
+body.bg-\[\#f7faf9\],
+div.min-h-screen.bg-\[\#f7faf9\] {
+    background-color: #eef9f0 !important;
+    background-image:
+        radial-gradient(at 8% 10%, rgba(126, 232, 167, 0.32) 0px, transparent 50%),
+        radial-gradient(at 48% 16%, rgba(210, 241, 168, 0.38) 0px, transparent 48%),
+        radial-gradient(at 20% 80%, rgba(88, 194, 128, 0.18) 0px, transparent 55%),
+        radial-gradient(at 90% 88%, rgba(28, 107, 63, 0.15) 0px, transparent 58%),
+        linear-gradient(135deg, #e8f8ed 0%, #f3fbe7 38%, #e4f4ea 72%, #d8eee0 100%) !important;
+    background-attachment: fixed;
+}
+
+/* 2. Exact Reference Mesh Gradient for Dashboard Productivity Stat Cards */
+.digides-stat-lime {
+    background-color: #6fd996;
+    background-image:
+        radial-gradient(at 10% 15%, #7ae7a3 0px, transparent 55%),
+        radial-gradient(at 52% 20%, #d6f3ae 0px, transparent 50%),
+        radial-gradient(at 22% 82%, #59c482 0px, transparent 55%),
+        radial-gradient(at 92% 88%, #1e6e41 0px, transparent 62%),
+        linear-gradient(135deg, #7fe9a7 0%, #ceefa6 34%, #57c17f 70%, #247848 100%) !important;
+}
+
+.digides-stat-sage {
+    background-color: #369e62;
+    background-image:
+        radial-gradient(at 12% 14%, rgba(126, 232, 167, 0.75) 0px, transparent 52%),
+        radial-gradient(at 50% 18%, rgba(210, 241, 168, 0.6) 0px, transparent 48%),
+        radial-gradient(at 25% 80%, rgba(72, 181, 115, 0.65) 0px, transparent 55%),
+        radial-gradient(at 90% 88%, rgba(19, 78, 44, 0.9) 0px, transparent 60%),
+        linear-gradient(135deg, #4ec07c 0%, #5bc47c 30%, #2e8c56 66%, #185c36 100%) !important;
+}
+
+.digides-stat-pine {
+    background-color: #217344;
+    background-image:
+        radial-gradient(at 14% 16%, rgba(126, 232, 167, 0.55) 0px, transparent 50%),
+        radial-gradient(at 54% 20%, rgba(206, 239, 166, 0.48) 0px, transparent 46%),
+        radial-gradient(at 88% 85%, rgba(15, 62, 35, 0.92) 0px, transparent 58%),
+        linear-gradient(135deg, #3ba667 0%, #46ad6c 28%, #227546 64%, #134e2c 100%) !important;
+}
+
+/* 3. Global Gradient Containers (Staff Banner, Right Sidebar Panel, Sambutan Kades, Public Footer, Citizen Hero, etc.) */
+.from-\[\#114443\]:not(.inset-0):not(.bg-gradient-to-t),
+.from-\[\#0c3837\]:not(.inset-0):not(.bg-gradient-to-t),
+.from-\[\#1b5e5c\]:not(.inset-0):not(.bg-gradient-to-t) {
+    background-color: #237647 !important;
+    background-image:
+        radial-gradient(at 10% 14%, rgba(126, 232, 167, 0.62) 0px, transparent 52%),
+        radial-gradient(at 48% 18%, rgba(210, 241, 168, 0.52) 0px, transparent 48%),
+        radial-gradient(at 22% 78%, rgba(82, 188, 122, 0.48) 0px, transparent 55%),
+        radial-gradient(at 90% 88%, rgba(17, 66, 39, 0.9) 0px, transparent 60%),
+        linear-gradient(135deg, #45b372 0%, #52bc78 28%, #29824f 64%, #165632 100%) !important;
+    border-color: rgba(167, 243, 208, 0.35) !important;
+}
+
+/* Ensure secondary text inside gradient banners/sidebars is bright & legible */
+.from-\[\#114443\] .text-\[\#8bc3b8\],
+.from-\[\#0c3837\] .text-\[\#8bc3b8\],
+.from-\[\#1b5e5c\] .text-\[\#8bc3b8\] {
+    color: #e2fbe8 !important;
+}
+
+/* 4. Primary Solid Buttons, Active Nav Pills & Badges */
+.bg-\[\#0c3837\],
+.bg-\[\#114443\] {
+    background-color: #217344 !important;
+    background-image: linear-gradient(135deg, #3ca868 0%, #267d4b 52%, #175834 100%) !important;
+}
+
+.hover\:bg-\[\#0c3837\]:hover,
+.hover\:bg-\[\#114443\]:hover {
+    background-color: #1b633a !important;
+    background-image: linear-gradient(135deg, #48b876 0%, #2d8c55 52%, #1b653c 100%) !important;
+}
+
+/* Soft Mint-Lime Badges & Pill Backgrounds */
+.bg-\[\#e2f0ed\] {
+    background-color: #dff6e5 !important;
+    background-image: linear-gradient(135deg, #d7f5e1 0%, #eaf9d5 52%, #cdeed8 100%) !important;
+}
+
+/* Auth Page Radial Background */
+.bg-radial.from-\[\#114443\]\/15 {
+    background-image:
+        radial-gradient(at 15% 15%, rgba(126, 232, 167, 0.45) 0px, transparent 52%),
+        radial-gradient(at 52% 22%, rgba(210, 241, 168, 0.5) 0px, transparent 48%),
+        radial-gradient(at 88% 85%, rgba(29, 108, 64, 0.25) 0px, transparent 58%),
+        linear-gradient(135deg, #e2f7ea 0%, #f1fae4 40%, #d8f0e1 100%) !important;
 }
 

@@ -19,8 +19,10 @@ class CitizenDashboardController extends Controller
         $desa    = DesaProfile::current();
         $profile = $user->citizenProfile;
 
+        SuratTemplate::ensureDefaultTemplates();
+
         // Quick available letter services (online only)
-        $availableTemplates = SuratTemplate::online()->orderBy('nama_surat')->take(6)->get();
+        $availableTemplates = SuratTemplate::online()->orderBy('id')->take(10)->get();
 
         // Real stats from pengajuan_surat
         $baseQuery = PengajuanSurat::byUser($user->id);

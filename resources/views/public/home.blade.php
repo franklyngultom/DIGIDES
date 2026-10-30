@@ -4,7 +4,7 @@
 <div x-data="{
         activeSlide: 0,
         autoSlideTimer: null,
-        searchTab: 'layanan',
+        searchTab: 'ajukan',
         visitorDropdown: false,
         slides: [
             {
@@ -13,8 +13,8 @@
                 tagline: 'Sistem digitalisasi tata kelola administrasi desa, pelayanan surat kependudukan mandiri, transparansi anggaran, serta penguatan potensi ekonomi warga terpadu 24 jam sehari.',
                 badge: 'Mitra Terpercaya Pelayanan Masyarakat Desa',
                 bg: '{{ asset('images/public/desa-alam.jpg') }}',
-                actionText: 'Ajukan Surat Mandiri',
-                actionUrl: '{{ route('public.layanan') }}'
+                actionText: 'Ajukan Surat Online',
+                actionUrl: '{{ route('public.ajukan-surat') }}'
             },
             {
                 title: 'Pelayanan Publik Prima & Bebas Calo',
@@ -22,8 +22,8 @@
                 tagline: 'Dapatkan dokumen surat resmi ber-QR Code valid seperti SKCK, Surat Keterangan Usaha, dan Domisili secara cepat dan transparan dari rumah.',
                 badge: 'Mitra Terpercaya Warga',
                 bg: '{{ asset('images/public/layanan-kiosk.jpg') }}',
-                actionText: 'Katalog Layanan Surat',
-                actionUrl: '{{ route('public.layanan') }}'
+                actionText: 'Ajukan Surat Sekarang',
+                actionUrl: '{{ route('public.ajukan-surat') }}'
             },
             {
                 title: 'Transparansi & Kemandirian Ekonomi',
@@ -76,10 +76,9 @@
                  class="absolute inset-0 z-0">
                 <img :src="slide.bg" 
                      :alt="slide.title" 
-                     class="w-full h-full object-cover object-center filter brightness-90">
+                     class="w-full h-full object-cover object-center filter brightness-95">
                 <!-- Dual Gradient Vignette for perfect text readability -->
-                <div class="absolute inset-0 bg-gradient-to-t from-[#0c3837] via-[#0c3837]/65 to-black/75"></div>
-                <div class="absolute inset-0 bg-[#082424]/30 mix-blend-multiply"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-black/65 via-black/35 to-black/75"></div>
             </div>
         </template>
 
@@ -229,35 +228,89 @@
         <div class="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-7 shadow-2xl shadow-emerald-950/10 border border-[#e1ede8]">
             
             <!-- Tab Switcher -->
-            <div class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3">
+            <div class="flex flex-wrap items-center gap-2 mb-4 border-b border-slate-100 pb-3">
                 <button type="button" 
-                        @click="searchTab = 'layanan'"
-                        :class="searchTab === 'layanan' ? 'bg-[#0c3837] text-white shadow-sm' : 'bg-slate-100 text-[#64748b] hover:bg-slate-200'"
+                        @click="searchTab = 'ajukan'"
+                        :class="searchTab === 'ajukan' ? 'bg-[#10b981] text-white shadow-sm' : 'bg-slate-100 text-[#64748b] hover:bg-slate-200'"
                         class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer">
-                    <span>Cari Layanan Surat</span>
+                    <span>Ajukan Surat Online</span>
                 </button>
 
                 <button type="button" 
                         @click="searchTab = 'lacak'"
                         :class="searchTab === 'lacak' ? 'bg-[#0c3837] text-white shadow-sm' : 'bg-slate-100 text-[#64748b] hover:bg-slate-200'"
                         class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer">
-                    <span>Lacak Status Permohonan</span>
+                    <span>Lacak Status & Unduh Surat</span>
+                </button>
+
+                <button type="button" 
+                        @click="searchTab = 'layanan'"
+                        :class="searchTab === 'layanan' ? 'bg-[#0c3837] text-white shadow-sm' : 'bg-slate-100 text-[#64748b] hover:bg-slate-200'"
+                        class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer">
+                    <span>Cari Katalog Layanan</span>
                 </button>
             </div>
 
+            <!-- Tab 0: Ajukan Surat Online Tanpa Ke Kantor Desa -->
+            <div x-show="searchTab === 'ajukan'">
+                <form action="{{ route('public.ajukan-surat') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+                    <div class="sm:col-span-5">
+                        <select name="template" required
+                                class="w-full px-4 py-3.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs sm:text-sm text-[#0c3837] font-bold focus:outline-none focus:border-[#10b981] focus:bg-white transition-all">
+                            @foreach(($onlineTemplates ?? $featuredTemplates) as $tpl)
+                                <option value="{{ $tpl->id }}">
+                                    [{{ $tpl->kode_surat }}] {{ $tpl->nama_surat }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="sm:col-span-4">
+                        <input type="text"
+                               name="nik"
+                               maxlength="16"
+                               placeholder="Masukkan 16 Digit NIK Anda (Opsional)..."
+                               class="w-full px-4 py-3.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs sm:text-sm text-[#0c3837] font-mono font-semibold focus:outline-none focus:border-[#10b981] focus:bg-white transition-all">
+                    </div>
+                    <div class="sm:col-span-3">
+                        <button type="submit"
+                                class="w-full px-5 py-3.5 rounded-2xl bg-[#10b981] hover:bg-[#059669] text-white font-extrabold text-xs sm:text-sm shadow-md transition-all duration-200 flex items-center justify-center cursor-pointer">
+                            <span>Buat Pengajuan &rarr;</span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Quick Links for Frequently Requested Letters -->
+                <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2 text-xs">
+                    <span class="font-bold text-[#64748b]">Surat Paling Sering Diajukan:</span>
+                    <a href="{{ route('public.ajukan-surat', ['kode' => 'SKCK']) }}" class="px-3 py-1 rounded-full bg-[#e2f0ed] hover:bg-[#10b981] text-[#0c3837] hover:text-white font-semibold transition-colors">
+                        Pengantar SKCK
+                    </a>
+                    <a href="{{ route('public.ajukan-surat', ['kode' => 'SKU']) }}" class="px-3 py-1 rounded-full bg-[#e2f0ed] hover:bg-[#10b981] text-[#0c3837] hover:text-white font-semibold transition-colors">
+                        Keterangan Usaha (SKU)
+                    </a>
+                    <a href="{{ route('public.ajukan-surat', ['kode' => 'SKD']) }}" class="px-3 py-1 rounded-full bg-[#e2f0ed] hover:bg-[#10b981] text-[#0c3837] hover:text-white font-semibold transition-colors">
+                        Keterangan Domisili (SKD)
+                    </a>
+                    <a href="{{ route('public.ajukan-surat', ['kode' => 'SKTM']) }}" class="px-3 py-1 rounded-full bg-[#e2f0ed] hover:bg-[#10b981] text-[#0c3837] hover:text-white font-semibold transition-colors">
+                        Tidak Mampu (SKTM)
+                    </a>
+                    <a href="{{ route('public.ajukan-surat', ['kode' => 'SKPOT']) }}" class="px-3 py-1 rounded-full bg-[#e2f0ed] hover:bg-[#10b981] text-[#0c3837] hover:text-white font-semibold transition-colors">
+                        Penghasilan Orang Tua
+                    </a>
+                    <a href="{{ route('public.ajukan-surat', ['kode' => 'SKP-NIKAH']) }}" class="px-3 py-1 rounded-full bg-[#e2f0ed] hover:bg-[#10b981] text-[#0c3837] hover:text-white font-semibold transition-colors">
+                        Pengantar Nikah
+                    </a>
+                </div>
+            </div>
+
             <!-- Tab 1: Cari Layanan Surat -->
-            <div x-show="searchTab === 'layanan'">
+            <div x-show="searchTab === 'layanan'" x-cloak>
                 <form action="{{ route('public.layanan') }}" method="GET" class="flex flex-col sm:flex-row gap-3 items-center">
                     <div class="relative flex-1 w-full">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#10b981]">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                            </svg>
-                        </div>
                         <input type="text" 
                                name="q" 
                                placeholder="Cari jenis surat (contoh: SKCK, Keterangan Usaha, Domisili, SKTM)..." 
-                               class="w-full pl-11 pr-4 py-3.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs sm:text-sm text-[#0c3837] font-semibold focus:outline-none focus:border-[#10b981] focus:bg-white transition-all">
+                               class="w-full px-4 py-3.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs sm:text-sm text-[#0c3837] font-semibold focus:outline-none focus:border-[#10b981] focus:bg-white transition-all">
                     </div>
                     <button type="submit" 
                             class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#10b981] hover:bg-[#059669] text-white font-extrabold text-xs sm:text-sm shadow-md transition-all duration-200 hover:scale-102 flex items-center justify-center cursor-pointer shrink-0">
@@ -268,13 +321,13 @@
                 <!-- Popular Letter Pills -->
                 <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2 text-xs">
                     <span class="font-bold text-[#64748b]">Layanan Cepat Populer:</span>
-                    <a href="{{ route('public.layanan', ['q' => 'SKCK']) }}" class="px-3 py-1 rounded-full bg-[#e2f0ed] hover:bg-[#10b981] text-[#0c3837] hover:text-white font-semibold transition-colors">
+                    <a href="{{ route('public.ajukan-surat', ['kode' => 'SKCK']) }}" class="px-3 py-1 rounded-full bg-[#e2f0ed] hover:bg-[#10b981] text-[#0c3837] hover:text-white font-semibold transition-colors">
                         Surat Pengantar SKCK
                     </a>
-                    <a href="{{ route('public.layanan', ['q' => 'Usaha']) }}" class="px-3 py-1 rounded-full bg-[#e2f0ed] hover:bg-[#10b981] text-[#0c3837] hover:text-white font-semibold transition-colors">
+                    <a href="{{ route('public.ajukan-surat', ['kode' => 'SKU']) }}" class="px-3 py-1 rounded-full bg-[#e2f0ed] hover:bg-[#10b981] text-[#0c3837] hover:text-white font-semibold transition-colors">
                         Keterangan Usaha (SKU)
                     </a>
-                    <a href="{{ route('public.layanan', ['q' => 'Domisili']) }}" class="px-3 py-1 rounded-full bg-[#e2f0ed] hover:bg-[#10b981] text-[#0c3837] hover:text-white font-semibold transition-colors">
+                    <a href="{{ route('public.ajukan-surat', ['kode' => 'SKD']) }}" class="px-3 py-1 rounded-full bg-[#e2f0ed] hover:bg-[#10b981] text-[#0c3837] hover:text-white font-semibold transition-colors">
                         Keterangan Domisili
                     </a>
                     <a href="{{ route('public.layanan') }}" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-[#64748b] font-semibold transition-colors ml-auto">
@@ -287,15 +340,10 @@
             <div x-show="searchTab === 'lacak'" x-cloak>
                 <form action="{{ route('public.lacak-surat') }}" method="GET" class="flex flex-col sm:flex-row gap-3 items-center">
                     <div class="relative flex-1 w-full">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#10b981]">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                            </svg>
-                        </div>
                         <input type="text" 
                                 name="nomor" 
-                                placeholder="Masukkan Nomor Registrasi Pengajuan atau Nomor Surat Resmi..." 
-                                class="w-full pl-11 pr-4 py-3.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs sm:text-sm text-[#0c3837] font-semibold focus:outline-none focus:border-[#10b981] focus:bg-white transition-all">
+                                placeholder="Masukkan Nomor Pengajuan (PGJ-...), 16 Digit NIK, atau Nomor Surat Resmi..." 
+                                class="w-full px-4 py-3.5 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-xs sm:text-sm text-[#0c3837] font-semibold focus:outline-none focus:border-[#10b981] focus:bg-white transition-all">
                     </div>
                     <button type="submit" 
                             class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#0c3837] hover:bg-[#082424] text-white font-extrabold text-xs sm:text-sm shadow-md transition-all duration-200 hover:scale-102 flex items-center justify-center cursor-pointer shrink-0">
@@ -304,9 +352,9 @@
                 </form>
 
                 <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-[#64748b]">
-                    <span>💡 Masukkan kode registrasi yang didapatkan saat pengajuan online untuk memantau status validasi berkas.</span>
+                    <span>Masukkan Nomor Pengajuan (PGJ-...) atau 16 digit NIK Anda untuk memantau status dan mengunduh PDF surat resmi.</span>
                     <a href="{{ route('public.lacak-surat') }}" class="font-bold text-[#10b981] hover:underline">
-                        Panduan Pelacakan &rarr;
+                        Halaman Pelacakan &rarr;
                     </a>
                 </div>
             </div>
@@ -323,15 +371,10 @@
             <!-- Card 1: Demografi -->
             <a href="{{ route('public.infografis') }}" class="bg-white p-6 rounded-3xl border border-[#e1ede8] shadow-xs hover:shadow-xl transition-all duration-300 group hover:-translate-y-1 flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200/70 shadow-xs flex items-center justify-center group-hover:scale-105 transition-transform">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                            </svg>
-                        </div>
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/60">Terdata</span>
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                        <span class="text-xs font-bold text-[#64748b] uppercase tracking-wider">Demografi Warga</span>
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/60 shrink-0">Terdata</span>
                     </div>
-                    <span class="text-xs font-bold text-[#64748b] uppercase tracking-wider block">Demografi Warga</span>
                     <p class="text-2xl font-black text-[#0c3837] mt-1">{{ number_format($totalPenduduk, 0, ',', '.') }} Jiwa</p>
                     <p class="text-xs text-[#64748b] mt-1">{{ number_format($totalLakiLaki, 0, ',', '.') }} L &bull; {{ number_format($totalPerempuan, 0, ',', '.') }} P</p>
                 </div>
@@ -344,15 +387,10 @@
             <!-- Card 2: Status IDM -->
             <a href="{{ route('public.idm') }}" class="bg-white p-6 rounded-3xl border border-[#e1ede8] shadow-xs hover:shadow-xl transition-all duration-300 group hover:-translate-y-1 flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-700 border border-amber-200/70 shadow-xs flex items-center justify-center group-hover:scale-105 transition-transform">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138z"/>
-                            </svg>
-                        </div>
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200/60">Skor 0.8415</span>
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                        <span class="text-xs font-bold text-[#64748b] uppercase tracking-wider">Status IDM 2026</span>
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200/60 shrink-0">Skor 0.8415</span>
                     </div>
-                    <span class="text-xs font-bold text-[#64748b] uppercase tracking-wider block">Status IDM 2026</span>
                     <p class="text-2xl font-black text-[#0c3837] mt-1">Desa Mandiri</p>
                     <p class="text-xs text-[#64748b] mt-1">Indeks Ketahanan Sosial Sangat Baik</p>
                 </div>
@@ -365,15 +403,10 @@
             <!-- Card 3: APBDes -->
             <a href="{{ route('public.infografis') }}" class="bg-white p-6 rounded-3xl border border-[#e1ede8] shadow-xs hover:shadow-xl transition-all duration-300 group hover:-translate-y-1 flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-700 border border-teal-200/70 shadow-xs flex items-center justify-center group-hover:scale-105 transition-transform">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-teal-50 text-teal-700 border border-teal-200/60">TA 2026</span>
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                        <span class="text-xs font-bold text-[#64748b] uppercase tracking-wider">Transparansi APBDes</span>
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-teal-50 text-teal-700 border border-teal-200/60 shrink-0">TA 2026</span>
                     </div>
-                    <span class="text-xs font-bold text-[#64748b] uppercase tracking-wider block">Transparansi APBDes</span>
                     <p class="text-2xl font-black text-[#0c3837] mt-1">Rp 1,85 M</p>
                     <p class="text-xs text-[#64748b] mt-1">Pendapatan & Belanja Terbuka</p>
                 </div>
@@ -386,15 +419,10 @@
             <!-- Card 4: Potensi & Listing -->
             <a href="{{ route('public.listing') }}" class="bg-white p-6 rounded-3xl border border-[#e1ede8] shadow-xs hover:shadow-xl transition-all duration-300 group hover:-translate-y-1 flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-700 border border-blue-200/70 shadow-xs flex items-center justify-center group-hover:scale-105 transition-transform">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                            </svg>
-                        </div>
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200/60">BUMDes & UMKM</span>
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                        <span class="text-xs font-bold text-[#64748b] uppercase tracking-wider">Potensi & Direktori</span>
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200/60 shrink-0">BUMDes & UMKM</span>
                     </div>
-                    <span class="text-xs font-bold text-[#64748b] uppercase tracking-wider block">Potensi & Direktori</span>
                     <p class="text-2xl font-black text-[#0c3837] mt-1">6 Sektor Unggulan</p>
                     <p class="text-xs text-[#64748b] mt-1">Pertanian, Kriya, Wisata Desa</p>
                 </div>
@@ -460,7 +488,7 @@
 
                     <!-- Single Clean Action CTA -->
                     <div class="pt-5 mt-5 border-t border-[#f1f5f4]">
-                        <a href="{{ route('public.layanan', ['q' => $template->kode_surat ?? $template->nama_surat]) }}" 
+                        <a href="{{ route('public.ajukan-surat', ['template' => $template->id ?? null, 'kode' => $template->kode_surat ?? null]) }}" 
                            class="w-full py-2.5 px-4 rounded-xl bg-[#10b981] hover:bg-[#059669] text-white font-bold text-xs shadow-xs transition-colors flex items-center justify-center group-hover:shadow-md">
                             <span>Ajukan Surat Sekarang</span>
                         </a>
@@ -491,10 +519,7 @@
                 <p class="text-sm text-[#64748b] mt-1">Kegiatan pembangunan, pengumuman resmi, dan aspirasi masyarakat desa.</p>
             </div>
             <a href="{{ route('public.berita') }}" class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#10b981] hover:text-[#0c3837] transition-colors shrink-0">
-                <span>Lihat Semua Berita</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
+                <span>Lihat Semua Berita &rarr;</span>
             </a>
         </div>
 
@@ -565,9 +590,6 @@
                 <!-- Message -->
                 <div class="lg:col-span-8 space-y-4">
                     <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 text-xs font-bold text-emerald-300 uppercase tracking-wider border border-white/10">
-                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-                        </svg>
                         <span>Sambutan Kepala Desa</span>
                     </div>
 
@@ -606,40 +628,31 @@
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             
-            <div class="p-6 rounded-3xl bg-white border border-[#e1ede8] shadow-xs hover:shadow-md transition-all">
-                <div class="w-10 h-10 rounded-2xl bg-[#e2f0ed] text-[#114443] flex items-center justify-center mb-4">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                    </svg>
+            <div class="p-6 rounded-3xl bg-white border border-[#e1ede8] shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
+                <div>
+                    <h4 class="text-base font-bold text-[#0c3837]">Layanan Mandiri Warga</h4>
+                    <p class="text-xs text-[#64748b] mt-1.5 leading-relaxed">Daftarkan akun kependudukan warga untuk memantau proses verifikasi permohonan surat secara terpusat.</p>
                 </div>
-                <h4 class="text-base font-bold text-[#0c3837]">Layanan Mandiri Warga</h4>
-                <p class="text-xs text-[#64748b] mt-1.5 leading-relaxed">Daftarkan akun kependudukan warga untuk memantau proses verifikasi permohonan surat secara terpusat.</p>
                 <div class="mt-4 pt-3 border-t border-slate-50">
                     <a href="{{ route('register') }}" class="text-xs font-bold text-[#10b981] hover:underline">Registrasi Akun Baru &rarr;</a>
                 </div>
             </div>
 
-            <div class="p-6 rounded-3xl bg-white border border-[#e1ede8] shadow-xs hover:shadow-md transition-all">
-                <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
+            <div class="p-6 rounded-3xl bg-white border border-[#e1ede8] shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
+                <div>
+                    <h4 class="text-base font-bold text-[#0c3837]">PPID & Dokumen Publik</h4>
+                    <p class="text-xs text-[#64748b] mt-1.5 leading-relaxed">Unduh salinan dokumen Peraturan Desa (Perdes), Keputusan Kepala Desa, dan Laporan Kinerja secara terbuka.</p>
                 </div>
-                <h4 class="text-base font-bold text-[#0c3837]">PPID & Dokumen Publik</h4>
-                <p class="text-xs text-[#64748b] mt-1.5 leading-relaxed">Unduh salinan dokumen Peraturan Desa (Perdes), Keputusan Kepala Desa, dan Laporan Kinerja secara terbuka.</p>
                 <div class="mt-4 pt-3 border-t border-slate-50">
                     <a href="{{ route('public.ppid') }}" class="text-xs font-bold text-amber-600 hover:underline">Cek Dokumen PPID &rarr;</a>
                 </div>
             </div>
 
-            <div class="p-6 rounded-3xl bg-white border border-[#e1ede8] shadow-xs hover:shadow-md transition-all">
-                <div class="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mb-4">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"/>
-                    </svg>
+            <div class="p-6 rounded-3xl bg-white border border-[#e1ede8] shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
+                <div>
+                    <h4 class="text-base font-bold text-[#0c3837]">Pusat Pengaduan & Aspirasi</h4>
+                    <p class="text-xs text-[#64748b] mt-1.5 leading-relaxed">Sampaikan masukan, kendala pelayanan kantor, atau kerusakan fasilitas umum secara langsung kepada aparat desa.</p>
                 </div>
-                <h4 class="text-base font-bold text-[#0c3837]">Pusat Pengaduan & Aspirasi</h4>
-                <p class="text-xs text-[#64748b] mt-1.5 leading-relaxed">Sampaikan masukan, kendala pelayanan kantor, atau kerusakan fasilitas umum secara langsung kepada aparat desa.</p>
                 <div class="mt-4 pt-3 border-t border-slate-50">
                     <button type="button" @click="$dispatch('open-pengaduan')" class="text-xs font-bold text-rose-600 hover:underline">Buat Laporan Sekarang &rarr;</button>
                 </div>

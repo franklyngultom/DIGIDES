@@ -62,17 +62,19 @@ Route::get('/belanja', [PublicWebsiteController::class, 'belanja'])->name('publi
 Route::get('/ppid', [PublicWebsiteController::class, 'ppid'])->name('public.ppid');
 Route::post('/pengaduan', [PublicWebsiteController::class, 'submitPengaduan'])->name('public.pengaduan.submit');
 Route::get('/layanan', [PublicWebsiteController::class, 'layanan'])->name('public.layanan');
+Route::get('/ajukan-surat', [PublicWebsiteController::class, 'ajukanSurat'])->name('public.ajukan-surat');
+Route::get('/ajukan-surat/cek-nik', [PublicWebsiteController::class, 'cekNik'])->name('public.ajukan-surat.cek-nik')->middleware('throttle:60,1');
+Route::post('/ajukan-surat', [PublicWebsiteController::class, 'storePengajuanSurat'])->name('public.ajukan-surat.store')->middleware('throttle:20,1');
 Route::get('/kontak', [PublicWebsiteController::class, 'kontak'])->name('public.kontak');
 Route::get('/lacak-surat', [PublicWebsiteController::class, 'lacakSurat'])->name('public.lacak-surat')->middleware('throttle:60,1');
+Route::get('/lacak-surat/{pengajuan}/download', [PublicWebsiteController::class, 'downloadSuratPublik'])->name('public.lacak-surat.download')->middleware('throttle:30,1');
 
-// Guest Authentication Routes
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
-    Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
+// Authentication Routes (Accessible from Public Website even if another session exists)
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
 
-    Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
-    Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
-});
+Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
 
 // Authenticated Routes
 Route::middleware('auth')->group(function () {

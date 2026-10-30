@@ -74,10 +74,11 @@
                 Pilih Jenis Surat <span class="text-red-500">*</span>
             </label>
             <select id="surat_template_id" name="surat_template_id" required
+                    onchange="renderPortalDynamicFields(this.value)"
                     class="w-full px-4 py-3 bg-[#f7faf9] border border-[#e1ede8] rounded-2xl text-sm font-semibold text-[#0c3837] focus:outline-none focus:border-[#10b981] transition-colors">
                 <option value="">-- Pilih jenis surat yang dibutuhkan --</option>
                 @foreach($templates as $tpl)
-                    <option value="{{ $tpl->id }}" {{ (old('surat_template_id', $template?->id) == $tpl->id) ? 'selected' : '' }}>
+                    <option value="{{ $tpl->id }}" {{ (old('surat_template_id', $template?->id ?? $templates->first()?->id) == $tpl->id) ? 'selected' : '' }}>
                         [{{ $tpl->kode_surat }}] {{ $tpl->nama_surat }}
                     </option>
                 @endforeach
@@ -85,6 +86,19 @@
             @error('surat_template_id')
                 <p class="text-xs text-red-600">{{ $message }}</p>
             @enderror
+        </div>
+
+        {{-- Dynamic Fields Sesuai Jenis Surat --}}
+        <div id="portal-dynamic-wrapper" class="p-5 rounded-2xl bg-[#f7faf9] border border-[#e1ede8] space-y-4 hidden">
+            <div class="flex items-center justify-between">
+                <span id="portal-dynamic-title" class="text-xs font-extrabold text-[#0c3837]">Data Rincian Surat</span>
+                <span class="text-[11px] font-semibold text-[#10b981]">Tercetak otomatis pada dokumen</span>
+            </div>
+            <div id="portal-dynamic-fields" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+            <div id="portal-persyaratan-box" class="pt-3 border-t border-[#e1ede8] text-xs text-[#475569]">
+                <span class="font-bold text-[#0c3837] block mb-1">Berkas Persyaratan yang Dianjurkan:</span>
+                <ul id="portal-persyaratan-list" class="list-disc list-inside space-y-0.5"></ul>
+            </div>
         </div>
 
         {{-- Step 2: Keperluan / Tujuan --}}
@@ -157,8 +171,72 @@
 
 </div>
 
+@php
+    $portalTemplatesJson = $templates->mapWithKeys(fn($t) => [
+        $t->id => [
+            'nama_surat' => $t->nama_surat,
+            'schema_fields' => $t->schema_fields_json ?? [],
+            'persyaratan' => $t->persyaratan_json ?? [],
+        ]
+    ]);
+    $portalOldFormData = old('form_data', []);
+@endphp
+
 @push('scripts')
 <script>
+const PORTAL_TEMPLATES = @json($portalTemplatesJson);
+const PORTAL_OLD_DATA = @json($portalOldFormData);
+
+function renderPortalDynamicFields(tplId) {
+    const wrapper = document.getElementById('portal-dynamic-wrapper');
+    const container = document.getElementById('portal-dynamic-fields');
+    const titleEl = document.getElementById('portal-dynamic-title');
+    const syaratList = document.getElementById('portal-persyaratan-list');
+    const tpl = PORTAL_TEMPLATES[tplId];
+
+    if (!tpl) {
+        wrapper.classList.add('hidden');
+        return;
+    }
+
+    wrapper.classList.remove('hidden');
+    titleEl.textContent = 'Data Rincian ' + tpl.nama_surat;
+    container.innerHTML = '';
+
+    (tpl.schema_fields || []).forEach(field => {
+        const div = document.createElement('div');
+        const val = PORTAL_OLD_DATA[field.name] || '';
+        const reqAttr = field.required ? 'required' : '';
+        const reqLabel = field.required ? '<span class="text-red-500">*</span>' : '';
+
+        let inputHtml = '';
+        if (field.type === 'select' && Array.isArray(field.options)) {
+            const opts = field.options.map(opt => `<option value="${opt}" ${val === opt ? 'selected' : ''}>${opt}</option>`).join('');
+            inputHtml = `<select name="form_data[${field.name}]" ${reqAttr} class="w-full px-3.5 py-2.5 bg-white border border-[#e1ede8] rounded-xl text-xs font-semibold text-[#0c3837] focus:outline-none focus:border-[#10b981]">${opts}</select>`;
+        } else {
+            const type = field.type === 'date' ? 'date' : 'text';
+            inputHtml = `<input type="${type}" name="form_data[${field.name}]" value="${val}" ${reqAttr} placeholder="${field.placeholder || ''}" class="w-full px-3.5 py-2.5 bg-white border border-[#e1ede8] rounded-xl text-xs font-semibold text-[#0c3837] focus:outline-none focus:border-[#10b981]">`;
+        }
+
+        div.innerHTML = `<label class="block text-xs font-bold text-[#0c3837] mb-1">${field.label} ${reqLabel}</label>${inputHtml}`;
+        container.appendChild(div);
+    });
+
+    syaratList.innerHTML = '';
+    (tpl.persyaratan || []).forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = s;
+        syaratList.appendChild(li);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const sel = document.getElementById('surat_template_id');
+    if (sel && sel.value) {
+        renderPortalDynamicFields(sel.value);
+    }
+});
+
 function showFileNames(input) {
     const fileList = document.getElementById('file-list');
     fileList.innerHTML = '';

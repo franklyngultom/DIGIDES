@@ -20,7 +20,8 @@ class PelayananSuratController extends Controller
      */
     public function create()
     {
-        $templates = SuratTemplate::where('is_active', true)->get();
+        SuratTemplate::ensureDefaultTemplates();
+        $templates = SuratTemplate::where('is_active', true)->orderBy('id')->get();
         return view('persuratan.pelayanan_surat', compact('templates'));
     }
 
